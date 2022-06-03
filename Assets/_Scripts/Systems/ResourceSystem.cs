@@ -8,8 +8,12 @@ using UnityEngine;
 /// If you don't feel free to make this a standard class
 /// </summary>
 public class ResourceSystem : StaticInstance<ResourceSystem> {
-    public List<ScriptableHero> Heroes { get; private set; }
+    private List<ScriptableHero> Heroes { get; set; }
     private Dictionary<string, ScriptableHero> _HeroesDict;
+
+    private List<ScriptableBackground> HeroBackgrounds { get; set; }
+
+    private Dictionary<string, ScriptableBackground> _HeroBackgroundsDict;
 
 
     /// <summary>
@@ -29,14 +33,32 @@ public class ResourceSystem : StaticInstance<ResourceSystem> {
     }
 
     private void AssembleResources() {
-        Heroes = Resources.LoadAll<ScriptableHero>("Heroes").ToList();
+        Heroes = Resources.LoadAll<ScriptableHero>("Heroes/Classes").ToList();
         _HeroesDict = Heroes.ToDictionary(r => r.ClassName, r => r);
+
+        HeroBackgrounds = Resources.LoadAll<ScriptableBackground>("Heroes/Backgrounds").ToList();
+        _HeroBackgroundsDict = HeroBackgrounds.ToDictionary(x => x.backgroundName, x => x); 
     }
 
     public ScriptableHero GetHero(string t) => _HeroesDict[t];
     public List<string> GetHeroClasses() => _HeroesDict.Keys.OrderBy(x => x).ToList();
     public ScriptableHero GetRandomHero() => Heroes[Random.Range(0, Heroes.Count)];
 
+    public ScriptableBackground GetBackground(string t) => _HeroBackgroundsDict[t];
+    public ScriptableBackground GetRandomBackground() => HeroBackgrounds[Random.Range(0, HeroBackgrounds.Count)];
+    public List<string> GetHeroBackgrounds()
+    {
+        var names = new List<string>();
+        
+        var BGnone = HeroBackgrounds.FirstOrDefault(x => x.backgroundName.ToLower() == "none");
+        names.Add(BGnone.backgroundName);
+        
+        var BGother = _HeroBackgroundsDict.Keys.OrderBy(x => x).ToList();
+        BGother.RemoveAll(x => x.ToLower() == "none");
+        names.AddRange(BGother);
+
+        return names;
+    }
 
     public string GetIconTag(Icon icon) => $"<sprite name=\"{TMP_IconDict[icon]}\">";
 }   
