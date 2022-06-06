@@ -4,14 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-public class PlayerUnit : UnitBase
+public static class Extensions
 {
-    
-    
-    public PlayerUnit(CharacterStats stats) : base(stats)
+    public static int ToLevel(this int number)
     {
-
+        return number > 0 ? number : 1;
     }
-
-
 }

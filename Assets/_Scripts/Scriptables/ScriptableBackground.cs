@@ -18,7 +18,7 @@ public class ScriptableBackground : ScriptableObject
 
     public string backgroundName;
 
-    public string startingCurrencyAmount;
+    public int startingCurrencyAmount;
 
     //TODO: starting equipment ig
     //TODO: special quest ig

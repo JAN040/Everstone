@@ -180,7 +180,8 @@ public class CharacterStats
         CooldownReduction = new Stat(cooldownReduction, StatType.CooldownReduction, true);
         BlockChance = new Stat(blockChance, StatType.BlockChance, false);
 
-        WeaponProficiencies = null;
+        //WeaponProficiencies = null;
+        SetDefaultWeaponProficiencies(0f, 0f);
     }
 
     public void SetDefaultWeaponProficiencies(float baseDamageBonus, float baseAccuracyBonus)
@@ -189,6 +190,9 @@ public class CharacterStats
 
         foreach (WeaponType weapon in (WeaponType[])Enum.GetValues(typeof(WeaponType)))
         {
+            if (weapon == WeaponType.None)
+                continue;
+
             WeaponProficiencies.Add(weapon, new WeaponProficiency(weapon, baseDamageBonus, baseAccuracyBonus));
         }
     }

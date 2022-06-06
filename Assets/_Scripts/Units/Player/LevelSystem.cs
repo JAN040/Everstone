@@ -14,14 +14,18 @@ public class LevelSystem
 {
     #region PROPERTIES
 
-    public Dictionary<Skill, SkillLevel> Skills { get; private set; }
+    /// <summary>
+    /// Dictionary of skill names and SkillLevel objects.
+    ///     Used to keep track of all levelable skills
+    /// </summary>
+    public Dictionary<string, SkillLevel> Skills { get; private set; }
 
-    private CharacterStats Stats;
+    [SerializeField] private CharacterStats Stats;
 
     #endregion PROPERTIES
 
 
-    public LevelSystem(Dictionary<Skill, SkillLevel> skills, CharacterStats stats)
+    public LevelSystem(Dictionary<string, SkillLevel> skills, CharacterStats stats)
     {
         if (skills == null || stats == null)
         {
@@ -33,7 +37,12 @@ public class LevelSystem
     
     public void AddExperienceToSkill(int amount, Skill skill)
     {
-        Skills[skill].AddExperience(amount);
+        Skills[skill.ToString()].AddExperience(amount);
+    }
+
+    public void AddExperienceToWeaponSkill(int amount, WeaponType weaponType)
+    {
+        Skills[weaponType.ToString()].AddExperience(amount);
     }
 
 }

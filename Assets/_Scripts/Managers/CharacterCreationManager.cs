@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Burst.Intrinsics;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -54,10 +55,17 @@ public class CharacterCreationManager : MonoBehaviour
     private int PointsAmount_Arts => basePointsAmount_Arts + bgPointsAmount_Arts + allocatedPointsAmount_Arts;
 
 
+
     #region UI Objects
 
     [Header("Skill points text field")]
     [SerializeField] TextMeshProUGUI SkillPointsText;
+
+    [Header("Start Button")]
+    [SerializeField] Button startButton;
+
+    [Header("Hero name textField")]
+    [SerializeField] TMP_InputField heroName;
 
     [Header("Icon selector")]
     [SerializeField]
@@ -104,7 +112,7 @@ public class CharacterCreationManager : MonoBehaviour
     #endregion UI Objects
 
 
-    #endregion
+    #endregion VARIABLES
 
     #region UNITY METHODS
 
@@ -127,9 +135,10 @@ public class CharacterCreationManager : MonoBehaviour
 
     private void SetupCharacterCreation()
     {
+        //setup dropdowns
+
         iconDropdown.ClearOptions();
         iconDropdown.AddOptions(playerIconList);
-
 
         heroClassDropdown.ClearOptions();
         heroClassDropdown.AddOptions(ResourceSystem.Instance.GetHeroClasses());
@@ -148,11 +157,13 @@ public class CharacterCreationManager : MonoBehaviour
         difficultyDropdown.onValueChanged.AddListener(call: delegate { OnDifficultyChanged(); });
         difficultyDropdown.value = diffOpt.IndexOf(Difficulty.Normal.ToString());
         difficultyDropdown.RefreshShownValue();
+
+        UpdateUI();
     }
 
     public void OnCharacterClassChanged()
     {
-        var chosenHero = ResourceSystem.Instance.GetHero(heroClassDropdown.options[heroClassDropdown.value].text);
+        var chosenHero = GetSelectedHero();
 
         basePointsAmount_Constitution = chosenHero.pointAllocationData.GetBaseSkillPoints(Skill.Constitution);
         basePointsAmount_Strength     = chosenHero.pointAllocationData.GetBaseSkillPoints(Skill.Strength);
@@ -165,7 +176,7 @@ public class CharacterCreationManager : MonoBehaviour
 
     public void OnCharacterBackgroundChanged()
     {
-        var chosenBackground = ResourceSystem.Instance.GetBackground(heroBackgroundDropdown.options[heroBackgroundDropdown.value].text);
+        var chosenBackground = GetSelectedBackground();
 
         bgPointsAmount_Constitution = chosenBackground.pointAllocationData.GetBaseSkillPoints(Skill.Constitution);
         bgPointsAmount_Strength     = chosenBackground.pointAllocationData.GetBaseSkillPoints(Skill.Strength);
@@ -209,7 +220,11 @@ public class CharacterCreationManager : MonoBehaviour
     }
 
     
-    private void UpdateUI()
+    /// <summary>
+    /// Updates stat allocation texts, available skill points and calls an update to stat allocation
+    ///     buttons interactibility
+    /// </summary>
+    public void UpdateUI()
     {
         //-1 means infinite in this case
         if (AvailableSkillPoints == -1)
@@ -226,10 +241,13 @@ public class CharacterCreationManager : MonoBehaviour
         AllocatedSkillPoints_Agility.text       = PointsAmount_Agility.ToString();
         AllocatedSkillPoints_Arts.text          = PointsAmount_Arts.ToString();
 
-        UpdateStatAllocationButtonsEnabled();
+        //if hero name is empty disable start button
+        startButton.interactable = heroName.text.Length > 1;
+
+        UpdateStatAllocationButtonsInteractable();
     }
 
-    private void UpdateStatAllocationButtonsEnabled()
+    private void UpdateStatAllocationButtonsInteractable()
     {
         bool hasPoints = AvailableSkillPoints == -1 || AvailableSkillPoints > 0;
 
@@ -296,6 +314,9 @@ public class CharacterCreationManager : MonoBehaviour
         AvailableSkillPoints        -= amount;
     }
 
+    /// <summary>
+    /// Create a random character
+    /// </summary>
     public void Randomize()
     {
         iconDropdown.value           = UnityEngine.Random.Range(0, iconDropdown.options.Count);
@@ -336,4 +357,124 @@ public class CharacterCreationManager : MonoBehaviour
             }
         }
     }
+
+    private ScriptableHero GetSelectedHero()
+    {
+        return ResourceSystem.Instance.GetHero(heroClassDropdown.options[heroClassDropdown.value].text);
+    }
+
+    private ScriptableBackground GetSelectedBackground()
+    {
+        return ResourceSystem.Instance.GetBackground(heroBackgroundDropdown.options[heroBackgroundDropdown.value].text);
+    }
+
+    private Sprite GetSelectedCharacterPortrait()
+    {
+        return iconDropdown.options[iconDropdown.value].image;
+    }
+
+    public void OnFinishCreation()
+    {
+        var hero = GetSelectedHero();
+        var stats = hero.BaseStats;
+
+        Dictionary<string, SkillLevel> skills = GenerateSkillSystem(stats);
+
+        GameManager.Instance.PlayerManager.SetHero(hero);
+        GameManager.Instance.PlayerManager.PlayerHero.MenuSprite = GetSelectedCharacterPortrait();
+        GameManager.Instance.PlayerManager.PlayerHero.SetLevelSystem(new LevelSystem(skills, stats));
+        GameManager.Instance.Currency = GetSelectedBackground().startingCurrencyAmount;
+
+        //leave character creation scene
+        SceneManagementSystem.Instance.LoadScene(Scenes.Outskirts);
+    }
+
+    public Dictionary<string, SkillLevel> GenerateSkillSystem(CharacterStats stats)
+    {
+        ScriptableHero       hero       = GetSelectedHero();
+        ScriptableBackground background = GetSelectedBackground();
+        var allocationData = new List<PointAllocationData>() 
+        { 
+            hero.pointAllocationData, 
+            background.pointAllocationData 
+        };
+
+        int points_Lockpicking = PointAllocationData.GetTotalPoints(Skill.Lockpicking,  allocationData);
+        int points_Taming      = PointAllocationData.GetTotalPoints(Skill.Taming,       allocationData);
+        int points_Trading     = PointAllocationData.GetTotalPoints(Skill.Trading,      allocationData);
+
+        int points_Dagger = PointAllocationData.GetTotalWeaponPoints(WeaponType.Dagger, allocationData);
+        int points_Sword  = PointAllocationData.GetTotalWeaponPoints(WeaponType.Sword,  allocationData);
+        int points_Axe    = PointAllocationData.GetTotalWeaponPoints(WeaponType.Axe,    allocationData);
+        int points_Shield = PointAllocationData.GetTotalWeaponPoints(WeaponType.Shield, allocationData);
+        int points_Staff  = PointAllocationData.GetTotalWeaponPoints(WeaponType.Staff,  allocationData);
+
+
+        return new Dictionary<string, SkillLevel>()
+        {
+            {
+                Skill.Constitution.ToString(),
+                new SkillLevel(Skill.Constitution, stats, PointsAmount_Constitution,
+                    0, PointsAmount_Constitution/10f)
+            },
+            {
+                Skill.Strength.ToString(),
+                new SkillLevel(Skill.Strength, stats, PointsAmount_Strength,
+                    0, PointsAmount_Strength/10f)
+            },
+            {
+                Skill.Agility.ToString(),
+                new SkillLevel(Skill.Agility, stats, PointsAmount_Agility,
+                    0, PointsAmount_Agility/10f)
+            },
+            {
+                Skill.Arts.ToString(),
+                new SkillLevel(Skill.Arts, stats, PointsAmount_Arts,
+                    0, PointsAmount_Arts/10f)
+            },
+            {
+                Skill.Lockpicking.ToString(),
+                new SkillLevel(Skill.Lockpicking, stats, points_Lockpicking,
+                    0, points_Lockpicking/10f)
+            },
+            {
+                Skill.Taming.ToString(),
+                new SkillLevel(Skill.Taming, stats, points_Taming,
+                    0, points_Taming/10f)
+            },
+            {
+                Skill.Trading.ToString(),
+                new SkillLevel(Skill.Trading, stats, points_Trading,
+                    0, points_Trading/10f)
+            },
+
+            //weapon skills
+            {
+                WeaponType.Dagger.ToString(),
+                new EquipmentSkillLevel(Skill.Equipment_Skill, stats, points_Dagger,
+                    0, points_Dagger/10f, WeaponType.Dagger)
+            },
+            {
+                WeaponType.Sword.ToString(),
+                new EquipmentSkillLevel(Skill.Equipment_Skill, stats, points_Sword,
+                    0, points_Sword/10f, WeaponType.Sword)
+            },
+            {
+                WeaponType.Axe.ToString(),
+                new EquipmentSkillLevel(Skill.Equipment_Skill, stats, points_Axe,
+                    0, points_Axe/10f, WeaponType.Axe)
+            },
+            {
+                WeaponType.Shield.ToString(),
+                new EquipmentSkillLevel(Skill.Equipment_Skill, stats, points_Shield,
+                    0, points_Shield/10f, WeaponType.Shield)
+            },
+            {
+                WeaponType.Staff.ToString(),
+                new EquipmentSkillLevel(Skill.Equipment_Skill, stats, points_Staff,
+                    0, points_Staff/10f, WeaponType.Staff)
+            },
+        };
+    }
+
 }

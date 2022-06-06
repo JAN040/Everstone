@@ -13,14 +13,16 @@ MonoBehaviour:
   m_Name: SO_HeroClass_Mage
   m_EditorClassIdentifier: 
   Faction: 0
+  MenuSprite: {fileID: 0}
+  Description: A mage relies on mana and arts skills to get ahead of its enemy.
   Prefab: {fileID: 0}
   _baseStats:
-    _healthPoints: 50
-    _energy: 30
-    _mana: 0
-    maxPets: 0
+    _healthPoints: 80
+    _energy: 4
+    _mana: 20
+    maxPets: 1
     physicalDamage:
-      baseValue: 0
+      baseValue: 3
       type: 0
       canBeNegative: 0
       growthParameters:
@@ -36,7 +38,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     artsDamage:
-      baseValue: 0
+      baseValue: 7
       type: 2
       canBeNegative: 0
       growthParameters:
@@ -44,7 +46,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     artsResist:
-      baseValue: 0
+      baseValue: 10
       type: 3
       canBeNegative: 1
       growthParameters:
@@ -52,7 +54,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     maxHP:
-      baseValue: 50
+      baseValue: 80
       type: 4
       canBeNegative: 0
       growthParameters:
@@ -60,7 +62,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     maxEnergy:
-      baseValue: 30
+      baseValue: 4
       type: 5
       canBeNegative: 0
       growthParameters:
@@ -68,7 +70,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     energyRecovery:
-      baseValue: 5
+      baseValue: 1
       type: 6
       canBeNegative: 1
       growthParameters:
@@ -84,7 +86,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     dodgeChance:
-      baseValue: 10
+      baseValue: 15
       type: 12
       canBeNegative: 0
       growthParameters:
@@ -92,7 +94,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     healEfficiency:
-      baseValue: 0
+      baseValue: 10
       type: 15
       canBeNegative: 1
       growthParameters:
@@ -100,7 +102,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     baseAccuracy:
-      baseValue: 0
+      baseValue: 0.7
       type: 11
       canBeNegative: 0
       growthParameters:
@@ -108,7 +110,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     maxMana:
-      baseValue: 0
+      baseValue: 20
       type: 7
       canBeNegative: 0
       growthParameters:
@@ -116,7 +118,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     manaRecovery:
-      baseValue: 0
+      baseValue: 2
       type: 8
       canBeNegative: 1
       growthParameters:
@@ -139,8 +141,6 @@ MonoBehaviour:
         AdditionMultiplier: 0
         PowerMultiplier: 0
         DivisionMultiplier: 0
-  MenuSprite: {fileID: 0}
-  Description: A mage relies on mana and arts skills to get ahead of its enemy.
   ClassName: Mage
   pointAllocationData:
     BaseSkillPointAllocations:
@@ -159,13 +159,13 @@ MonoBehaviour:
     - skill: 6
       points: 0
     WeaponProficiencies:
-    - weapon: 2
+    - weaponType: 2
       points: 0
-    - weapon: 1
+    - weaponType: 1
       points: 0
-    - weapon: 3
+    - weaponType: 3
       points: 0
-    - weapon: 5
+    - weaponType: 5
       points: 0
-    - weapon: 4
+    - weaponType: 4
       points: 2

@@ -38,7 +38,8 @@ public class SkillLevel
     /// <summary>
     /// Highest allowed level. Used in stat gain calculation
     /// </summary>
-    public static readonly int MAX_LEVEL = 100;
+    public static readonly int MAX_LEVEL = 99;
+    public static readonly int STARTING_LEVEL = 1;
 
     [Header("Default xp growth parameters")]
 
@@ -55,18 +56,33 @@ public class SkillLevel
     /// <summary>
     /// Further divides weapon skills When SkillType = Skill.Weapon_SkillType
     /// </summary>
-    public WeaponType Weapon_SkillType { get; private set; }
+    public bool IsWeaponSkill { get; private set; }
 
-    private CharacterStats _statsReference;
+    protected CharacterStats _statsReference;
 
-    private int _level;
+    protected int _level = STARTING_LEVEL;
     public int Level
     {
         get { return _level; }
         set
         {
+            if (value <= _level)
+                return;
+
+            int tempLevel = _level;
             _level = value;
+
+            //handle jumping multiple levels cause its possible to start
+            //  with level higher than 1
+            while (tempLevel < _level)
+            {
+                ModifyStatsOnLevelUp();
+                tempLevel++;
+            }
+
             ExpToNextLevel = GetRequiredExpToNextLevel(_level);
+
+            OnLevelChanged?.Invoke(this, EventArgs.Empty);
         }
     }
     public int Experience { get; set; }
@@ -74,6 +90,7 @@ public class SkillLevel
 
     /// <summary>
     /// Modifies bonus exp, aka. how fast the character will level up
+    ///     value 0.22 is 22% xp bonus
     /// </summary>
     public Stat Proficiency { get; private set; }
 
@@ -87,26 +104,26 @@ public class SkillLevel
     /// <param name="level">Starting level</param>
     /// <param name="experience">Starting experience</param>
     /// <param name="proficiency">Percentage modifier that applies to gained xp, instantiates a Stat object</param>
-    public SkillLevel(Skill type, CharacterStats stats, int level = 1, int experience = 0, float proficiency = 0, WeaponType weapon_SkillType = WeaponType.None)
+    public SkillLevel(Skill type, CharacterStats stats, int level = 1, int experience = 0, 
+                            float proficiency = 0, bool isWeaponSkill = false)
     {
         SkillType = type;
-        Weapon_SkillType = weapon_SkillType;
+        IsWeaponSkill = isWeaponSkill;
         
         _statsReference = stats;
-        Level = Math.Clamp(level, 0, MAX_LEVEL);
-        Experience = Math.Clamp(experience, 0, ExpToNextLevel - 1);
+        Proficiency = new Stat(proficiency, StatType.Proficiency, true);
 
-        Proficiency = new Stat(proficiency, StatType.Proficiency, false);
+        if (IsWeaponSkill) //assign level in child class
+            return;
+
+        Level = Math.Clamp(level, 1, MAX_LEVEL);
+        ExpToNextLevel = GetRequiredExpToNextLevel(Level);
+        Experience = Math.Clamp(experience, 0, ExpToNextLevel - 1);
     }
 
-    public string GetSkillName()
+    public virtual string GetSkillName()
     {
-        if (SkillType == Skill.Equipment_Skill)
-        {
-            return $"{Weapon_SkillType} Mastery";
-        }
-        else
-            return $"{SkillType}";
+        return $"{SkillType}";
     }
 
     public void AddExperience(int amount)
@@ -117,6 +134,9 @@ public class SkillLevel
             return;
         }
 
+        //proficiency modification
+        amount += (int)(amount * Proficiency.GetValue());
+        
         Experience += amount;
 
         while (Experience >= ExpToNextLevel)
@@ -124,22 +144,18 @@ public class SkillLevel
             Experience -= ExpToNextLevel;
             //updating the level also updates ExpToNextLevel
             LevelUp();
-            
-            //TODO: UI notify about the level up
-            Debug.Log($"Player skill '{SkillType}' leveled up to lvl {Level}.");
         }
-        
+
+        //TODO: consume event to notify UI about the level up
         OnExperienceChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    private void LevelUp()
+    protected void LevelUp()
     {
+        Debug.Log($"Player skill '{SkillType}' leveled up to lvl {Level}.");
+
         //updating the level also updates ExpToNextLevel
         Level++;
-        OnLevelChanged?.Invoke(this, EventArgs.Empty);
-
-        //TODO: modify stats
-        ModifyStatsOnLevelUp();
     }
 
     public float GetExperienceNormalized()
@@ -165,12 +181,12 @@ public class SkillLevel
     /// </summary>
     /// <param name="level">Currently reached level</param>
     /// <returns></returns>
-    private int GetRequiredExpToNextLevel(int level)
+    protected int GetRequiredExpToNextLevel(int level)
     {
         return (int)Math.Floor(level + AdditionMultiplier * MathF.Pow(PowerMultiplier, level / DivisionMultiplier)) / 4;
     }
 
-    private void ModifyStatsOnLevelUp()
+    protected virtual void ModifyStatsOnLevelUp()
     {
         switch (SkillType)
         {
@@ -204,13 +220,9 @@ public class SkillLevel
                 break;
             case Skill.Trading:
                 break;
-            //All equipment proficiencies are handled here
+            //All equipment proficiencies are handled in child class
             case Skill.Equipment_Skill:
-                if (Weapon_SkillType == WeaponType.Shield)
-                {
-                    this._statsReference.BlockChance.Grow();
-                }
-                this._statsReference.WeaponProficiencies[this.Weapon_SkillType].Grow(Level);
+                Debug.LogError("Tried to modify Equipment_Skill type on SkillLevel object!");
                 break;
             default:
                 Debug.LogError("Tried to modify stats, but the skillType is unknown!");

@@ -29,15 +29,15 @@ MonoBehaviour:
     - skill: 5
       points: 0
     - skill: 6
-      points: 0
+      points: 2
     WeaponProficiencies:
-    - weapon: 2
+    - weaponType: 2
       points: 0
-    - weapon: 1
+    - weaponType: 1
       points: 1
-    - weapon: 3
+    - weaponType: 3
       points: 0
-    - weapon: 5
+    - weaponType: 5
       points: 0
-    - weapon: 4
+    - weaponType: 4
       points: 0

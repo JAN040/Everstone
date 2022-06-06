@@ -12,41 +12,58 @@ public class SceneManagementSystem : Singleton<SceneManagementSystem>
 
     #endregion
 
-    
+
 
     /// <summary>
     /// Dictionary of scene names and their IDs
     /// </summary>
-    
 
 
-	#region UNITY METHODS
+
+    #region UNITY METHODS
     // Start is called before the first frame update
     //void Start()
     //{
-        
+
     //}
 
     //// Update is called once per frame
     //void Update()
     //{
-        
+
     //}
     #endregion
 
+    /// <summary>
+    /// Load scene by object reference
+    /// </summary>
+    /// <param name="scene">Scene object</param>
+    public void LoadScene(Scene scene)
+    {
+        StartCoroutine(LoadSceneWithTransition((Scenes)scene.buildIndex));
+    }
+
+    /// <summary>
+    /// Load scene by build index (not recommended)
+    /// </summary>
+    /// <param name="sceneNum"></param>
     public void LoadScene(int sceneNum)
     {
-        //Debug.Log($"Loading scene with ID: {sceneNum}");
-        StartCoroutine(LoadSceneWithTransition((Scene)sceneNum));
+        LoadScene((Scenes)sceneNum);
     }
 
-    public void LoadScene(Scene sc)
+    /// <summary>
+    /// Load scene using the Scenes enum as reference
+    /// </summary>
+    /// <param name="sc"></param>
+    public void LoadScene(Scenes sc)
     {
-        Debug.Log($"Loading scene: {sc}");
-        SceneManager.LoadScene((int)sc);
+        //SceneManager.LoadScene((int)sc);
+
+        StartCoroutine(LoadSceneWithTransition(sc));
     }
 
-    private IEnumerator LoadSceneWithTransition(Scene sc)
+    private IEnumerator LoadSceneWithTransition(Scenes sc)
     {
         Debug.Log($"Loading scene: {sc}, ID: {(int)sc}");
 
@@ -63,7 +80,7 @@ public class SceneManagementSystem : Singleton<SceneManagementSystem>
     }
 }
 
-public enum Scene
+public enum Scenes
 {
     MainMenu = 0,
     Outskirts = 1,

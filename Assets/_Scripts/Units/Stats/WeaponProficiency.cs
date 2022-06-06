@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 public class WeaponProficiency
 {
     private readonly float ACCURACY_GROWTH = 0.01f;
-    private readonly float DAMAGE_GROWTH = 0.01f;
+    private readonly float DAMAGE_GROWTH = 1f;
 
 
 

@@ -6,12 +6,22 @@ public class PlayerManager
 {
     #region VARIABLES
 
-    public PlayerUnit PlayerUnit { get; private set; }
+    //holds all player related data
+    public ScriptableHero PlayerHero { get; private set; }
 
-    //TODO: abilities
+    //TODO: inventory system
 
     #endregion VARIABLES
 
     
+    #region METHODS
+
+    public void SetHero(ScriptableHero hero)
+    {
+        PlayerHero = hero;
+    }
+
+    #endregion METHODS
+
 
 }

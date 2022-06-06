@@ -9,6 +9,11 @@ public abstract class ScriptableUnitBase: ScriptableObject {
     
     public Faction Faction;
 
+    // Used in menus
+    public Sprite MenuSprite;
+    [TextArea(3,5)]
+    public string Description;
+
     // Used in game
     public UnitBase Prefab;
 
@@ -20,10 +25,6 @@ public abstract class ScriptableUnitBase: ScriptableObject {
         = new CharacterStats(0,0,0,0,50,30,5,5,10);
     public CharacterStats BaseStats => _baseStats;
 
-    public Sprite MenuSprite;
-    // Used in menus
-    [TextArea(3,5)]
-    public string Description;
 }
 
 

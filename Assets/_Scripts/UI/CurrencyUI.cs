@@ -18,14 +18,13 @@ public class CurrencyUI : MonoBehaviour
 
     public int numOfCopperForOneSilver = 10;
     public int numOfSilverForOneGold = 100;
-    public int initialAmnt = 1111;
 
     #endregion
 
     #region UNITY METHODS
     void Awake()
     {
-        SetCurrencyUI(initialAmnt);
+        SetCurrencyUI(GameManager.Instance.Currency);
     }
 
     

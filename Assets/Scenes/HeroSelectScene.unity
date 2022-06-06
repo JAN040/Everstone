@@ -182,6 +182,8 @@ MonoBehaviour:
   allocatedPointsAmount_Agility: 0
   allocatedPointsAmount_Arts: 0
   SkillPointsText: {fileID: 969133846}
+  startButton: {fileID: 1285602867}
+  heroName: {fileID: 343450960}
   iconDropdown: {fileID: 1469277394}
   playerIconList:
   - {fileID: 21300000, guid: f42f0e0be94bf3647a8b5e03b3b10bff, type: 3}
@@ -794,7 +796,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3460191778065389737, guid: 92d3bd98c333b1443b2a8814b1875e10, type: 3}
       propertyPath: m_text
-      value: NEXT
+      value: START
       objectReference: {fileID: 0}
     - target: {fileID: 3460191778315157924, guid: 92d3bd98c333b1443b2a8814b1875e10, type: 3}
       propertyPath: m_Pivot.x
@@ -883,6 +885,22 @@ PrefabInstance:
     - target: {fileID: 3460191778315157925, guid: 92d3bd98c333b1443b2a8814b1875e10, type: 3}
       propertyPath: m_Name
       value: Next_Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 3460191778315157931, guid: 92d3bd98c333b1443b2a8814b1875e10, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3460191778315157931, guid: 92d3bd98c333b1443b2a8814b1875e10, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 17023077}
+    - target: {fileID: 3460191778315157931, guid: 92d3bd98c333b1443b2a8814b1875e10, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnFinishCreation
+      objectReference: {fileID: 0}
+    - target: {fileID: 3460191778315157931, guid: 92d3bd98c333b1443b2a8814b1875e10, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: CharacterCreationManager, Assembly-CSharp
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 92d3bd98c333b1443b2a8814b1875e10, type: 3}
@@ -1477,7 +1495,19 @@ MonoBehaviour:
       m_Calls: []
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 17023077}
+        m_TargetAssemblyTypeName: CharacterCreationManager, Assembly-CSharp
+        m_MethodName: UpdateUI
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_OnTouchScreenKeyboardStatusChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -4532,6 +4562,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3460191778315157924, guid: 92d3bd98c333b1443b2a8814b1875e10, type: 3}
   m_PrefabInstance: {fileID: 207594954}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1285602867 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3460191778315157931, guid: 92d3bd98c333b1443b2a8814b1875e10, type: 3}
+  m_PrefabInstance: {fileID: 207594954}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1320063084 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7125045563423154798, guid: 800d5186478415847b18a20303c974ea, type: 3}
