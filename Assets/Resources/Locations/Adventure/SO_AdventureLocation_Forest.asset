@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f92bc0771d223b459384a94898fd64c, type: 3}
+  m_Name: SO_AdventureLocation_Forest
+  m_EditorClassIdentifier: 
+  locationName: Forest
+  icon: {fileID: 21300000, guid: abac9e2db29261a4ebfeb049e4dd86a2, type: 3}
+  background: {fileID: 21300000, guid: c23104822c6e96e47bdcf762606f6471, type: 3}
+  difficulty: 0
+  stageAmount: 20
+  playerProgress: 0
+  _hasPlayerClearedFirstBoss: 0
+  enemyPool: []

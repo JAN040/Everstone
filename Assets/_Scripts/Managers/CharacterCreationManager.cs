@@ -58,6 +58,10 @@ public class CharacterCreationManager : MonoBehaviour
 
     #region UI Objects
 
+    [Space]
+    [Header("UI component references")]
+    [Space]
+
     [Header("Skill points text field")]
     [SerializeField] TextMeshProUGUI SkillPointsText;
 
@@ -384,6 +388,7 @@ public class CharacterCreationManager : MonoBehaviour
         GameManager.Instance.PlayerManager.PlayerHero.MenuSprite = GetSelectedCharacterPortrait();
         GameManager.Instance.PlayerManager.PlayerHero.SetLevelSystem(new LevelSystem(skills, stats));
         GameManager.Instance.Currency = GetSelectedBackground().startingCurrencyAmount;
+        GameManager.Instance.SetGameDifficulty((Difficulty)difficultyDropdown.value);
 
         //leave character creation scene
         SceneManagementSystem.Instance.LoadScene(Scenes.Outskirts);

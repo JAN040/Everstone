@@ -10,6 +10,11 @@ public class UnitManager: StaticInstance<UnitManager> {
         //SpawnUnit(ExampleHeroType.Tarodev, new Vector3(1, 0, 0));
     }
 
+    public void SpawnEnemies()
+    {
+
+    }
+
     //void SpawnUnit(ExampleHeroType t, Vector3 pos) {
     //    var tarodevScriptable = ResourceSystem.Instance.GetExampleHero(t);
 

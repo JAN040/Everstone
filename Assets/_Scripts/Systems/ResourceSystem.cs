@@ -12,9 +12,10 @@ public class ResourceSystem : StaticInstance<ResourceSystem> {
     private Dictionary<string, ScriptableHero> _HeroesDict;
 
     private List<ScriptableBackground> HeroBackgrounds { get; set; }
-
     private Dictionary<string, ScriptableBackground> _HeroBackgroundsDict;
 
+    private List<ScriptableAdventureLocation> AdventureLocations { get; set; }
+    private Dictionary<string, ScriptableAdventureLocation> _AdventureLocationsDict;
 
     /// <summary>
     /// To add icons: slice up sprite sheet -> right click-> create -> textmeshpro -> sprite asset -> 
@@ -37,7 +38,10 @@ public class ResourceSystem : StaticInstance<ResourceSystem> {
         _HeroesDict = Heroes.ToDictionary(r => r.ClassName, r => r);
 
         HeroBackgrounds = Resources.LoadAll<ScriptableBackground>("Heroes/Backgrounds").ToList();
-        _HeroBackgroundsDict = HeroBackgrounds.ToDictionary(x => x.backgroundName, x => x); 
+        _HeroBackgroundsDict = HeroBackgrounds.ToDictionary(x => x.backgroundName, x => x);
+
+        AdventureLocations = Resources.LoadAll<ScriptableAdventureLocation>("Locations/Adventure").ToList();
+        _AdventureLocationsDict = AdventureLocations.ToDictionary(x => x.locationName, x => x);
     }
 
     public ScriptableHero GetHero(string t) => _HeroesDict[t];
@@ -59,6 +63,8 @@ public class ResourceSystem : StaticInstance<ResourceSystem> {
 
         return names;
     }
+
+    public List<ScriptableAdventureLocation> GetAdventureLocations() => AdventureLocations.OrderBy(x => x.name).OrderBy(x => x.difficulty).ToList();
 
     public string GetIconTag(Icon icon) => $"<sprite name=\"{TMP_IconDict[icon]}\">";
 }   

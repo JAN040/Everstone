@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -7,18 +8,28 @@ using UnityEngine;
 /// </summary>
 public class GameManager : Singleton<GameManager>
 {
-    private int currency;
+    [SerializeField] private int currency;
+    [SerializeField] private Dictionary<string, int> AdventureLocationProgress;
+    [SerializeField] private Difficulty gameDifficulty;
 
     /// <summary>
     /// Reference to the PlayerManager script
     /// </summary>
     public PlayerManager PlayerManager { get; private set; }
 
-    public static event Action<GameState> OnBeforeStateChanged;
-    public static event Action<GameState> OnAfterStateChanged;
+    /// <summary>
+    /// Stores the reference to the adventure location the player is currently in (null if not in adventure)
+    /// </summary>
+    public ScriptableAdventureLocation CurrentLocation { get; private set; }
 
-    public GameState State { get; private set; }
+
+    //public static event Action<GameState> OnBeforeStateChanged;
+    //public static event Action<GameState> OnAfterStateChanged;
+
+    //public GameState State { get; private set; }
     public int Currency { get => currency; set => currency = value; }
+    public Difficulty GameDifficulty { get => gameDifficulty; private set => gameDifficulty = value; }
+
 
 
     // Kick the game off with the first state
@@ -29,38 +40,48 @@ public class GameManager : Singleton<GameManager>
 
     #region METHODS
 
-    public void ChangeState(GameState newState)
+    //public void ChangeState(GameState newState)
+    //{
+    //    OnBeforeStateChanged?.Invoke(newState);
+
+    //    State = newState;
+    //    switch (newState)
+    //    {
+    //        case GameState.Starting:
+    //            //HandleStarting();
+    //            break;
+    //        case GameState.SpawningHeroes:
+    //            //HandleSpawningHeroes();
+    //            break;
+    //        case GameState.SpawningEnemies:
+    //            //HandleSpawningEnemies();
+    //            break;
+    //        case GameState.HeroTurn:
+    //            //HandleHeroTurn();
+    //            break;
+    //        case GameState.EnemyTurn:
+    //            break;
+    //        case GameState.Win:
+    //            break;
+    //        case GameState.Lose:
+    //            break;
+    //        default:
+    //            throw new ArgumentOutOfRangeException(nameof(newState), newState, null);
+    //    }
+
+    //    OnAfterStateChanged?.Invoke(newState);
+
+    //    //Debug.Log($"New state: {newState}");
+    //}
+
+    public void SetGameDifficulty(Difficulty newDifficulty)
     {
-        OnBeforeStateChanged?.Invoke(newState);
+        GameDifficulty = newDifficulty;
+    }
 
-        State = newState;
-        switch (newState)
-        {
-            case GameState.Starting:
-                //HandleStarting();
-                break;
-            case GameState.SpawningHeroes:
-                //HandleSpawningHeroes();
-                break;
-            case GameState.SpawningEnemies:
-                //HandleSpawningEnemies();
-                break;
-            case GameState.HeroTurn:
-                //HandleHeroTurn();
-                break;
-            case GameState.EnemyTurn:
-                break;
-            case GameState.Win:
-                break;
-            case GameState.Lose:
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(newState), newState, null);
-        }
-
-        OnAfterStateChanged?.Invoke(newState);
-
-        //Debug.Log($"New state: {newState}");
+    public void SetCurrentLocation(ScriptableAdventureLocation location)
+    {
+        CurrentLocation = location;
     }
 
     private void HandleStarting()
@@ -76,7 +97,7 @@ public class GameManager : Singleton<GameManager>
     {
         //UnitManager.Instance.SpawnHeroes();
 
-        ChangeState(GameState.SpawningEnemies);
+        //ChangeState(GameState.SpawningEnemies);
     }
 
     private void HandleSpawningEnemies()
@@ -84,7 +105,7 @@ public class GameManager : Singleton<GameManager>
 
         // Spawn enemies
 
-        ChangeState(GameState.HeroTurn);
+        //ChangeState(GameState.HeroTurn);
     }
 
     private void HandleHeroTurn()
