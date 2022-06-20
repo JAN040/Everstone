@@ -7,6 +7,7 @@ using UnityEngine;
 /// <summary>
 /// Used to store Adventure location data like the background and encounterable enemies, events, etc.
 /// </summary>
+
 [CreateAssetMenu(menuName = "Scriptable/Locations/New Adventure Location", fileName = "SO_AdventureLocation_")]
 public class ScriptableAdventureLocation : ScriptableObject
 {

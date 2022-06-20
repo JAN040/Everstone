@@ -20,6 +20,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/HeroSelectScene.unity
     guid: 08d94411a1a619a468802a7c03a1da07
+  - enabled: 1
+    path: Assets/Scenes/AdventureSelectScene.unity
+    guid: c48ddbde087008c48a8e59d22086e1a7
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 9d8ee72fef2f1054283c4037ef8a41f6, type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: cae4296269914f34c8f7a4814644ae92, type: 2}

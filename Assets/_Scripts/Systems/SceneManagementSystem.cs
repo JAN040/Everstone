@@ -85,5 +85,7 @@ public enum Scenes
     MainMenu = 0,
     Outskirts = 1,
     Town = 2,
-    Adventure = 3
+    Adventure = 3,
+    HeroSelect = 4,
+    AdventureSelect = 5,
 }

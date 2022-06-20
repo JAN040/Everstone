@@ -9,21 +9,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6e73fa001d22ff4baf6506989c5c542, type: 3}
+  m_Script: {fileID: 11500000, guid: 3b93f3dbeb9d695419fcb72037536f27, type: 3}
   m_Name: SO_HeroBackground_Athlete
   m_EditorClassIdentifier: 
   backgroundName: Athlete
-  startingCurrencyAmount: 270
+  startingCurrencyAmount: 120
   pointAllocationData:
     BaseSkillPointAllocations:
     - skill: 3
-      points: -1
+      points: 0
     - skill: 0
-      points: 2
+      points: 3
     - skill: 2
-      points: 2
+      points: 0
     - skill: 1
-      points: -2
+      points: 0
     - skill: 4
       points: 0
     - skill: 5
@@ -31,13 +31,13 @@ MonoBehaviour:
     - skill: 6
       points: 0
     WeaponProficiencies:
-    - weapon: 2
+    - weaponType: 2
       points: 0
-    - weapon: 1
+    - weaponType: 1
       points: 0
-    - weapon: 3
+    - weaponType: 3
       points: 0
-    - weapon: 5
+    - weaponType: 5
       points: 0
-    - weapon: 4
+    - weaponType: 4
       points: 0

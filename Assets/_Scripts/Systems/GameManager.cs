@@ -21,7 +21,7 @@ public class GameManager : Singleton<GameManager>
     /// Stores the reference to the adventure location the player is currently in (null if not in adventure)
     /// </summary>
     public ScriptableAdventureLocation CurrentLocation { get; private set; }
-
+    public List<ScriptableAdventureLocation> AdventureLocationData { get; set; } = null;
 
     //public static event Action<GameState> OnBeforeStateChanged;
     //public static event Action<GameState> OnAfterStateChanged;

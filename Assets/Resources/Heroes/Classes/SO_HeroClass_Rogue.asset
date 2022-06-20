@@ -9,20 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb5c23fd834c21743bf7677711b06d5e, type: 3}
+  m_Script: {fileID: 11500000, guid: c98add8d75ad97e449a3ca8cd5073d8e, type: 3}
   m_Name: SO_HeroClass_Rogue
   m_EditorClassIdentifier: 
   Faction: 0
   MenuSprite: {fileID: 0}
-  Description: 'Fast, precise & evasive '
-  Prefab: {fileID: 0}
+  Description: 
   _baseStats:
     _healthPoints: 50
     _energy: 30
     _mana: 0
-    maxPets: 1
+    maxPets: 0
     physicalDamage:
-      baseValue: 7
+      baseValue: 0
       type: 0
       canBeNegative: 0
       growthParameters:
@@ -30,7 +29,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     armor:
-      baseValue: 1
+      baseValue: 0
       type: 1
       canBeNegative: 0
       growthParameters:
@@ -38,7 +37,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     artsDamage:
-      baseValue: 3
+      baseValue: 0
       type: 2
       canBeNegative: 0
       growthParameters:
@@ -54,7 +53,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     maxHP:
-      baseValue: 100
+      baseValue: 50
       type: 4
       canBeNegative: 0
       growthParameters:
@@ -62,7 +61,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     maxEnergy:
-      baseValue: 5
+      baseValue: 30
       type: 5
       canBeNegative: 0
       growthParameters:
@@ -70,7 +69,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     energyRecovery:
-      baseValue: 1
+      baseValue: 5
       type: 6
       canBeNegative: 1
       growthParameters:
@@ -78,7 +77,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     speed:
-      baseValue: 7
+      baseValue: 5
       type: 10
       canBeNegative: 0
       growthParameters:
@@ -86,7 +85,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     dodgeChance:
-      baseValue: 20
+      baseValue: 10
       type: 12
       canBeNegative: 0
       growthParameters:
@@ -102,7 +101,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     baseAccuracy:
-      baseValue: 0.9
+      baseValue: 0
       type: 11
       canBeNegative: 0
       growthParameters:
@@ -110,7 +109,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     maxMana:
-      baseValue: 10
+      baseValue: 0
       type: 7
       canBeNegative: 0
       growthParameters:
@@ -118,7 +117,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     manaRecovery:
-      baseValue: 1
+      baseValue: 0
       type: 8
       canBeNegative: 1
       growthParameters:
@@ -126,7 +125,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     blockChance:
-      baseValue: 5
+      baseValue: 0
       type: 16
       canBeNegative: 0
       growthParameters:
@@ -145,22 +144,22 @@ MonoBehaviour:
   pointAllocationData:
     BaseSkillPointAllocations:
     - skill: 3
-      points: 1
+      points: 0
     - skill: 0
-      points: 1
+      points: 0
     - skill: 2
-      points: 3
+      points: 0
     - skill: 1
       points: 0
     - skill: 4
-      points: 1
+      points: 0
     - skill: 5
       points: 0
     - skill: 6
       points: 0
     WeaponProficiencies:
     - weaponType: 2
-      points: 2
+      points: 0
     - weaponType: 1
       points: 0
     - weaponType: 3
