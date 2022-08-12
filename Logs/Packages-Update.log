@@ -43,3 +43,14 @@ The following packages were updated:
   com.unity.ide.vscode from version 1.2.4 to 1.2.5
   com.unity.test-framework from version 1.1.30 to 1.1.31
   com.unity.timeline from version 1.6.3 to 1.6.4
+
+=== Thu Aug 11 10:03:52 2022
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.collab-proxy from version 1.15.15 to 1.17.1
+  com.unity.ide.rider from version 3.0.13 to 3.0.15
+  com.unity.ide.visualstudio from version 2.0.14 to 2.0.16
+  com.unity.visualscripting from version 1.7.6 to 1.7.8
