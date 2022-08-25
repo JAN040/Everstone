@@ -18,10 +18,7 @@ public class ScriptableEnemy : ScriptableUnitBase
     /// </summary>
     public EnemyClass Class;
 
-    /// <summary>
-    /// normal, elite, boss
-    /// </summary>
-    public EnemyType Type;
+    
 
     //TODO abilities list
 

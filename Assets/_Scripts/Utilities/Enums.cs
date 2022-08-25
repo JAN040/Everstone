@@ -10,8 +10,7 @@ using System.Threading.Tasks;
 [Serializable]
 public enum Faction
 {
-    Heroes,
-    Pets,
+    Allies,
     Enemies
 }
 
@@ -36,6 +35,13 @@ public enum LocationDifficulty
     Advanced = 5,
     Hard = 10,
     Expert = 50
+}
+
+public enum StageType
+{
+    Battle,
+    Chest,
+    Event
 }
 
 public enum EncounterType
@@ -68,6 +74,12 @@ public enum EnemyType
     Normal,
     Elite,
     Boss
+}
+
+public enum FacingDirection
+{
+    Left,
+    Right
 }
 
 //public enum HeroClass

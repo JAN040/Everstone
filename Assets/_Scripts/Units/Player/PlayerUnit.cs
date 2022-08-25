@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-public class PlayerUnit : UnitBase
+public class PlayerUnit : Unit
 {
     
     
-    public PlayerUnit(CharacterStats stats) : base(stats)
-    {
+    //public PlayerUnit(CharacterStats stats) : base()
+    //{
 
-    }
+    //}
 
 
 }

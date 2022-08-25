@@ -196,4 +196,14 @@ public class CharacterStats
             WeaponProficiencies.Add(weapon, new WeaponProficiency(weapon, baseDamageBonus, baseAccuracyBonus));
         }
     }
+
+    public float GetHpNormalized()
+    {
+        return HealthPoints / MaxHP.GetValue();
+    }
+
+    public float GetEnergyNormalized()
+    {
+        return Energy / MaxEnergy.GetValue();
+    }
 }

@@ -9,13 +9,23 @@ public abstract class ScriptableUnitBase : ScriptableObject {
     
     public Faction Faction;
 
+    /// <summary>
+    /// normal, elite, boss
+    ///     ...even allies can have a type, after all it affects stats and the frame type
+    /// </summary>
+    public EnemyType Type = EnemyType.Normal;
+
     // Used in menus
     public Sprite MenuSprite;
+
+    [Tooltip("Specify the direction the portrait is facing. This helps the game flip the sprite in the right direction")]
+    public FacingDirection FaceDirection;
+
     [TextArea(3,5)]
     public string Description;
 
     // Used in game
-    //public UnitBase Prefab;
+    public GameObject Prefab;
 
     /// <summary>
     /// Keeping base stats as a struct on the scriptable keeps it flexible and easily editable.

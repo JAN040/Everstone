@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.UIElements;
 
 public static class Extensions
 {
@@ -11,7 +13,16 @@ public static class Extensions
         return number > 0 ? number : 1;
     }
 
-   
+    public static Vector3 FlipX(this Vector3 vector)
+    {
+        return new Vector3(-1f * vector.x, vector.y, vector.z);
+    }
+
+    public static Vector3 FlipY(this Vector3 vector)
+    {
+        return new Vector3(vector.x, -1f * vector.y, vector.z);
+    }
+
 
     /// <summary>
     /// Gets the next value of the enum (numerically)
