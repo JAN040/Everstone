@@ -11,6 +11,7 @@ public class AdventureManager : MonoBehaviour
     #region UI References
 
     [SerializeField] GameObject PauseMenu;
+    [SerializeField] GameObject UnitPrefab;
 
     #endregion UI References
 
@@ -18,15 +19,13 @@ public class AdventureManager : MonoBehaviour
     [SerializeField] Image background;
     [SerializeField] bool IsPaused = false;
 
-    //[SerializeField] float Chance_Event = 0;
-    [SerializeField] float Chance_Chest = 0.01f;
+    private ScriptableAdventureLocation CurrentLocation;
 
-    private ScriptableAdventureLocation LocationRef;
-
+    private ScriptableHero Hero;
     private List<ScriptableUnitBase> AlliedUnitsList;
-    private List<ScriptableUnitBase> EnemyUnitsList;
+    private List<ScriptableEnemy> EnemyUnitsList;
 
-    private UnitGrid UnitGrid;
+    private UnitGrid UnitGrid = new UnitGrid();
 
     #endregion 	VARIABLES
 
@@ -36,8 +35,8 @@ public class AdventureManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        LocationRef = GameManager.Instance?.CurrentLocation;
-        Sprite currLocationSprite = LocationRef?.background;
+        CurrentLocation = GameManager.Instance?.CurrentLocation;
+        Sprite currLocationSprite = CurrentLocation?.background;
 
         if (currLocationSprite != null)
            background.sprite = GameManager.Instance?.CurrentLocation?.background;
@@ -78,38 +77,56 @@ public class AdventureManager : MonoBehaviour
     private void InitStage(bool IsFirstInit)
     {
         if (IsFirstInit)
-        {
-            //Spawn allies
+        {   //Handle allies (and hero)
+            AlliedUnitsList = new List<ScriptableUnitBase>();
+            Hero = GameManager.Instance.PlayerManager.PlayerHero;
+
+            if (Hero != null)
+                AlliedUnitsList.Add(Hero);
+
+            if (GameManager.Instance.Allies != null)
+                AlliedUnitsList.AddRange(GameManager.Instance.Allies);
+
             SpawnAllies();
         }
 
-        //select stage type
-        StageType stageType = RollStageType();
+        //get encounter type
+        EncounterType encounter = CurrentLocation.GetNextEncounter();
+
+        if (encounter == EncounterType.Event)
+        {
+            //handle events
+        }
+        else
+        {
+            EnemyUnitsList = CurrentLocation.RollEnemies(encounter);
+        }
 
         //spawn enemies/chests
-        RollEnemies();
         SpawnEnemies();
 
 
         //notify about stage number (current progress)
     }
 
-    /// <summary>
-    /// Decide the enemies for the stage, from the ScriptableAdventureLocation enemy pool
-    /// </summary>
-    private void RollEnemies()
+    
+    public void Test_ResetStage()
     {
-        
+        ResetEnemies();
+
+        InitStage(false);
     }
 
-    private StageType RollStageType()
+    private void ResetEnemies()
     {
-        if (Helpers.DiceRoll(Chance_Chest))
+        foreach (var enemy in EnemyUnitsList)
         {
-            return StageType.Chest;
+            Destroy(enemy.Prefab);
+            
+            //enemy.Prefab = null;
         }
-
-        return StageType.Battle;
+        EnemyUnitsList.Clear();
+        UnitGrid.Clear(Faction.Enemies);
     }
 
 
@@ -117,12 +134,54 @@ public class AdventureManager : MonoBehaviour
 
     private void SpawnAllies()
     {
+        foreach (var ally in AlliedUnitsList)
+        {
+            //create prefab
+            ally.Prefab = Instantiate(UnitPrefab, new Vector2(-20, -20), Quaternion.identity);
+            ally.Prefab.GetComponent<Unit>().Initialize(ally.BaseStats, ally);
 
+            //place the prefab in the grid
+            UnitGrid.AddToFront(Faction.Allies, ally);
+        }
     }
 
     private void SpawnEnemies()
     {
+        foreach (var enemy in EnemyUnitsList)
+        {
+            //create prefab
+            enemy.Prefab = Instantiate(UnitPrefab, new Vector2(-20, -20), Quaternion.identity);
+            enemy.Prefab.GetComponent<Unit>().Initialize(enemy.BaseStats, enemy);
 
+            //place the prefab in the grid
+            switch (enemy.Class)
+            {
+                case EnemyClass.Warrior:
+                case EnemyClass.Bruiser:
+                case EnemyClass.Battlemage:
+                case EnemyClass.Tank:
+                case EnemyClass.Titan:
+                case EnemyClass.Vanguard:
+                    UnitGrid.AddToFront(Faction.Enemies, enemy);
+                    break;
+
+                case EnemyClass.Marksman:
+                case EnemyClass.Mage:
+                case EnemyClass.Artillery:
+                case EnemyClass.Controller:
+                case EnemyClass.Healer:
+                case EnemyClass.Assassin:
+                    UnitGrid.AddToBack(Faction.Enemies, enemy);
+                    break;
+
+                default:
+                    Debug.Log($"Unknown Class: {enemy.Class} of enemy: {enemy.Name}");
+                    break;
+            }
+        }
+
+        //TODO: load the saved ally positions
+        UnitGrid.Restructure(Faction.Enemies);
     }
 
     #endregion Unit Spawning

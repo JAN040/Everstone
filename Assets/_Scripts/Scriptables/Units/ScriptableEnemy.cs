@@ -11,7 +11,6 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Scriptable/Units/New Enemy", fileName = "SO_Enemy_")]
 public class ScriptableEnemy : ScriptableUnitBase
 {
-    public string Name;
 
     /// <summary>
     /// defines stat distributions and available abilities

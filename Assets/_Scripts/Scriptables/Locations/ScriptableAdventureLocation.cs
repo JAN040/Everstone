@@ -53,7 +53,7 @@ public class ScriptableAdventureLocation : ScriptableObject
     }
 
 
-    [SerializeField] List<ScriptableEnemy> enemyPool;
+    public List<ScriptableEnemy> EnemyPool { get; private set; }
     //TODO eventPool ?
     //TODO boss ?
     //TODO nestSetup ?
@@ -62,6 +62,11 @@ public class ScriptableAdventureLocation : ScriptableObject
 
     #region METHODS
 
+    public void SetEnemyPool(List<ScriptableEnemy> pool)
+    {
+        if (pool != null && pool.Count != 0)
+            EnemyPool = pool;
+    }
 
     public EncounterType GetNextEncounter()
     {
@@ -84,21 +89,54 @@ public class ScriptableAdventureLocation : ScriptableObject
         return EncounterType.SingleEnemy;
     }
 
+    /// <summary>
+    /// Decide the enemies for the stage, from the ScriptableAdventureLocation enemy pool
+    /// </summary>
+    public List<ScriptableEnemy> RollEnemies(EncounterType encounterType)
+    {
+        var result = new List<ScriptableEnemy>();
+        switch (encounterType)
+        {
+            case EncounterType.SingleEnemy:
+                result.Add(GetRandomEnemy());
+                break;
+
+            case EncounterType.MultipleEnemy:
+                //for there to be multiple there have to be at least two
+                result.Add(GetRandomEnemy());
+                result.Add(GetRandomEnemy());
+
+                //roll to see if we add even more (max 6 enemies)
+                while (Helpers.DiceRoll(LocationData.MULTI_ENEMY_ADD_MORE_ENEMIES_CHANCE) && result.Count < 6)
+                    result.Add(GetRandomEnemy());
+
+                break;
+
+            case EncounterType.BossEnemy:
+                Debug.Log("TODO: BossEnemy");
+                break;
+            case EncounterType.MonsterNest:
+                Debug.Log("TODO: MonsterNest");
+                break;
+            case EncounterType.Event:
+            default:
+                //this shouldnt really happen, events should be handled separately
+                Debug.Log($"Unexpected EncounterType: {encounterType} in RollEnemies");
+                break;
+        }
+
+        return result;
+    }
+
     public ScriptableEnemy GetRandomEnemy()
     {
         bool isElite = Helpers.DiceRoll(GetEliteEnemyChance());
-        List<ScriptableEnemy> effectivePool = null;
+        List<ScriptableEnemy> effectivePool = isElite ?
+            effectivePool = EnemyPool.Where(x => x.Type == EnemyType.Elite).ToList()
+            :
+            effectivePool = EnemyPool.Where(x => x.Type == EnemyType.Normal).ToList();
 
-        if (isElite)
-        {
-            effectivePool = enemyPool.Where(x => x.Type == EnemyType.Elite).ToList();
-        }
-        else
-        {
-            effectivePool = enemyPool.Where(x => x.Type == EnemyType.Normal).ToList();
-        }
-
-        return effectivePool[Random.Range(0, effectivePool.Count)];
+        return Instantiate(effectivePool[Random.Range(0, effectivePool.Count)]);
     }
 
 

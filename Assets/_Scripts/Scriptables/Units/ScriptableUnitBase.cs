@@ -6,7 +6,9 @@ using UnityEngine;
 /// info on the menu screen, without instantiating the unit prefab.
 /// </summary>
 public abstract class ScriptableUnitBase : ScriptableObject {
-    
+
+    public string Name;
+
     public Faction Faction;
 
     /// <summary>

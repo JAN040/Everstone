@@ -53,6 +53,11 @@ public class Unit : MonoBehaviour {
 
     private ScriptableUnitBase UnitDataRef { get; set; }
 
+    /// <summary>
+    /// Holds the units idle position, dictated by the grid its in.
+    /// </summary>
+    public Vector2 IdlePosition;
+
 
     public void Initialize(CharacterStats stats, ScriptableUnitBase unitData)
     {

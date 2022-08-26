@@ -1,0 +1,147 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfee79429a23a6845a15e0205ee8c742, type: 3}
+  m_Name: SO_Enemy_Boar
+  m_EditorClassIdentifier: 
+  Name: Boar
+  Faction: 1
+  Type: 0
+  MenuSprite: {fileID: 21300000, guid: 9fd0f4f1eb337184aa705bf8cf205f18, type: 3}
+  FaceDirection: 0
+  Description: 
+  Prefab: {fileID: 0}
+  _baseStats:
+    _healthPoints: 50
+    _energy: 30
+    _mana: 0
+    maxPets: 0
+    physicalDamage:
+      baseValue: 0
+      type: 0
+      canBeNegative: 0
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+    armor:
+      baseValue: 0
+      type: 1
+      canBeNegative: 0
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+    artsDamage:
+      baseValue: 0
+      type: 2
+      canBeNegative: 0
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+    artsResist:
+      baseValue: 0
+      type: 3
+      canBeNegative: 1
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+    maxHP:
+      baseValue: 50
+      type: 4
+      canBeNegative: 0
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+    maxEnergy:
+      baseValue: 30
+      type: 5
+      canBeNegative: 0
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+    energyRecovery:
+      baseValue: 5
+      type: 6
+      canBeNegative: 1
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+    speed:
+      baseValue: 5
+      type: 10
+      canBeNegative: 0
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+    dodgeChance:
+      baseValue: 10
+      type: 12
+      canBeNegative: 0
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+    healEfficiency:
+      baseValue: 0
+      type: 15
+      canBeNegative: 1
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+    baseAccuracy:
+      baseValue: 0
+      type: 11
+      canBeNegative: 0
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+    maxMana:
+      baseValue: 0
+      type: 7
+      canBeNegative: 0
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+    manaRecovery:
+      baseValue: 0
+      type: 8
+      canBeNegative: 1
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+    blockChance:
+      baseValue: 0
+      type: 16
+      canBeNegative: 0
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+    cooldownReduction:
+      baseValue: 0
+      type: 9
+      canBeNegative: 1
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+  Class: 11

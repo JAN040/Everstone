@@ -17,6 +17,9 @@ public class ResourceSystem : StaticInstance<ResourceSystem> {
     private List<ScriptableAdventureLocation> AdventureLocations { get; set; }
     private Dictionary<string, ScriptableAdventureLocation> _AdventureLocationsDict;
 
+    private List<ScriptableEnemy> CommonEnemies { get; set; }
+
+
     /// <summary>
     /// To add icons: slice up sprite sheet -> right click-> create -> textmeshpro -> sprite asset -> 
     ///     project settings TMP set as default sprite asset. In the asset click "Update sprite asset"
@@ -42,6 +45,14 @@ public class ResourceSystem : StaticInstance<ResourceSystem> {
 
         AdventureLocations = Resources.LoadAll<ScriptableAdventureLocation>("Locations/Adventure").ToList();
         _AdventureLocationsDict = AdventureLocations.ToDictionary(x => x.locationName, x => x);
+
+        //load enemies
+        foreach (var location in AdventureLocations)
+        {
+            location.SetEnemyPool(Resources.LoadAll<ScriptableEnemy>($"Enemies/{location.locationName}").ToList());
+        }
+
+        CommonEnemies = Resources.LoadAll<ScriptableEnemy>("Enemies/_Common").ToList();
     }
 
     public ScriptableHero GetHero(string t) => _HeroesDict[t];

@@ -17,6 +17,8 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public PlayerManager PlayerManager { get; private set; }
 
+    public List<ScriptableUnitBase> Allies { get; set; }
+
     /// <summary>
     /// Stores the reference to the adventure location the player is currently in (null if not in adventure)
     /// </summary>

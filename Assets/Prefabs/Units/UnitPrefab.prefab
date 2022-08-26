@@ -473,15 +473,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Image_Frame: {fileID: 6637542072375983109}
-  Image_Portrait: {fileID: 6637542072274994520}
+  Image_Portrait: {fileID: 4698574776425522977}
   Image_TargetIcon: {fileID: 6637542072123354600}
   Image_HealthBar: {fileID: 6637542071833872389}
   Image_EnergyBar: {fileID: 6637542070667964856}
   Transform_Frame: {fileID: 6637542072375983106}
-  Transform_Portrait: {fileID: 6637542072274994521}
-  Sprite_Frame_Normal: {fileID: 0}
-  Sprite_Frame_Elite: {fileID: 0}
-  Sprite_Frame_Boss: {fileID: 0}
+  Transform_Portrait: {fileID: 2698763247176865079}
+  Sprite_Frame_Normal: {fileID: 21300000, guid: 9cd1fe586dd5bf94b83e11d4e2801357, type: 3}
+  Sprite_Frame_Elite: {fileID: 21300000, guid: 8f808217b55a00d47a98eec3988098b2, type: 3}
+  Sprite_Frame_Boss: {fileID: 21300000, guid: 0bcd60a14376e6a469386c1410e781b4, type: 3}
+  IdlePosition: {x: 0, y: 0}
 --- !u!1 &6637542071833872387
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class UnitGrid
 {
@@ -14,6 +15,16 @@ public class UnitGrid
     public ScriptableUnitBase[,] Allies  = new ScriptableUnitBase[3, 2];
     public ScriptableUnitBase[,] Enemies = new ScriptableUnitBase[3, 2];
 
+    public Vector2[,] AllyGridPoints = {
+        { new Vector2(-7, 1),    new Vector2(-7, -1.5f) },
+        { new Vector2(-4.5f, 1), new Vector2(-4.5f, -1.5f) },
+        { new Vector2(-2, 1),    new Vector2(-2, -1.5f) },
+    };
+    public Vector2[,] EnemyGridPoints = { 
+        { new Vector2(2, 1),    new Vector2(2, -1.5f) },
+        { new Vector2(4.5f, 1), new Vector2(4.5f, -1.5f) },
+        { new Vector2(7, 1),    new Vector2(7, -1.5f) },
+    };
 
     /// <summary>
     /// Tries to add the unit from the front to the grid in question.
@@ -33,6 +44,8 @@ public class UnitGrid
                     if (target[k, l] == null)
                     {
                         target[k, l] = unit;
+                        RecalcIdlePositions(faction);
+
                         return true;
                     }
         }
@@ -43,14 +56,17 @@ public class UnitGrid
                     if (target[k, l] == null)
                     {
                         target[k, l] = unit;
+                        RecalcIdlePositions(faction);
+
                         return true;
                     }
         }
 
+
         return false;
     }
 
-    private bool AddToBack(Faction faction, ScriptableUnitBase unit)
+    public bool AddToBack(Faction faction, ScriptableUnitBase unit)
     {
         var target = faction == Faction.Allies ? Allies : Enemies;
 
@@ -62,6 +78,7 @@ public class UnitGrid
                     if (target[k, l] == null)
                     {
                         target[k, l] = unit;
+                        RecalcIdlePositions(faction);
                         return true;
                     }
         }
@@ -72,6 +89,7 @@ public class UnitGrid
                     if (target[k, l] == null)
                     {
                         target[k, l] = unit;
+                        RecalcIdlePositions(faction);
                         return true;
                     }
         }
@@ -126,6 +144,41 @@ public class UnitGrid
                 }
             }
         }
-                    
+
+        RecalcIdlePositions(faction);
+    }
+
+    public void RecalcIdlePositions(Faction faction)
+    {
+        if (faction == Faction.Allies)
+        {
+            for (int k = 0; k < Allies.GetLength(0); k++)
+                for (int l = 0; l < Allies.GetLength(1); l++)
+                    if (Allies[k, l] != null)
+                    {
+                        Allies[k, l].Prefab.transform.position = AllyGridPoints[k, l];
+                        Allies[k, l].Prefab.GetComponent<Unit>().IdlePosition = AllyGridPoints[k, l];
+                    }
+        }
+
+        if (faction == Faction.Enemies)
+        { 
+            for (int k = 0; k < Enemies.GetLength(0); k++)
+                for (int l = 0; l < Enemies.GetLength(1); l++)
+                    if (Enemies[k, l] != null)
+                    {
+                        Enemies[k, l].Prefab.transform.position = EnemyGridPoints[k, l];
+                        Enemies[k, l].Prefab.GetComponent<Unit>().IdlePosition = EnemyGridPoints[k, l];
+                    }
+        }
+    }
+
+    public void Clear(Faction faction)
+    {
+        var target = faction == Faction.Allies ? Allies : Enemies;
+
+        for (int k = 0; k < target.GetLength(0); k++)
+            for (int l = 0; l < target.GetLength(1); l++)
+                target[k, l] = null;
     }
 }

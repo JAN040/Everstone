@@ -31,7 +31,7 @@ public static class Helpers
     /// </para>
     /// 
     /// <para>
-    /// If chanceToSucceed is below 0 always returns false
+    /// If chanceToSucceed is below or equal to 0 always returns false
     /// </para>
     /// 
     /// <para>
@@ -40,7 +40,7 @@ public static class Helpers
     /// </summary>
     public static bool DiceRoll(float chanceToSucceed)
     {
-        if (chanceToSucceed < 0)
+        if (chanceToSucceed <= 0)
             return false;
         
         if (chanceToSucceed > 1)

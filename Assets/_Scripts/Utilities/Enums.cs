@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 public enum Faction
 {
     Allies,
-    Enemies
+    Enemies,
 }
 
 [Serializable]
@@ -37,12 +37,6 @@ public enum LocationDifficulty
     Expert = 50
 }
 
-public enum StageType
-{
-    Battle,
-    Chest,
-    Event
-}
 
 public enum EncounterType
 {
@@ -58,7 +52,7 @@ public enum EnemyClass
 {               //  speed       damage      const       special
     Marksman,   //  fast,       high,       low
     Mage,       //  slow,       high,       low         arts
-    Artillery,  //  normal,     V high,     medium      arts, ELITE
+    Artillery,  //  slow,       V high,     medium      arts, ELITE
     Controller, //  slow,       low,        medium      CC, debuffs, team buffs
     Bruiser,    //  normal      normal,     normal,     melee, self-heal, self atk buff 
     Battlemage, //  normal      normal,     normal,     arts, self shield, ELITE
@@ -67,6 +61,7 @@ public enum EnemyClass
     Vanguard,   //  fast,       low,        normal      melee
     Assassin,   //  fast,       high,       low,        melee, invis
     Healer,     //  slow,       low,        low,        heal team
+    Warrior     //  normal,     normal,     normal     
 }
 
 public enum EnemyType
