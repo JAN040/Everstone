@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class AdventureManager : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class AdventureManager : MonoBehaviour
 
     [SerializeField] Image background;
     [SerializeField] bool IsPaused = false;
+    [SerializeField] ScriptableEnemy targetedEnemy = null;
 
     private ScriptableAdventureLocation CurrentLocation;
 
@@ -27,6 +29,16 @@ public class AdventureManager : MonoBehaviour
 
     private UnitGrid UnitGrid = new UnitGrid();
 
+    private ScriptableEnemy TargetedEnemy { 
+        get 
+        {
+            if (targetedEnemy == null)
+                return UnitGrid.GetDefaultTarget(Faction.Enemies) as ScriptableEnemy;
+            
+            return targetedEnemy;
+        } 
+        set => targetedEnemy = value; 
+    }
     #endregion 	VARIABLES
 
 
@@ -39,7 +51,7 @@ public class AdventureManager : MonoBehaviour
         Sprite currLocationSprite = CurrentLocation?.background;
 
         if (currLocationSprite != null)
-           background.sprite = GameManager.Instance?.CurrentLocation?.background;
+            background.sprite = GameManager.Instance?.CurrentLocation?.background;
 
         InitStage(true);
     }
@@ -47,9 +59,9 @@ public class AdventureManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
-	
+
     #endregion 	UNITY METHODS
 
 
@@ -62,10 +74,10 @@ public class AdventureManager : MonoBehaviour
         //Update() still gets called even when timescale = 0
         //use time.unscaledDeltaTime to measure time even when timescale = 0
         Time.timeScale = IsPaused ? 0 : 1;
-        
+
         TogglePausedMenu();
     }
-    
+
     private void TogglePausedMenu()
     {
         if (PauseMenu == null)
@@ -109,7 +121,7 @@ public class AdventureManager : MonoBehaviour
         //notify about stage number (current progress)
     }
 
-    
+
     public void Test_ResetStage()
     {
         ResetEnemies();
@@ -122,7 +134,7 @@ public class AdventureManager : MonoBehaviour
         foreach (var enemy in EnemyUnitsList)
         {
             Destroy(enemy.Prefab);
-            
+
             //enemy.Prefab = null;
         }
         EnemyUnitsList.Clear();
@@ -137,8 +149,7 @@ public class AdventureManager : MonoBehaviour
         foreach (var ally in AlliedUnitsList)
         {
             //create prefab
-            ally.Prefab = Instantiate(UnitPrefab, new Vector2(-20, -20), Quaternion.identity);
-            ally.Prefab.GetComponent<Unit>().Initialize(ally.BaseStats, ally);
+            CreateUnitPrefab(ally);
 
             //place the prefab in the grid
             UnitGrid.AddToFront(Faction.Allies, ally);
@@ -150,8 +161,7 @@ public class AdventureManager : MonoBehaviour
         foreach (var enemy in EnemyUnitsList)
         {
             //create prefab
-            enemy.Prefab = Instantiate(UnitPrefab, new Vector2(-20, -20), Quaternion.identity);
-            enemy.Prefab.GetComponent<Unit>().Initialize(enemy.BaseStats, enemy);
+            CreateUnitPrefab(enemy);
 
             //place the prefab in the grid
             switch (enemy.Class)
@@ -182,6 +192,54 @@ public class AdventureManager : MonoBehaviour
 
         //TODO: load the saved ally positions
         UnitGrid.Restructure(Faction.Enemies);
+    }
+
+    private void CreateUnitPrefab(ScriptableUnitBase unit)
+    {
+        unit.Prefab = Instantiate(UnitPrefab, new Vector2(-20, -20), Quaternion.identity);
+        unit.Prefab.GetComponent<Unit>().Initialize(unit.BaseStats, unit);
+        unit.Prefab.GetComponent<Unit>().OnUnitClicked += SetTargetEnemy;
+        unit.Prefab.GetComponent<Unit>().OnUnitDeath += HandleUnitDeath;
+    }
+
+    public void SetTargetEnemy(ScriptableUnitBase unit)
+    {
+        foreach (var enemy in EnemyUnitsList)
+        {
+            enemy.Prefab.GetComponent<Unit>().IsTargeted = false;
+        }
+
+        unit.Prefab.GetComponent<Unit>().IsTargeted = true;
+
+        targetedEnemy = unit as ScriptableEnemy;
+    }
+
+    private void HandleUnitDeath(ScriptableUnitBase unit)
+    {
+        if (unit == Hero)
+        {
+            //TODO: game over
+            Debug.Log("Hero died. Game over.");
+        }
+
+        if (unit.Faction == Faction.Enemies)
+        {
+            //TODO: handle loot 
+        }
+
+        Destroy(unit.Prefab);
+
+        if (unit.Faction == Faction.Allies)
+            AlliedUnitsList.Remove(unit);
+        else
+        {
+            EnemyUnitsList.Remove(unit as ScriptableEnemy);
+
+            if (TargetedEnemy == unit)
+                TargetedEnemy = null;
+        }
+
+        UnitGrid.Remove(unit);
     }
 
     #endregion Unit Spawning

@@ -12,9 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c98add8d75ad97e449a3ca8cd5073d8e, type: 3}
   m_Name: SO_HeroClass_Mage
   m_EditorClassIdentifier: 
+  Name: 
   Faction: 0
+  Type: 0
   MenuSprite: {fileID: 0}
+  FaceDirection: 1
   Description: 
+  Prefab: {fileID: 0}
   _baseStats:
     _healthPoints: 50
     _energy: 30

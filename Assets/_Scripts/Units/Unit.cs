@@ -8,7 +8,10 @@ using UnityEngine.UI;
 /// This will share logic for any unit on the field. Could be friend or foe, controlled or not.
 /// Things like taking damage, dying, animation triggers etc
 /// </summary>
-public class Unit : MonoBehaviour {
+public class Unit : MonoBehaviour
+{
+
+    #region VARIABLES
 
     #region UI References
 
@@ -17,7 +20,7 @@ public class Unit : MonoBehaviour {
     [SerializeField] Image Image_TargetIcon;
     [SerializeField] Image Image_HealthBar;
     [SerializeField] Image Image_EnergyBar;
-    
+
     [Space]
     [SerializeField] RectTransform Transform_Frame;
     [SerializeField] RectTransform Transform_Portrait;
@@ -29,6 +32,28 @@ public class Unit : MonoBehaviour {
     [SerializeField] Sprite Sprite_Frame_Boss;
 
     #endregion UI References
+
+    public CharacterStats Stats { get; private set; }
+
+    private ScriptableUnitBase UnitDataRef { get; set; }
+
+    /// <summary>
+    /// Holds the units idle position, dictated by the grid its in.
+    /// </summary>
+    public Vector2 IdlePosition;
+    
+    private bool isTargeted = false;
+    public bool IsTargeted
+    {
+        get => isTargeted;
+        set
+        {
+            isTargeted = value;
+            Image_TargetIcon.enabled = value;
+        }
+    }
+
+    #endregion VARIABLES
 
     #region UNITY METHODS
 
@@ -45,18 +70,8 @@ public class Unit : MonoBehaviour {
 
     #endregion UNITY METHODS
 
-
-    public event Action OnUnitClicked;
-
-
-    public CharacterStats Stats { get; private set; }
-
-    private ScriptableUnitBase UnitDataRef { get; set; }
-
-    /// <summary>
-    /// Holds the units idle position, dictated by the grid its in.
-    /// </summary>
-    public Vector2 IdlePosition;
+    public event Action<ScriptableUnitBase> OnUnitClicked;
+    public event Action<ScriptableUnitBase> OnUnitDeath;
 
 
     public void Initialize(CharacterStats stats, ScriptableUnitBase unitData)
@@ -66,7 +81,8 @@ public class Unit : MonoBehaviour {
         SetUnitData(unitData);
 
         //no-one is targeted at the beginning
-        Image_TargetIcon.enabled = false;
+        IsTargeted = false;
+
         Image_HealthBar.fillAmount = Stats.GetHpNormalized();
         Image_EnergyBar.fillAmount = Stats.GetEnergyNormalized();
     }
@@ -115,8 +131,11 @@ public class Unit : MonoBehaviour {
 
     public void UnitClicked()
     {
-        Debug.Log("Clicked unit");
-        OnUnitClicked?.Invoke();
+        Debug.Log($"Clicked unit {UnitDataRef.Name}");
+        this.TakeDamage(new Damage(10));
+        IsTargeted = true;
+
+        OnUnitClicked?.Invoke(UnitDataRef);
     }
 
     public virtual void SetStats(CharacterStats stats)
@@ -170,8 +189,8 @@ public class Unit : MonoBehaviour {
 
     public virtual void ReduceHPByAmount(float amount)
     {
+        Debug.Log($"Unit {this.UnitDataRef.Name} took {amount} damage.");
         Stats.HealthPoints -= amount;
-        Debug.Log($"Unit {this.name} took {amount} damage.");
     }
 
     /// <summary>
@@ -179,6 +198,8 @@ public class Unit : MonoBehaviour {
     /// </summary>
     private void OnUnitHPChanged(float newAmount, float oldAmount)
     {
+        Image_HealthBar.fillAmount = Stats.GetHpNormalized();
+
         if (newAmount <= 0)
         {
             Die();
@@ -190,12 +211,11 @@ public class Unit : MonoBehaviour {
 
     protected virtual void Die()
     {
-        Debug.Log($"Unit {this.name} has died.");
-        
+        Debug.Log($"Unit {UnitDataRef.Name} has died.");
+
         //TODO: animate death
 
-        //destroy object
-
-        //notify Combat manager
+        //notify Adventure manager
+        OnUnitDeath?.Invoke(UnitDataRef);
     }
 }

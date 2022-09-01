@@ -31,6 +31,12 @@ public class ScriptableHero : ScriptableUnitBase
     private LevelSystem levelSystem;
     public LevelSystem LevelSystem { get => levelSystem; private set => levelSystem = value; }
 
+    public ScriptableHero()
+    {
+        //for some reason my hero portraits all face right, might change in the future
+        this.FaceDirection = FacingDirection.Right;
+    }
+
     public void SetLevelSystem(LevelSystem levelSystem)
     {
         LevelSystem = levelSystem;
