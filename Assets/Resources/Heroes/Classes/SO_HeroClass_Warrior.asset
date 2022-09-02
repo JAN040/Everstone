@@ -81,7 +81,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     speed:
-      baseValue: 5
+      baseValue: 9
       type: 10
       canBeNegative: 0
       growthParameters:

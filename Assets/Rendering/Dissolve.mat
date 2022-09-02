@@ -42,9 +42,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _BorderWidth: 0.1
     - _Fade: 1
+    - _NoiseScale: 50
     - _Scale: 50
-    - _Step: 0.1
+    - _Step: 0.18
     m_Colors:
     - _BorderColor: {r: 13.348745, g: 0.726237, b: 30.792454, a: 1}
   m_BuildTextureStacks: []

@@ -86,9 +86,9 @@ public class AdventureManager : MonoBehaviour
         PauseMenu.SetActive(IsPaused);
     }
 
-    private void InitStage(bool IsFirstInit)
+    private void InitStage(bool initAllies)
     {
-        if (IsFirstInit)
+        if (initAllies)
         {   //Handle allies (and hero)
             AlliedUnitsList = new List<ScriptableUnitBase>();
             Hero = GameManager.Instance.PlayerManager.PlayerHero;
@@ -124,9 +124,20 @@ public class AdventureManager : MonoBehaviour
 
     public void Test_ResetStage()
     {
+        ResetAllies();
         ResetEnemies();
 
-        InitStage(false);
+        InitStage(true);
+    }
+
+    private void ResetAllies()
+    {
+        foreach (var ally in AlliedUnitsList)
+        {
+            Destroy(ally.Prefab);
+        }
+        AlliedUnitsList.Clear();
+        UnitGrid.Clear(Faction.Allies);
     }
 
     private void ResetEnemies()
@@ -134,8 +145,6 @@ public class AdventureManager : MonoBehaviour
         foreach (var enemy in EnemyUnitsList)
         {
             Destroy(enemy.Prefab);
-
-            //enemy.Prefab = null;
         }
         EnemyUnitsList.Clear();
         UnitGrid.Clear(Faction.Enemies);
@@ -151,8 +160,8 @@ public class AdventureManager : MonoBehaviour
             //create prefab
             CreateUnitPrefab(ally);
 
-            //place the prefab in the grid
-            UnitGrid.AddToFront(Faction.Allies, ally);
+            //place the prefab in the grid (allies are teleported)
+            UnitGrid.AddToFront(Faction.Allies, ally, true);
         }
     }
 
@@ -160,6 +169,8 @@ public class AdventureManager : MonoBehaviour
     {
         foreach (var enemy in EnemyUnitsList)
         {
+            enemy.SetBaseStats(CurrentLocation.difficulty, GameManager.Instance.GameDifficulty);
+            
             //create prefab
             CreateUnitPrefab(enemy);
 
@@ -192,13 +203,15 @@ public class AdventureManager : MonoBehaviour
 
         //TODO: load the saved ally positions
         UnitGrid.Restructure(Faction.Enemies);
+        UnitGrid.SetupEnemyEntrance();
     }
 
     private void CreateUnitPrefab(ScriptableUnitBase unit)
     {
-        unit.Prefab = Instantiate(UnitPrefab, new Vector2(-20, -20), Quaternion.identity);
-        unit.Prefab.GetComponent<Unit>().Initialize(unit.BaseStats, unit);
-        unit.Prefab.GetComponent<Unit>().OnUnitClicked += SetTargetEnemy;
+        var spawnX = unit.Faction == Faction.Enemies ? 10 : -10; 
+        unit.Prefab = Instantiate(UnitPrefab, new Vector2(spawnX, -0.25f), Quaternion.identity);
+        unit.Prefab.GetComponent<Unit>().Initialize(unit.BaseStats, unit, UnitGrid, Hero);
+        unit.Prefab.GetComponent<Unit>().OnSetTarget += SetTargetEnemy;
         unit.Prefab.GetComponent<Unit>().OnUnitDeath += HandleUnitDeath;
     }
 
@@ -209,9 +222,16 @@ public class AdventureManager : MonoBehaviour
             enemy.Prefab.GetComponent<Unit>().IsTargeted = false;
         }
 
-        unit.Prefab.GetComponent<Unit>().IsTargeted = true;
+        if (unit == null)
+        {
+            targetedEnemy = null;
+        }
+        else
+        {
+            targetedEnemy = unit as ScriptableEnemy;
 
-        targetedEnemy = unit as ScriptableEnemy;
+            unit.Prefab.GetComponent<Unit>().IsTargeted = true;
+        }
     }
 
     private void HandleUnitDeath(ScriptableUnitBase unit)

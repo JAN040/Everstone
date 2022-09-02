@@ -32,7 +32,7 @@ public class CharacterStats
         }
     }
 
-    [SerializeField] private float _energy;
+    [SerializeField] private float _energy = 0;
     public float Energy
     {
         get
@@ -165,7 +165,7 @@ public class CharacterStats
         MaxHP = new Stat(maxHP, StatType.MaxHP, false);
         _healthPoints = maxHP;
         MaxEnergy = new Stat(maxEnergy, StatType.MaxEnergy, false);
-        _energy = maxEnergy;
+        _energy = 0;
         EnergyRecovery = new Stat(energyRecovery, StatType.EnergyRecovery, true);
         Speed = new Stat(speed, StatType.Speed, false);
         DodgeChance = new Stat(dodgeChance, StatType.DodgeChance, false);

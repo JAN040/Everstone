@@ -21,7 +21,7 @@ MonoBehaviour:
   Prefab: {fileID: 0}
   _baseStats:
     _healthPoints: 50
-    _energy: 30
+    _energy: 0
     _mana: 0
     maxPets: 0
     physicalDamage:
@@ -65,7 +65,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     maxEnergy:
-      baseValue: 30
+      baseValue: 100
       type: 5
       canBeNegative: 0
       growthParameters:

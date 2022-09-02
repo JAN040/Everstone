@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfee79429a23a6845a15e0205ee8c742, type: 3}
   m_Name: SO_Enemy_Archer
   m_EditorClassIdentifier: 
+  Name: Archer
   Faction: 1
   Type: 0
   MenuSprite: {fileID: 21300000, guid: ffab6fb828ff11944b824e3b2a7e99cc, type: 3}
@@ -20,7 +21,7 @@ MonoBehaviour:
   Prefab: {fileID: 0}
   _baseStats:
     _healthPoints: 50
-    _energy: 30
+    _energy: 0
     _mana: 0
     maxPets: 0
     physicalDamage:
@@ -64,7 +65,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     maxEnergy:
-      baseValue: 30
+      baseValue: 100
       type: 5
       canBeNegative: 0
       growthParameters:
@@ -80,7 +81,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     speed:
-      baseValue: 5
+      baseValue: 7
       type: 10
       canBeNegative: 0
       growthParameters:
@@ -143,5 +144,4 @@ MonoBehaviour:
         AdditionMultiplier: 0
         PowerMultiplier: 0
         DivisionMultiplier: 0
-  Name: Archer
   Class: 0

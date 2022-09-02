@@ -505,9 +505,17 @@ PrefabInstance:
       propertyPath: m_Material
       value: 
       objectReference: {fileID: 2100000, guid: 53bb19500aee5f84c938670d4c670a99, type: 2}
+    - target: {fileID: 6637542071462078023, guid: 3bb5eab35f5c3d34eb841bbce7be4fb1, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6637542071658122928, guid: 3bb5eab35f5c3d34eb841bbce7be4fb1, type: 3}
       propertyPath: m_Name
-      value: UnitPrefab
+      value: TestUnitPrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 6637542071658122928, guid: 3bb5eab35f5c3d34eb841bbce7be4fb1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6637542071658122930, guid: 3bb5eab35f5c3d34eb841bbce7be4fb1, type: 3}
       propertyPath: m_RootOrder

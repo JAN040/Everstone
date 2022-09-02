@@ -1029,10 +1029,10 @@
     "m_Guid": {
         "m_GuidSerialized": "e2d47ca7-35bf-4bd4-a95d-447f056c985f"
     },
-    "m_Name": "Step",
+    "m_Name": "BorderWidth",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "Step",
-    "m_DefaultReferenceName": "_Step",
+    "m_RefNameGeneratedByDisplayName": "BorderWidth",
+    "m_DefaultReferenceName": "_BorderWidth",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
@@ -1045,7 +1045,7 @@
     "m_FloatType": 1,
     "m_RangeValues": {
         "x": 0.0,
-        "y": 1.0
+        "y": 0.1899999976158142
     }
 }
 
@@ -1467,7 +1467,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "8d96e89de077412691c112ffa8334f4b",
     "m_Id": 0,
-    "m_DisplayName": "Scale",
+    "m_DisplayName": "NoiseScale",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
@@ -1728,7 +1728,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "a3734b7cdcd94dbcbcbf9eb5106fcd2a",
     "m_Id": 0,
-    "m_DisplayName": "Step",
+    "m_DisplayName": "BorderWidth",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
@@ -2141,10 +2141,10 @@
     "m_Guid": {
         "m_GuidSerialized": "8b153904-addb-4f65-84fd-323e0dff9c52"
     },
-    "m_Name": "Scale",
+    "m_Name": "NoiseScale",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "Scale",
-    "m_DefaultReferenceName": "_Scale",
+    "m_RefNameGeneratedByDisplayName": "NoiseScale",
+    "m_DefaultReferenceName": "_NoiseScale",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
@@ -2237,10 +2237,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -993.60009765625,
-            "y": 534.7500610351563,
-            "width": 0.0,
-            "height": 0.0
+            "x": -1184.0,
+            "y": 518.0,
+            "width": 134.0,
+            "height": 34.0
         }
     },
     "m_Slots": [
@@ -2279,7 +2279,7 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
-    "m_Value": 0.41999998688697817,
+    "m_Value": 1.0,
     "m_FloatType": 1,
     "m_RangeValues": {
         "x": 0.0,

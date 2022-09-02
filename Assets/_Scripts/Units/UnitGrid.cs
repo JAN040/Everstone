@@ -40,7 +40,7 @@ public class UnitGrid
     ///     it doesnt add the unit and returns false.
     /// </summary>
     /// <returns>True on sucessful add</returns>
-    public bool AddToFront(Faction faction, ScriptableUnitBase unit)
+    public bool AddToFront(Faction faction, ScriptableUnitBase unit, bool teleport = false)
     {
         var target = faction == Faction.Allies ? Allies : Enemies;
 
@@ -52,7 +52,7 @@ public class UnitGrid
                     if (target[k, l] == null)
                     {
                         target[k, l] = unit;
-                        RecalcIdlePositions(faction);
+                        RecalcIdlePositions(faction, teleport);
 
                         return true;
                     }
@@ -64,7 +64,7 @@ public class UnitGrid
                     if (target[k, l] == null)
                     {
                         target[k, l] = unit;
-                        RecalcIdlePositions(faction);
+                        RecalcIdlePositions(faction, teleport);
 
                         return true;
                     }
@@ -74,7 +74,7 @@ public class UnitGrid
         return false;
     }
 
-    public bool AddToBack(Faction faction, ScriptableUnitBase unit)
+    public bool AddToBack(Faction faction, ScriptableUnitBase unit, bool teleport = false)
     {
         var target = faction == Faction.Allies ? Allies : Enemies;
 
@@ -86,7 +86,7 @@ public class UnitGrid
                     if (target[k, l] == null)
                     {
                         target[k, l] = unit;
-                        RecalcIdlePositions(faction);
+                        RecalcIdlePositions(faction, teleport);
                         return true;
                     }
         }
@@ -97,7 +97,7 @@ public class UnitGrid
                     if (target[k, l] == null)
                     {
                         target[k, l] = unit;
-                        RecalcIdlePositions(faction);
+                        RecalcIdlePositions(faction, teleport);
                         return true;
                     }
         }
@@ -158,13 +158,15 @@ public class UnitGrid
                 }
         } 
 
-        RecalcIdlePositions(faction);
+        RecalcIdlePositions(faction, false);
     }
+
+   
 
     /// <summary>
     /// Reassigns unit prefab Idle positions based on their grid position
     /// </summary>
-    public void RecalcIdlePositions(Faction faction)
+    public void RecalcIdlePositions(Faction faction, bool teleport = false)
     {
         Vector2 assignedPosition;
 
@@ -181,7 +183,7 @@ public class UnitGrid
                             l == 1 && Allies[k, 0] == null)
                             assignedPosition.y = y1_5;  //assign him the "middle" row
 
-                        AssignPosition(Allies[k, l], assignedPosition);
+                        AssignPosition(Allies[k, l], assignedPosition, teleport);
                     }
         }
 
@@ -198,15 +200,17 @@ public class UnitGrid
                             l == 1 && Enemies[k, 0] == null)
                             assignedPosition.y = y1_5;  //assign him the "middle" row
 
-                        AssignPosition(Enemies[k, l], assignedPosition);
+                        AssignPosition(Enemies[k, l], assignedPosition, teleport);
                     }
         }
     }
 
-    private void AssignPosition(ScriptableUnitBase unit, Vector2 position)
+    private void AssignPosition(ScriptableUnitBase unit, Vector2 position, bool teleport = false)
     {
-        unit.Prefab.transform.position = position;
         unit.Prefab.GetComponent<Unit>().IdlePosition = position;
+        
+        if (teleport)
+            unit.Prefab.transform.position = position;
     }
 
     public void Clear(Faction faction)
@@ -226,8 +230,8 @@ public class UnitGrid
 
         if (faction == Faction.Allies)
         {
-            firstRowUp   = target[target.GetLength(0), 0];
-            firstRowDown = target[target.GetLength(0), 1];
+            firstRowUp   = target[target.GetLength(0) - 1, 0];
+            firstRowDown = target[target.GetLength(0) - 1, 1];
         }
         else
         {
@@ -263,5 +267,22 @@ public class UnitGrid
                     target[k, l] = null;
 
         Restructure(unit.Faction);
+    }
+
+    //sets enemy positions in a grid-like manner, for a smoother entrance
+    //  (looks a bit weird if they all spawn at the same position because of colliders)
+    public void SetupEnemyEntrance()
+    {
+        var target = Enemies;
+        float offsetAmnt = 8f;
+
+        for (int k = 0; k < target.GetLength(0); k++)
+            for (int l = 0; l < target.GetLength(1); l++)
+                if (target[k, l] != null)
+                {
+                    var idlePos = target[k, l].Prefab.GetComponent<Unit>().IdlePosition;
+                    target[k, l].Prefab.transform.position = 
+                        new Vector2(idlePos.x + offsetAmnt, idlePos.y);
+                }
     }
 }

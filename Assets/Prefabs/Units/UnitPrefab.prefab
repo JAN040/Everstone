@@ -528,7 +528,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
+  m_LinearDrag: 2
   m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
@@ -548,8 +548,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6a5f23d9a5fb9e41afb0a3758ddfd4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LerpDelta: 0.15
+  MovementSpeed: 0.15
+  BasicAttackForce: 40
+  Material_Dissolve: {fileID: 2100000, guid: 53bb19500aee5f84c938670d4c670a99, type: 2}
+  RigidBody: {fileID: 6637542071658122933}
+  Collider: {fileID: 6637542071658122932}
+  Button: {fileID: 6637542072274994522}
   Image_Frame: {fileID: 6637542072375983109}
   Image_Portrait: {fileID: 4698574776425522977}
+  Image_PortraitBackground: {fileID: 6533383868530369443}
   Image_TargetIcon: {fileID: 6637542072123354600}
   Image_HealthBar: {fileID: 6637542071833872389}
   Image_EnergyBar: {fileID: 6637542070667964856}
@@ -558,6 +566,7 @@ MonoBehaviour:
   Sprite_Frame_Normal: {fileID: 21300000, guid: 9cd1fe586dd5bf94b83e11d4e2801357, type: 3}
   Sprite_Frame_Elite: {fileID: 21300000, guid: 8f808217b55a00d47a98eec3988098b2, type: 3}
   Sprite_Frame_Boss: {fileID: 21300000, guid: 0bcd60a14376e6a469386c1410e781b4, type: 3}
+  Material_Dissolve_Instance: {fileID: 0}
   IdlePosition: {x: 0, y: 0}
 --- !u!1 &6637542071833872387
 GameObject:
