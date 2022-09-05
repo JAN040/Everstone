@@ -20,12 +20,12 @@ MonoBehaviour:
   Description: 
   Prefab: {fileID: 0}
   _baseStats:
-    _healthPoints: 50
-    _energy: 30
+    _healthPoints: 0
+    _energy: 0
     _mana: 0
     maxPets: 0
     physicalDamage:
-      baseValue: 0
+      baseValue: 10
       type: 0
       canBeNegative: 0
       growthParameters:
@@ -33,7 +33,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     armor:
-      baseValue: 0
+      baseValue: 6
       type: 1
       canBeNegative: 0
       growthParameters:
@@ -49,7 +49,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     artsResist:
-      baseValue: 0
+      baseValue: 5
       type: 3
       canBeNegative: 1
       growthParameters:
@@ -57,7 +57,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     maxHP:
-      baseValue: 50
+      baseValue: 130
       type: 4
       canBeNegative: 0
       growthParameters:
@@ -65,7 +65,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     maxEnergy:
-      baseValue: 30
+      baseValue: 50
       type: 5
       canBeNegative: 0
       growthParameters:
@@ -113,7 +113,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     maxMana:
-      baseValue: 0
+      baseValue: 2
       type: 7
       canBeNegative: 0
       growthParameters:
@@ -129,7 +129,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     blockChance:
-      baseValue: 0
+      baseValue: 10
       type: 16
       canBeNegative: 0
       growthParameters:
@@ -165,10 +165,10 @@ MonoBehaviour:
     - weaponType: 2
       points: 0
     - weaponType: 1
-      points: 0
+      points: 1
     - weaponType: 3
       points: 0
     - weaponType: 5
-      points: 0
+      points: 1
     - weaponType: 4
       points: 0

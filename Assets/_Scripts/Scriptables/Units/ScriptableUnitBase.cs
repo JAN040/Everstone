@@ -34,7 +34,7 @@ public abstract class ScriptableUnitBase : ScriptableObject {
     /// We can pass this struct to the spawned prefab unit and alter them depending on conditions.
     /// </summary>
     [SerializeField] protected CharacterStats _baseStats 
-        = new CharacterStats(0,0,0,0,50,30,5,5,10);
+        = new CharacterStats(0,0,50,0,0,100,10,2);
     public CharacterStats BaseStats => _baseStats;
 
 }

@@ -15,7 +15,7 @@ public class ScriptableEnemy : ScriptableUnitBase
     /// <summary>
     /// defines stat distributions and available abilities
     /// </summary>
-    public EnemyClass Class;
+    public UnitClass Class;
 
     
 
@@ -26,9 +26,9 @@ public class ScriptableEnemy : ScriptableUnitBase
         this.Faction = Faction.Enemies;
     }
 
-    public void SetBaseStats(LocationDifficulty locDiff, Difficulty gameDiff)
+    public void SetBaseStats(Difficulty gameDiff, ScriptableAdventureLocation locData)
     {
-        _baseStats = UnitData.GetBaseStats(Class, Type, locDiff, gameDiff);
+        _baseStats = UnitData.GetBaseStats(Class, Type, gameDiff, locData);
     }
 
 

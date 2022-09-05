@@ -48,11 +48,11 @@ public enum EncounterType
 }
 
 [Serializable]
-public enum EnemyClass
+public enum UnitClass
 {               //  speed       damage      const       special
     Marksman,   //  fast,       high,       low
     Mage,       //  slow,       high,       low         arts
-    Artillery,  //  slow,       V high,     medium      arts, ELITE
+    Artillery,  //  slow,       V high,     medium      AOE, ELITE
     Controller, //  slow,       low,        medium      CC, debuffs, team buffs
     Bruiser,    //  normal      normal,     normal,     melee, self-heal, self atk buff 
     Battlemage, //  normal      normal,     normal,     arts, self shield, ELITE
@@ -62,6 +62,26 @@ public enum EnemyClass
     Assassin,   //  fast,       high,       low,        melee, invis
     Healer,     //  slow,       low,        low,        heal team
     Warrior     //  normal,     normal,     normal     
+}
+
+public enum StatScaling
+{
+    VeryLow,
+    Low,
+    Normal,
+    High,
+    VeryHigh
+}
+
+public enum SpecialSkill
+{
+    CC,             //stuns the enemy (could be freeze or someth when/if i add elements)
+    OpponentDebuff, OpponentTeamDebuff,
+    SelfBuff,       TeamBuff,
+    SelfHeal,       TeamHeal,
+    AoeAtk,         //hits the unit & the ones behind, in front, above and below the target
+    PiercingAtk1,   //hits the unit & one unit behind
+    PiercingAtk2    //hits the unit & all the ones behind
 }
 
 public enum EnemyType

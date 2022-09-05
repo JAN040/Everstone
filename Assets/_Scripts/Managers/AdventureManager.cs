@@ -169,7 +169,7 @@ public class AdventureManager : MonoBehaviour
     {
         foreach (var enemy in EnemyUnitsList)
         {
-            enemy.SetBaseStats(CurrentLocation.difficulty, GameManager.Instance.GameDifficulty);
+            enemy.SetBaseStats(GameManager.Instance.GameDifficulty, CurrentLocation);
             
             //create prefab
             CreateUnitPrefab(enemy);
@@ -177,21 +177,21 @@ public class AdventureManager : MonoBehaviour
             //place the prefab in the grid
             switch (enemy.Class)
             {
-                case EnemyClass.Warrior:
-                case EnemyClass.Bruiser:
-                case EnemyClass.Battlemage:
-                case EnemyClass.Tank:
-                case EnemyClass.Titan:
-                case EnemyClass.Vanguard:
+                case UnitClass.Warrior:
+                case UnitClass.Bruiser:
+                case UnitClass.Battlemage:
+                case UnitClass.Tank:
+                case UnitClass.Titan:
+                case UnitClass.Vanguard:
                     UnitGrid.AddToFront(Faction.Enemies, enemy);
                     break;
 
-                case EnemyClass.Marksman:
-                case EnemyClass.Mage:
-                case EnemyClass.Artillery:
-                case EnemyClass.Controller:
-                case EnemyClass.Healer:
-                case EnemyClass.Assassin:
+                case UnitClass.Marksman:
+                case UnitClass.Mage:
+                case UnitClass.Artillery:
+                case UnitClass.Controller:
+                case UnitClass.Healer:
+                case UnitClass.Assassin:
                     UnitGrid.AddToBack(Faction.Enemies, enemy);
                     break;
 

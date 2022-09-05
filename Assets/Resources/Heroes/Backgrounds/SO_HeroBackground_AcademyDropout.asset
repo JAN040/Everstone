@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SO_HeroBackground_AcademyDropout
   m_EditorClassIdentifier: 
   backgroundName: Acadeny Dropout
-  startingCurrencyAmount: 0
+  startingCurrencyAmount: 20
   pointAllocationData:
     BaseSkillPointAllocations:
     - skill: 3
@@ -40,4 +40,4 @@ MonoBehaviour:
     - weaponType: 5
       points: 0
     - weaponType: 4
-      points: 0
+      points: 2

@@ -151,12 +151,11 @@ public class CharacterStats
     #endregion PLAYER STATS
 
 
-    public CharacterStats(float physicalDamage, float defense, float artsDamage, float artsResist, float maxHP,
-                          float maxEnergy, float energyRecovery, float speed, float dodgeChance,
-                          float healEfficiency = 0,
+    public CharacterStats(float physicalDamage, float artsDamage, float maxHP, float defense, float artsResist,
+                          float maxEnergy, float speed, float dodgeChance,
                           float baseAccuracy = 0,
-                          float maxMana = 0, float manaRecovery = 0, float cooldownReduction = 0,
-                          float blockChance = 0)
+                          float maxMana = 0, float manaRecovery = 0, float energyRecovery = 0, float cooldownReduction = 0,
+                          float blockChance = 0, float healEfficiency = 0)
     {
         PhysicalDamage = new Stat(physicalDamage, StatType.PhysicalDamage, false);
         Armor = new Stat(defense, StatType.Armor, false);
