@@ -28,7 +28,7 @@ public class ScriptableEnemy : ScriptableUnitBase
 
     public void SetBaseStats(Difficulty gameDiff, ScriptableAdventureLocation locData)
     {
-        _baseStats = UnitData.GetBaseStats(Class, Type, gameDiff, locData);
+        _baseStats = GameManager.Instance.UnitData.GetBaseStats(Class, Type, gameDiff, locData);
     }
 
 

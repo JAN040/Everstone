@@ -527,8 +527,8 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 2
+  m_Mass: 10
+  m_LinearDrag: 0.01
   m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
@@ -549,8 +549,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LerpDelta: 0.15
-  MovementSpeed: 0.15
-  BasicAttackForce: 40
+  MovementSpeed_Base: 0.15
+  BasicAttackForce_Base: 50
   Material_Dissolve: {fileID: 2100000, guid: 53bb19500aee5f84c938670d4c670a99, type: 2}
   RigidBody: {fileID: 6637542071658122933}
   Collider: {fileID: 6637542071658122932}
@@ -567,7 +567,134 @@ MonoBehaviour:
   Sprite_Frame_Elite: {fileID: 21300000, guid: 8f808217b55a00d47a98eec3988098b2, type: 3}
   Sprite_Frame_Boss: {fileID: 21300000, guid: 0bcd60a14376e6a469386c1410e781b4, type: 3}
   Material_Dissolve_Instance: {fileID: 0}
+  stats:
+    _healthPoints: 0
+    _energy: 0
+    _mana: 0
+    maxPets: 0
+    physicalDamage:
+      baseValue: 0
+      type: 0
+      canBeNegative: 0
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+    armor:
+      baseValue: 0
+      type: 0
+      canBeNegative: 0
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+    artsDamage:
+      baseValue: 0
+      type: 0
+      canBeNegative: 0
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+    artsResist:
+      baseValue: 0
+      type: 0
+      canBeNegative: 0
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+    maxHP:
+      baseValue: 0
+      type: 0
+      canBeNegative: 0
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+    maxEnergy:
+      baseValue: 0
+      type: 0
+      canBeNegative: 0
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+    energyRecovery:
+      baseValue: 0
+      type: 0
+      canBeNegative: 0
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+    speed:
+      baseValue: 0
+      type: 0
+      canBeNegative: 0
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+    dodgeChance:
+      baseValue: 0
+      type: 0
+      canBeNegative: 0
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+    healEfficiency:
+      baseValue: 0
+      type: 0
+      canBeNegative: 0
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+    baseAccuracy:
+      baseValue: 0
+      type: 0
+      canBeNegative: 0
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+    maxMana:
+      baseValue: 0
+      type: 0
+      canBeNegative: 0
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+    manaRecovery:
+      baseValue: 0
+      type: 0
+      canBeNegative: 0
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+    blockChance:
+      baseValue: 0
+      type: 0
+      canBeNegative: 0
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+    cooldownReduction:
+      baseValue: 0
+      type: 0
+      canBeNegative: 0
+      growthParameters:
+        AdditionMultiplier: 0
+        PowerMultiplier: 0
+        DivisionMultiplier: 0
+  UnitDataRef: {fileID: 0}
   IdlePosition: {x: 0, y: 0}
+  IsAttacking: 0
 --- !u!1 &6637542071833872387
 GameObject:
   m_ObjectHideFlags: 0

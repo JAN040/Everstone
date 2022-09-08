@@ -208,11 +208,26 @@ public class AdventureManager : MonoBehaviour
 
     private void CreateUnitPrefab(ScriptableUnitBase unit)
     {
-        var spawnX = unit.Faction == Faction.Enemies ? 10 : -10; 
+        float spawnX;
+        UserLayers layer;
+
+        if (unit.Faction == Faction.Enemies)
+        {
+            spawnX = 10;
+            layer = UserLayers.Enemies_Layer;
+        }
+        else
+        {
+            spawnX = -10;
+            layer = UserLayers.Allies_Layer;
+        }
+
         unit.Prefab = Instantiate(UnitPrefab, new Vector2(spawnX, -0.25f), Quaternion.identity);
+
         unit.Prefab.GetComponent<Unit>().Initialize(unit.BaseStats, unit, UnitGrid, Hero);
         unit.Prefab.GetComponent<Unit>().OnSetTarget += SetTargetEnemy;
         unit.Prefab.GetComponent<Unit>().OnUnitDeath += HandleUnitDeath;
+        unit.Prefab.layer = LayerMask.NameToLayer(layer.ToString());
     }
 
     public void SetTargetEnemy(ScriptableUnitBase unit)

@@ -16,8 +16,8 @@ public class Unit : MonoBehaviour
     [Header("Parameters")]
 
     [SerializeField] float LerpDelta;
-    [SerializeField] float MovementSpeed;
-    [SerializeField] float BasicAttackForce;
+    [SerializeField] float MovementSpeed_Base;
+    [SerializeField] float BasicAttackForce_Base;
     [SerializeField] Material Material_Dissolve;
 
     #region UI References
@@ -145,9 +145,26 @@ public class Unit : MonoBehaviour
         }
     }
 
-    private bool IsAttacking = false;
+    [SerializeField] bool IsAttacking = false;
 
     private ScriptableUnitBase TargetOpponent;
+
+    private bool IsTargetOpponentValid {
+        get
+        {
+            return TargetOpponent != null &&
+                   TargetOpponent.Prefab != null &&
+                 ! TargetOpponent.Prefab.GetComponent<Unit>().IsDead; 
+        }
+    }
+
+    private float BasicAttackForce { 
+        get { return BasicAttackForce_Base * GetMineToHeroSpeedRatio(); }
+    }
+
+    private float MovementSpeed { 
+        get { return MovementSpeed_Base * GetMineToHeroSpeedRatio(); }
+    }
 
     #endregion VARIABLES
 
@@ -157,6 +174,12 @@ public class Unit : MonoBehaviour
     {
         Material_Dissolve_Instance = new Material(Material_Dissolve);
         SetDissolveMaterial(Material_Dissolve_Instance);
+    }
+
+    private void OnDestroy()
+    {
+        Stats.OnHealthPointsChanged -= OnUnitHPChanged;
+        Stats.OnEnergyChanged -= OnUnitEnergyChanged;
     }
 
     private void Update()
@@ -175,8 +198,6 @@ public class Unit : MonoBehaviour
             {
                 //auto attack
                 BasicAttack();
-
-                Stats.Energy = 0;
             }
         }
     }
@@ -189,6 +210,12 @@ public class Unit : MonoBehaviour
 
         if (IsAttacking)
         {
+            if (!IsTargetOpponentValid)
+            {
+                this.StopAttacking(true);
+                return;
+            }
+
             Vector3 targetPos = TargetOpponent.Prefab.transform.position;
             Vector3 f = targetPos - transform.position;
 
@@ -204,13 +231,33 @@ public class Unit : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        Stats.OnHealthPointsChanged -= OnUnitHPChanged;
-        Stats.OnEnergyChanged -= OnUnitEnergyChanged;
+        var enemyUnitScript = collision.gameObject?.GetComponent<Unit>();
+
+        //same faction just-in-case check
+        if (enemyUnitScript.UnitDataRef.Faction == this.UnitDataRef.Faction) //shouldnt theoretically happen if layers are set correctly
+        {
+            Debug.LogError($"{UnitDataRef.Name} Collided with {enemyUnitScript.UnitDataRef.Name} but they are of the same faction!");
+            return;
+        }
+
+        //if we collided with another unit and we are attacking, make the collided unit take damage
+        if (this.IsAttacking && enemyUnitScript != null && !enemyUnitScript.IsDead)
+        {
+            var damage = new Damage(Stats.PhysicalDamage.GetValue(), Stats.ArtsDamage.GetValue());
+            enemyUnitScript.TakeDamage(damage);
+
+            //stop attacking
+            this.StopAttacking();
+        }
+
+        StabiliseAfterHit();
     }
 
+
     #endregion UNITY METHODS
+
 
     public event Action<ScriptableUnitBase> OnSetTarget;
     public event Action<ScriptableUnitBase> OnUnitDeath;
@@ -290,10 +337,10 @@ public class Unit : MonoBehaviour
     public virtual void SetStats(CharacterStats stats)
     {
         Stats = stats;
+        Stats.HealthPoints = Stats.MaxHP.GetValue();
         Stats.OnHealthPointsChanged += OnUnitHPChanged;
         Stats.OnEnergyChanged += OnUnitEnergyChanged;
     }
-
 
 
     public virtual void TakeDamage(Damage damage)
@@ -369,7 +416,7 @@ public class Unit : MonoBehaviour
     protected virtual void Die()
     {
         this.IsDead = true;
-        //TODO reset targeted enemy in the manager
+        RemoveVelocity();
 
         Debug.Log($"Unit {UnitDataRef?.Name} has died.");
 
@@ -414,25 +461,70 @@ public class Unit : MonoBehaviour
 
     private float GetEnergyRecovery()
     {
+        float speedMultiplier = GameManager.Instance.UnitData.SpeedRatioMultiplier;
+        var ratio = GetMineToHeroSpeedRatio();
+
+        return speedMultiplier * ratio * Time.deltaTime;
+    }
+
+    private float GetMineToHeroSpeedRatio()
+    {
+        if (this.UnitDataRef == HeroRef)
+            return 1;
+
         float MAX_SPEED_RATIO = 10f;
         float MIN_SPEED_RATIO = 0.1f;
 
-        float heroSpeed = HeroRef.Prefab.GetComponent<Unit>().Stats.Speed.GetValue();
+        float heroSpeed = GameManager.Instance.PlayerManager.PlayerHero.BaseStats.Speed.GetValue();
         float mySpeed = Stats.Speed.GetValue();
-        float ratio;
 
-        ratio = heroSpeed == 0 ? MAX_SPEED_RATIO : mySpeed / heroSpeed;
-
+        float ratio = heroSpeed == 0 ? MAX_SPEED_RATIO : mySpeed / heroSpeed;
         Math.Clamp(ratio, MIN_SPEED_RATIO, MAX_SPEED_RATIO);
 
-        return mySpeed * ratio * Time.deltaTime;
+        return ratio;
     }
 
     private void BasicAttack()
     {
-        this.IsAttacking = true;
+        TargetOpponent = UnitGridRef.GetDefaultTarget(GetOpponentFaction());
 
-        TargetOpponent = UnitGridRef.GetDefaultTarget(Faction.Allies);
+        //if we have a valid target
+        if (IsTargetOpponentValid)
+        {
+            this.IsAttacking = true;
+            this.Stats.Energy = 0;
+        }
+    }
+
+    private void StopAttacking(bool stabilise = false)
+    {
+        IsAttacking = false;
+
+        if (stabilise)
+            StabiliseAfterHit();
+    }
+
+    private void RemoveVelocity()
+    {
+        RigidBody.velocity = Vector2.zero;
+        RigidBody.angularVelocity = 0;
+    }
+
+    public Faction GetOpponentFaction()
+    {
+        return UnitDataRef.Faction == Faction.Allies ? Faction.Enemies : Faction.Allies;
+    }
+
+    private void StabiliseAfterHit()
+    {
+        StartCoroutine(StopAfter(0.2f));
+    }
+
+    private IEnumerator StopAfter(float t)
+    {
+        yield return new WaitForSeconds(t);
+
+        RemoveVelocity();
     }
 
 }

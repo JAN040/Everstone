@@ -17,6 +17,14 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public PlayerManager PlayerManager { get; private set; }
 
+    /// <summary>
+    /// Reference to the UnitData script
+    /// </summary>
+    public UnitData UnitData { get; private set; }
+
+    /// <summary>
+    /// List of all player allies (pets, mercs, mission teammates etc.)
+    /// </summary>
     public List<ScriptableUnitBase> Allies { get; set; }
 
     /// <summary>
@@ -38,6 +46,7 @@ public class GameManager : Singleton<GameManager>
     void Start()
     {
         PlayerManager = new PlayerManager();
+        UnitData      = new UnitData();
     }
 
     #region METHODS

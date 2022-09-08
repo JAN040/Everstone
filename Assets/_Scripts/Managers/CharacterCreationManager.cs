@@ -382,6 +382,8 @@ public class CharacterCreationManager : MonoBehaviour
         var hero = GetSelectedHero();
         var stats = hero.BaseStats;
 
+        hero.Name = heroName.text;
+
         Dictionary<string, SkillLevel> skills = GenerateSkillSystem(stats);
 
         GameManager.Instance.PlayerManager.SetHero(hero);

@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 using UnityEditor.VersionControl;
 using UnityEngine;
 
-public static class UnitData
+[System.Serializable]
+public class UnitData
 {
-    public static Dictionary<UnitClass, UnitClassData> ClassDataDict = new Dictionary<UnitClass, UnitClassData>()
+    public Dictionary<UnitClass, UnitClassData> ClassDataDict = new Dictionary<UnitClass, UnitClassData>()
     {
         {
             UnitClass.Marksman,
@@ -85,11 +86,11 @@ public static class UnitData
     };
 
     //bonus stats (in percentages)
-    private static readonly float EliteBonus = 0.25f;
-    private static readonly float BossBonus = 1f;
+    private readonly float EliteBonus = 0.25f;
+    private readonly float BossBonus = 1f;
 
     //game difficulty modifiers
-    public static Dictionary<Difficulty, float> GameDiffScalingDict = new Dictionary<Difficulty, float>()
+    public Dictionary<Difficulty, float> GameDiffScalingDict = new Dictionary<Difficulty, float>()
     {
         { Difficulty.Custom,   0f   },
         { Difficulty.Casual,  -0.2f },
@@ -98,7 +99,7 @@ public static class UnitData
     };
 
     //stat scaling modifiers
-    public static Dictionary<StatScaling, float> StatScalingDict = new Dictionary<StatScaling, float>()
+    public Dictionary<StatScaling, float> StatScalingDict = new Dictionary<StatScaling, float>()
     {
         { StatScaling.VeryLow,  -0.75f },
         { StatScaling.Low,      -0.5f  },
@@ -109,21 +110,24 @@ public static class UnitData
     
 
     //per-stage modifier (enemy stats scale by stage)
-    private static readonly float PerStageMod = 0.02f;
+    private readonly float PerStageMod = 0.02f;
 
     //base stat amounts
-    private static readonly float Damage = 10;
-    private static readonly float Health = 50;
-    private static readonly float Armor = 4;
-    private static readonly float Speed = 10;
+    private readonly float Damage = 10;
+    private readonly float Health = 50;
+    private readonly float Armor = 4;
+    private readonly float Speed = 10;
+
+    //multiply the speed ratio with this and Time.DeltaTime to get enemy energy increase per frame
+    public float SpeedRatioMultiplier = 15;
 
 
-    public static CharacterStats GetBaseStats(UnitClass unitClass, EnemyType enemyType, Difficulty gameDiff, ScriptableAdventureLocation locationData)
+    public CharacterStats GetBaseStats(UnitClass unitClass, EnemyType enemyType, Difficulty gameDiff, ScriptableAdventureLocation locationData)
     {
         return GetEnemyStatsForClass(unitClass, CalculateStatModifier(enemyType, gameDiff, locationData));
     }
 
-    private static float CalculateStatModifier(EnemyType enemyType, Difficulty gameDiff, ScriptableAdventureLocation location)
+    private float CalculateStatModifier(EnemyType enemyType, Difficulty gameDiff, ScriptableAdventureLocation location)
     {
         float res = 0f;
 
@@ -149,7 +153,7 @@ public static class UnitData
     }
 
     /// <param name="statModifier">Based on location & game difficulties</param>
-    private static CharacterStats GetEnemyStatsForClass(UnitClass @class, float statModifier)
+    private CharacterStats GetEnemyStatsForClass(UnitClass @class, float statModifier)
     {
         UnitClassData classData = ClassDataDict[@class];
 
@@ -170,7 +174,7 @@ public static class UnitData
         }
     }
 
-    private static float GetScaledStatWithVariabilityAndMods(float baseAmnt,  StatScaling scaling, float modifier)
+    private float GetScaledStatWithVariabilityAndMods(float baseAmnt,  StatScaling scaling, float modifier)
     {
         float res = baseAmnt;
         float mod = StatScalingDict[scaling];

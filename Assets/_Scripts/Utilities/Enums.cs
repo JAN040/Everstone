@@ -150,3 +150,9 @@ public enum Icon
     Infinity,
     Everstone
 }
+
+public enum UserLayers
+{
+    Allies_Layer,
+    Enemies_Layer
+}
