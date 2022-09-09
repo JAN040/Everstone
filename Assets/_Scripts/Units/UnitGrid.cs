@@ -47,7 +47,7 @@ public class UnitGrid
         if (faction == Faction.Allies)
         {
             //for the allies grid, the "front" is the rightmost column
-            for (int k = target.GetLength(0) - 1; k >= 1; k--)
+            for (int k = target.GetLength(0) - 1; k >= 0; k--)
                 for (int l = 0; l < target.GetLength(1); l++)
                     if (target[k, l] == null)
                     {
@@ -59,7 +59,7 @@ public class UnitGrid
         }
         else
         {
-            for (int k = 0; k < target.GetLength(0) - 1; k++)  //only first two cols are valid for adding
+            for (int k = 0; k < target.GetLength(0); k++)
                 for (int l = 0; l < target.GetLength(1); l++)
                     if (target[k, l] == null)
                     {
@@ -81,7 +81,7 @@ public class UnitGrid
         if (faction == Faction.Allies)
         {
             //for the allies grid, the "back" is the leftmost column
-            for (int k = 0; k < target.GetLength(0) - 1; k++)  //only first two cols are valid for adding
+            for (int k = 0; k < target.GetLength(0); k++)
                 for (int l = 0; l < target.GetLength(1); l++)
                     if (target[k, l] == null)
                     {
@@ -92,7 +92,7 @@ public class UnitGrid
         }
         else
         {
-            for (int k = target.GetLength(0) - 1; k >= 1; k--)
+            for (int k = target.GetLength(0) - 1; k >= 0; k--)
                 for (int l = 0; l < target.GetLength(1); l++)
                     if (target[k, l] == null)
                     {
@@ -131,8 +131,8 @@ public class UnitGrid
         if (faction == Faction.Allies)
         {
             //run it twice to cover the special case of only the last col having units
-            for (int i = 0; i < 2; i++)
-                for (int k = target.GetLength(0) - 1; k >= 1; k--) //dont have to check the first col
+            for (int iteration = 0; iteration < 2; iteration++)
+                for (int k = target.GetLength(0) - 1; k > 0; k--) //dont have to check the first col
                 {
                     if (target[k, 0] == null && target[k, 1] == null)
                     {
@@ -145,7 +145,7 @@ public class UnitGrid
         }
         else
         {
-            for (int i = 0; i < 2; i++)
+            for (int iteration = 0; iteration < 2; iteration++)
                 for (int k = 0; k < target.GetLength(0) - 1; k++) //dont have to check the last col
                 {
                     if (target[k, 0] == null && target[k, 1] == null)

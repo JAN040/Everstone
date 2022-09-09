@@ -51,13 +51,13 @@ public class UnitData
             UnitClass.Tank,
             new UnitClassData(UnitClass.Tank, null,
                 StatScaling.Low, StatScaling.High, StatScaling.High, 5,
-                StatScaling.Low)
+                StatScaling.High)
         },
         {
             UnitClass.Titan,
             new UnitClassData(UnitClass.Titan, new List<SpecialSkill>(){ SpecialSkill.CC},
                 StatScaling.VeryLow, StatScaling.VeryHigh, StatScaling.VeryHigh, 0,
-                StatScaling.High)
+                StatScaling.VeryHigh)
         },
         {
             UnitClass.Vanguard,
@@ -113,7 +113,7 @@ public class UnitData
     private readonly float PerStageMod = 0.02f;
 
     //base stat amounts
-    private readonly float Damage = 10;
+    private readonly float Damage = 15;
     private readonly float Health = 50;
     private readonly float Armor = 4;
     private readonly float Speed = 10;

@@ -147,7 +147,7 @@ public class Unit : MonoBehaviour
 
     [SerializeField] bool IsAttacking = false;
 
-    private ScriptableUnitBase TargetOpponent;
+    public ScriptableUnitBase TargetOpponent;
 
     private bool IsTargetOpponentValid {
         get
@@ -388,7 +388,7 @@ public class Unit : MonoBehaviour
 
     public virtual void ReduceHPByAmount(float amount)
     {
-        Debug.Log($"Unit {this.UnitDataRef.Name} took {amount} damage.");
+        Debug.Log($"{UnitDataRef.Faction} Unit {UnitDataRef.Name} took {amount} damage.");
         Stats.HealthPoints -= amount;
     }
 
@@ -486,8 +486,9 @@ public class Unit : MonoBehaviour
 
     private void BasicAttack()
     {
-        TargetOpponent = UnitGridRef.GetDefaultTarget(GetOpponentFaction());
-
+        if (TargetOpponent == null)
+            TargetOpponent = UnitGridRef.GetDefaultTarget(GetOpponentFaction());
+        
         //if we have a valid target
         if (IsTargetOpponentValid)
         {

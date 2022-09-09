@@ -8,7 +8,12 @@ public class SceneManagementSystem : Singleton<SceneManagementSystem>
     #region VARIABLES
 
     public Animator transition;
+    
     public float transitionDuration = 1f;
+
+    //true while transitioning; prevents the user from spamming the transition button
+    //  and starting multiple transition coroutines
+    public bool IsSwitchingLocation = false;
 
     #endregion
 
@@ -40,6 +45,9 @@ public class SceneManagementSystem : Singleton<SceneManagementSystem>
     /// <param name="scene">Scene object</param>
     public void LoadScene(Scene scene)
     {
+        if (IsSwitchingLocation)
+            return;
+
         StartCoroutine(LoadSceneWithTransition((Scenes)scene.buildIndex));
     }
 
@@ -49,6 +57,9 @@ public class SceneManagementSystem : Singleton<SceneManagementSystem>
     /// <param name="sceneNum"></param>
     public void LoadScene(int sceneNum)
     {
+        if (IsSwitchingLocation)
+            return;
+
         LoadScene((Scenes)sceneNum);
     }
 
@@ -58,13 +69,16 @@ public class SceneManagementSystem : Singleton<SceneManagementSystem>
     /// <param name="sc"></param>
     public void LoadScene(Scenes sc)
     {
-        //SceneManager.LoadScene((int)sc);
+        if (IsSwitchingLocation)
+            return;
 
         StartCoroutine(LoadSceneWithTransition(sc));
     }
 
     private IEnumerator LoadSceneWithTransition(Scenes sc)
     {
+        IsSwitchingLocation = true;
+
         Debug.Log($"Loading scene: {sc}, ID: {(int)sc}");
 
         //play transition "Start" animation
@@ -77,6 +91,8 @@ public class SceneManagementSystem : Singleton<SceneManagementSystem>
         SceneManager.LoadScene((int)sc);
 
         transition.SetTrigger("End");
+        
+        IsSwitchingLocation = false;
     }
 }
 

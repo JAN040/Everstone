@@ -29,15 +29,23 @@ public class AdventureManager : MonoBehaviour
 
     private UnitGrid UnitGrid = new UnitGrid();
 
-    private ScriptableEnemy TargetedEnemy { 
-        get 
+    private ScriptableEnemy TargetedEnemy
+    {
+        get
         {
             if (targetedEnemy == null)
                 return UnitGrid.GetDefaultTarget(Faction.Enemies) as ScriptableEnemy;
-            
+
             return targetedEnemy;
-        } 
-        set => targetedEnemy = value; 
+        }
+        set
+        {
+            targetedEnemy = value;
+            foreach (var ally in AlliedUnitsList)
+            {
+                ally.Prefab.GetComponent<Unit>().TargetOpponent = targetedEnemy;
+            }
+        }
     }
     #endregion 	VARIABLES
 
@@ -88,6 +96,9 @@ public class AdventureManager : MonoBehaviour
 
     private void InitStage(bool initAllies)
     {
+        //get encounter type
+        EncounterType encounter = CurrentLocation.GetNextEncounter();
+
         if (initAllies)
         {   //Handle allies (and hero)
             AlliedUnitsList = new List<ScriptableUnitBase>();
@@ -99,11 +110,19 @@ public class AdventureManager : MonoBehaviour
             if (GameManager.Instance.Allies != null)
                 AlliedUnitsList.AddRange(GameManager.Instance.Allies);
 
+            //TODO: remove! this is testing only
+            var extraAllies = CurrentLocation.RollEnemies(encounter);
+            while (extraAllies.Count > 5) //make sure there arent too many
+                extraAllies.RemoveAt(0);
+            foreach (var extra in extraAllies)
+            {
+                extra.Faction = Faction.Allies;
+                extra.SetBaseStats(GameManager.Instance.GameDifficulty, CurrentLocation);
+            }
+            AlliedUnitsList.AddRange(extraAllies);
+
             SpawnAllies();
         }
-
-        //get encounter type
-        EncounterType encounter = CurrentLocation.GetNextEncounter();
 
         if (encounter == EncounterType.Event)
         {
@@ -160,9 +179,16 @@ public class AdventureManager : MonoBehaviour
             //create prefab
             CreateUnitPrefab(ally);
 
+            //TODO: load the saved ally positions if any, if not, place like this:
+
             //place the prefab in the grid (allies are teleported)
-            UnitGrid.AddToFront(Faction.Allies, ally, true);
+            if (ally is ScriptableEnemy)
+                AddEnemyToGridByClass(ally as ScriptableEnemy, true);
+            else
+                UnitGrid.AddToFront(Faction.Allies, ally, true);
         }
+
+        UnitGrid.Restructure(Faction.Allies);
     }
 
     private void SpawnEnemies()
@@ -170,40 +196,44 @@ public class AdventureManager : MonoBehaviour
         foreach (var enemy in EnemyUnitsList)
         {
             enemy.SetBaseStats(GameManager.Instance.GameDifficulty, CurrentLocation);
-            
+
             //create prefab
             CreateUnitPrefab(enemy);
 
             //place the prefab in the grid
-            switch (enemy.Class)
-            {
-                case UnitClass.Warrior:
-                case UnitClass.Bruiser:
-                case UnitClass.Battlemage:
-                case UnitClass.Tank:
-                case UnitClass.Titan:
-                case UnitClass.Vanguard:
-                    UnitGrid.AddToFront(Faction.Enemies, enemy);
-                    break;
-
-                case UnitClass.Marksman:
-                case UnitClass.Mage:
-                case UnitClass.Artillery:
-                case UnitClass.Controller:
-                case UnitClass.Healer:
-                case UnitClass.Assassin:
-                    UnitGrid.AddToBack(Faction.Enemies, enemy);
-                    break;
-
-                default:
-                    Debug.Log($"Unknown Class: {enemy.Class} of enemy: {enemy.Name}");
-                    break;
-            }
+            AddEnemyToGridByClass(enemy, false);
         }
 
-        //TODO: load the saved ally positions
         UnitGrid.Restructure(Faction.Enemies);
         UnitGrid.SetupEnemyEntrance();
+    }
+
+    private void AddEnemyToGridByClass(ScriptableEnemy unit, bool teleport)
+    {
+        switch (unit.Class)
+        {
+            case UnitClass.Warrior:
+            case UnitClass.Bruiser:
+            case UnitClass.Battlemage:
+            case UnitClass.Tank:
+            case UnitClass.Titan:
+            case UnitClass.Vanguard:
+                UnitGrid.AddToFront(unit.Faction, unit, teleport);
+                break;
+
+            case UnitClass.Marksman:
+            case UnitClass.Mage:
+            case UnitClass.Artillery:
+            case UnitClass.Controller:
+            case UnitClass.Healer:
+            case UnitClass.Assassin:
+                UnitGrid.AddToBack(unit.Faction, unit, teleport);
+                break;
+
+            default:
+                Debug.Log($"Unknown Class: {unit.Class} of enemy: {unit.Name}");
+                break;
+        }
     }
 
     private void CreateUnitPrefab(ScriptableUnitBase unit)
@@ -239,11 +269,11 @@ public class AdventureManager : MonoBehaviour
 
         if (unit == null)
         {
-            targetedEnemy = null;
+            TargetedEnemy = null;
         }
         else
         {
-            targetedEnemy = unit as ScriptableEnemy;
+            TargetedEnemy = unit as ScriptableEnemy;
 
             unit.Prefab.GetComponent<Unit>().IsTargeted = true;
         }

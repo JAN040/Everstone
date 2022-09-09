@@ -1,0 +1,532 @@
+Using pre-set license
+Built from '2021.3/staging' branch; Version is '2021.3.8f1 (b30333d56e81) revision 11731763'; Using compiler version '192829333'; Build Type 'Release'
+OS: 'Windows 10  (10.0.19044) 64bit Core' Language: 'sl' Physical Memory: 16263 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1, IsPro: 1
+
+COMMAND LINE ARGUMENTS:
+T:\Software\Unity Hub\Editor\2021.3.8f1\Editor\Unity.exe
+-adb2
+-batchMode
+-noUpm
+-name
+AssetImportWorker6
+-projectPath
+T:/Projects/Everstone
+-logFile
+Logs/AssetImportWorker6.log
+-srvPort
+54617
+Successfully changed project path to: T:/Projects/Everstone
+T:/Projects/Everstone
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gfx=262144"
+Refreshing native plugins compatible for Editor in 683.52 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Initialize engine version: 2021.3.8f1 (b30333d56e81)
+[Subsystems] Discovering subsystems at path T:/Software/Unity Hub/Editor/2021.3.8f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path T:/Projects/Everstone/Assets
+GfxDevice: creating device client; threaded=0; jobified=0
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce GTX 1060 (ID=0x1c60)
+    Vendor:   NVIDIA
+    VRAM:     6052 MB
+    Driver:   30.0.15.1278
+Initialize mono
+Mono path[0] = 'T:/Software/Unity Hub/Editor/2021.3.8f1/Editor/Data/Managed'
+Mono path[1] = 'T:/Software/Unity Hub/Editor/2021.3.8f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'T:/Software/Unity Hub/Editor/2021.3.8f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56484
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: T:/Software/Unity Hub/Editor/2021.3.8f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
+Register platform support module: T:/Software/Unity Hub/Editor/2021.3.8f1/Editor/Data/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll
+Register platform support module: T:/Software/Unity Hub/Editor/2021.3.8f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.015491 seconds.
+Native extension for WindowsStandalone target not found
+Native extension for Android target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 720.79 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  2.996 seconds
+Domain Reload Profiling:
+	ReloadAssembly (2999ms)
+		BeginReloadAssembly (310ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (0ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (5ms)
+		EndReloadAssembly (2369ms)
+			LoadAssemblies (305ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (538ms)
+			ReleaseScriptCaches (0ms)
+			RebuildScriptCaches (73ms)
+			SetupLoadedEditorAssemblies (1504ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (121ms)
+				SetLoadedEditorAssemblies (1ms)
+				RefreshPlugins (721ms)
+				BeforeProcessingInitializeOnLoad (7ms)
+				ProcessInitializeOnLoadAttributes (502ms)
+				ProcessInitializeOnLoadMethodAttributes (153ms)
+				AfterProcessingInitializeOnLoad (0ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (0ms)
+Platform modules already initialized, skipping
+Registering precompiled user dll's ...
+Registered in 0.022295 seconds.
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image T:\Projects\Everstone\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image T:\Projects\Everstone\Library\PackageCache\com.unity.visualscripting@1.7.8\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Native extension for WindowsStandalone target not found
+Native extension for Android target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 683.26 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+Package Manager log level set to [2]
+- Completed reload, in  6.126 seconds
+Domain Reload Profiling:
+	ReloadAssembly (6130ms)
+		BeginReloadAssembly (440ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (27ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (1ms)
+			CreateAndSetChildDomain (67ms)
+		EndReloadAssembly (5232ms)
+			LoadAssemblies (357ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (1128ms)
+			ReleaseScriptCaches (2ms)
+			RebuildScriptCaches (266ms)
+			SetupLoadedEditorAssemblies (3261ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (60ms)
+				SetLoadedEditorAssemblies (1ms)
+				RefreshPlugins (683ms)
+				BeforeProcessingInitializeOnLoad (756ms)
+				ProcessInitializeOnLoadAttributes (1315ms)
+				ProcessInitializeOnLoadMethodAttributes (422ms)
+				AfterProcessingInitializeOnLoad (22ms)
+				EditorAssembliesLoaded (1ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (37ms)
+Platform modules already initialized, skipping
+========================================================================
+Worker process is ready to serve import requests
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.20 seconds
+Refreshing native plugins compatible for Editor in 4.64 ms, found 4 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 5837 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 59 unused Assets / (0.7 MB). Loaded Objects now: 6280.
+Memory consumption went from 233.1 MB to 232.4 MB.
+Total: 15.226200 ms (FindLiveObjects: 1.213700 ms CreateObjectMapping: 1.126400 ms MarkObjects: 11.191200 ms  DeleteObjects: 1.691400 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  Time since last request: 325139.494545 seconds.
+  path: Assets/Prefabs/UI/AdventureLocationButton.prefab
+  artifactKey: Guid(8f3fd91482b2c9a4888f1c0eb277d7c6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/AdventureLocationButton.prefab using Guid(8f3fd91482b2c9a4888f1c0eb277d7c6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '5e7cc61df1e0e0250307fe7dad70a6e9') in 0.555858 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000063 seconds.
+  path: Assets/Prefabs/UI/StatDistributionLine.prefab
+  artifactKey: Guid(4cd2b8944010e6241a9bd324b391fd42) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/StatDistributionLine.prefab using Guid(4cd2b8944010e6241a9bd324b391fd42) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd46237eba1df1cfc83d5784ac52045b0') in 0.103722 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000064 seconds.
+  path: Assets/Prefabs/UI/Small_Button.prefab
+  artifactKey: Guid(92d3bd98c333b1443b2a8814b1875e10) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/Small_Button.prefab using Guid(92d3bd98c333b1443b2a8814b1875e10) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'eed8235e6e763d2b60f72a25be226175') in 0.091716 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 8.775609 seconds.
+  path: Assets/Prefabs/UI/StatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/StatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9c674f1c9af8c1d054748c03a85f7a22') in 0.033471 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 9.671724 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'dab2fecd317600f9d92aaf5bd2ae719b') in 0.026277 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 1522.426723 seconds.
+  path: Assets/Sprites/UI/Classic_RPG_GUI Pack/Parts/little_round_frame2.png
+  artifactKey: Guid(1479817b46f87f9428532d529bce2a3e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sprites/UI/Classic_RPG_GUI Pack/Parts/little_round_frame2.png using Guid(1479817b46f87f9428532d529bce2a3e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '8ebc8cfd96ee8974583c5b0ba62c7e44') in 0.699665 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 5568.059815 seconds.
+  path: Assets/Sprites/UI/Classic_RPG_GUI Pack/Parts/long_line2.png
+  artifactKey: Guid(41d630fe463be704497e95f8c99c8034) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sprites/UI/Classic_RPG_GUI Pack/Parts/long_line2.png using Guid(41d630fe463be704497e95f8c99c8034) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '5b962332633c6a249799601b80f22583') in 0.098669 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 123.550003 seconds.
+  path: Assets/Sprites/UI/Classic_RPG_GUI Pack/Parts/long_line.png
+  artifactKey: Guid(1fc36c90f57cd0d418b332d98f42eda0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sprites/UI/Classic_RPG_GUI Pack/Parts/long_line.png using Guid(1fc36c90f57cd0d418b332d98f42eda0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '70f55121e898236020ebe466826ab308') in 0.040280 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 47.412435 seconds.
+  path: Assets/Sprites/UI/Classic_RPG_GUI Pack/Parts/long_line2_elite.png
+  artifactKey: Guid(0deda20b838acaa48b6650983ed472f4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Sprites/UI/Classic_RPG_GUI Pack/Parts/long_line2_elite.png using Guid(0deda20b838acaa48b6650983ed472f4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '437fdbca5e68486fdf5eff7b5d118070') in 0.235655 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 383.849087 seconds.
+  path: Assets/Scenes/TownOutskirtsScene.unity
+  artifactKey: Guid(364449dfd739a044194ea1c5bcc90b9d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scenes/TownOutskirtsScene.unity using Guid(364449dfd739a044194ea1c5bcc90b9d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'ef7444e8c8954d03ba83922d38db1578') in 0.006390 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 41.944896 seconds.
+  path: Assets/Scenes/AdventureScene.unity
+  artifactKey: Guid(bd7a9bc6af0da8645873700d6aba40ed) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scenes/AdventureScene.unity using Guid(bd7a9bc6af0da8645873700d6aba40ed) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'bb6cfaddb6b340b06d20a86bc405edfe') in 0.006363 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 75.048406 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '7456d002c56adf60c4a40fd1dda7a4e4') in 0.042991 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 21.052870 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '5b640a9efb5c0d82f78711107604f24b') in 0.028762 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 9.701478 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '40ddcc7dece01dec426a5955c130074a') in 0.029303 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.591130 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'e8067c02812696af4ad7cd0fc6b96166') in 0.024768 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 4.024964 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '70c91dcb716a62a1a7b7eb58436fe2c4') in 0.023539 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 7.745089 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '820811825e01a05aee44f1c1100bd533') in 0.025815 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 6.134838 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '2c48e3c69e5d74e6ca8024fab69a9626') in 0.024790 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 8.823849 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '4f6cd561b62a7de55612ef242bf98f14') in 0.024535 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 24.257887 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '6223b12cb9604308e11baf70fe8749d1') in 0.026505 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 28.206225 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '07407d797c14d95e51eb272c2010d8a3') in 0.024118 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 3.081162 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '55a93a067168558794b0a5c6321a6345') in 0.024352 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 4.694017 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '50aff8b08fd26a700506db9877bc74a2') in 0.024410 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 8.280084 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '243899f3ea5bfa4994471958dd68d888') in 0.023636 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 14.755052 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '1db5d0566d57b3ba72fc3a9df3ca7af8') in 0.024221 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 38.557917 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '7863856c581c71034daa6594121db150') in 0.023609 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 14.303561 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '778d7cf621ec16f4476e290144102722') in 0.027872 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 14.840047 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '705816d20aa0128623951b40bbcc4967') in 0.130967 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 6.403331 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '4964fd13ed0bb489e09c3a9b9f06ebf0') in 0.024345 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 7.353359 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd95251ba9f0fcb96a53015160e893bec') in 0.024375 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 4.489246 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '906752f3c659ad96243eafde471c2486') in 0.025104 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 20.614008 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'aec390612274defc1872b13cd88280e0') in 0.025028 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 6.745748 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '65c44b9047b5c1b1a54851f6f703bfaf') in 0.025147 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 9.150606 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'f3788c7b92d5c0d38f89891a1d15d6e9') in 0.024529 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 13.156025 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'b4dd429325194aff64caf2db13ae46e2') in 0.026838 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 11.787784 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9d33e40beae91111372db2e17006efbf') in 0.024122 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 29.299455 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '234ad3284590f0c514312a6dedc9416a') in 0.025521 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 27.930138 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'bca743ac04b74818885dccb6d623d9b1') in 0.023685 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 6.159884 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd210ffdc9e43a6970a907ac9bd67a1f7') in 0.070166 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 22.104090 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '30d320c8561ee3b6871cd39781da8b5d') in 0.221718 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 11.206831 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'c8ee281ead641e2a3200bd5a5790d61e') in 0.026536 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 12.970867 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '6184cdd6529dad3703ff80132433f650') in 0.025752 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 9.131754 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '2c1477c42ed816e99c98c3d1392a68b1') in 0.024708 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 13.599983 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '3eec9b200b2e034890c4896ca5db2577') in 0.024520 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 13.073690 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '22a10b55674be0055f3cf95b0f3f6e2f') in 0.023473 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 4.712958 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'c2befbb0804e90f52eba71741d8c7c34') in 0.023987 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 2.146181 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '7632ea1a5c2aeb3458d279217165f9b6') in 0.023666 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 11.966963 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '08e0db0c6b1ca18a0d0358f02e69444f') in 0.026564 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 2.401027 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '02f201d465685ffcac4976b09d8566a5') in 0.024107 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 6.459137 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '6bb4feb6ae57b667ed1d7950b137c880') in 0.024595 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 3.584536 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '01fe8475d116e2aead31a78a8740a19f') in 0.023709 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 64.968039 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'b17293445fba7d7470bf4acee89264b2') in 0.024546 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 4.999785 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'eb62c95e0ef5473355ef5b0a778818ab') in 0.023838 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 25.032478 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'b43f755b53abfe65ed960c8ac28e0d5d') in 0.025109 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 13.813214 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'a9bc16f5d10b3cd6286a3729188c4723') in 0.024549 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 16.140532 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'e8eb702c8f2b38fa87c69a1acfed83b7') in 0.023589 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 17.028530 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'ea1f73c5628adba30fd8e1fa671c7ace') in 0.024592 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 3.144337 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'a06fbc949a56336f08ff5d9bba26eb0f') in 0.028278 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 994.482697 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'a0a411f66d54cad26752ecc8463fd9f2') in 0.024772 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 16.319297 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '0a56a7c3a49f5dbe6753f0939b1ebaac') in 0.024156 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 4.168714 seconds.
+  path: Assets/Prefabs/UI/UnitStatusBar.prefab
+  artifactKey: Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/UI/UnitStatusBar.prefab using Guid(eed2b2ad567d8104a90a5d29efdb6690) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '069d78a0b3de74caa1b0c78153e6b54a') in 0.024897 seconds 
