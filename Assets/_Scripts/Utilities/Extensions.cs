@@ -23,6 +23,10 @@ public static class Extensions
         return new Vector3(vector.x, -1f * vector.y, vector.z);
     }
 
+    public static int Round(this float num)
+    {
+        return (int)Math.Round(num);
+    }
 
     /// <summary>
     /// Gets the next value of the enum (numerically)

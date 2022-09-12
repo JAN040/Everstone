@@ -148,7 +148,15 @@ public enum WeaponType
 public enum Icon
 {
     Infinity,
-    Everstone
+    Everstone,
+    Attack_Phys,
+    Attack_Arts,
+    Defense,
+    Arts_Resist,
+    Speed,
+    Health,
+    Stamina,
+    Mana
 }
 
 public enum UserLayers

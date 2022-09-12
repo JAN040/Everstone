@@ -52,7 +52,7 @@ public class Unit : MonoBehaviour
     [SerializeField] Material Material_Dissolve_Instance;
     
     [SerializeField] CharacterStats stats;
-    protected CharacterStats Stats { get => stats; private set => stats = value; }
+    public CharacterStats Stats { get => stats; private set => stats = value; }
 
     [SerializeField] ScriptableUnitBase UnitDataRef;
 
@@ -105,7 +105,7 @@ public class Unit : MonoBehaviour
                 IsTargeted = false;
 
                 //communicate that the target was lost to the manager
-                OnSetTarget?.Invoke(null);
+                OnSetTarget?.Invoke(null, UnitDataRef.Faction);
             }
         }
     }
@@ -179,7 +179,8 @@ public class Unit : MonoBehaviour
     private void OnDestroy()
     {
         Stats.OnHealthPointsChanged -= OnUnitHPChanged;
-        Stats.OnEnergyChanged -= OnUnitEnergyChanged;
+        Stats.OnEnergyChanged       -= OnUnitEnergyChanged;
+        Stats.OnStatChanged         -= StatChanged;
     }
 
     private void Update()
@@ -259,8 +260,9 @@ public class Unit : MonoBehaviour
     #endregion UNITY METHODS
 
 
-    public event Action<ScriptableUnitBase> OnSetTarget;
+    public event Action<ScriptableUnitBase, Faction> OnSetTarget;
     public event Action<ScriptableUnitBase> OnUnitDeath;
+    public event Action<ScriptableUnitBase, Stat> OnStatChanged;
 
 
     public void Initialize(CharacterStats stats, ScriptableUnitBase unitData, UnitGrid grid, ScriptableHero hero)
@@ -328,10 +330,24 @@ public class Unit : MonoBehaviour
     public void UnitClicked()
     {
         Debug.Log($"Clicked unit {UnitDataRef.Name}");
-        this.TakeDamage(new Damage(10));
-        IsTargeted = true;
+        //this.TakeDamage(new Damage(10));
+        
+        //only enemies can be targeted
+        if (UnitDataRef.Faction == Faction.Enemies)
+        {
+            //if its already targeted, then "untarget" it
+            if (IsTargeted)
+            {
+                IsTargeted = false;
+                OnSetTarget?.Invoke(null, UnitDataRef.Faction);
+                
+                return;
+            }
 
-        OnSetTarget?.Invoke(UnitDataRef);
+            IsTargeted = true;
+        }
+
+        OnSetTarget?.Invoke(UnitDataRef, UnitDataRef.Faction);
     }
 
     public virtual void SetStats(CharacterStats stats)
@@ -340,6 +356,7 @@ public class Unit : MonoBehaviour
         Stats.HealthPoints = Stats.MaxHP.GetValue();
         Stats.OnHealthPointsChanged += OnUnitHPChanged;
         Stats.OnEnergyChanged += OnUnitEnergyChanged;
+        Stats.OnStatChanged += StatChanged;
     }
 
 
@@ -404,6 +421,9 @@ public class Unit : MonoBehaviour
             Die();
         }
 
+        //pretend MaxHP was changed since HealthPoints is not a Stat but float (and it doesnt matter anyway)
+        OnStatChanged?.Invoke(UnitDataRef, Stats.MaxHP);
+
         //TODO: update hp bar
         //TODO: animate hp bar
     }
@@ -411,6 +431,11 @@ public class Unit : MonoBehaviour
     private void OnUnitEnergyChanged(float arg1, float arg2)
     {
         Image_EnergyBar.fillAmount = Stats.GetEnergyNormalized();
+    }
+
+    private void StatChanged(Stat stat)
+    {
+        OnStatChanged?.Invoke(UnitDataRef, stat);
     }
 
     protected virtual void Die()
@@ -486,7 +511,7 @@ public class Unit : MonoBehaviour
 
     private void BasicAttack()
     {
-        if (TargetOpponent == null)
+        if (!IsTargetOpponentValid) //reselect a target if needed
             TargetOpponent = UnitGridRef.GetDefaultTarget(GetOpponentFaction());
         
         //if we have a valid target
@@ -527,5 +552,4 @@ public class Unit : MonoBehaviour
 
         RemoveVelocity();
     }
-
 }

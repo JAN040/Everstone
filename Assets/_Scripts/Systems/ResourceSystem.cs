@@ -26,8 +26,17 @@ public class ResourceSystem : StaticInstance<ResourceSystem> {
     /// </summary>
     private Dictionary<Icon, string> TMP_IconDict = new Dictionary<Icon, string>()
     {
-        {Icon.Everstone, "everstone" },
-        {Icon.Infinity, "infinity" },
+        { Icon.Everstone,    "everstone" },
+        { Icon.Infinity,     "infinity"  },
+
+        { Icon.Attack_Phys, "attack_phys" },
+        { Icon.Attack_Arts, "attack_arts" },
+        { Icon.Defense,     "defense"     },
+        { Icon.Arts_Resist, "resist"      },
+        { Icon.Speed,       "speed"       },
+        { Icon.Health,      "health"      },
+        { Icon.Stamina,     "energy"      },
+        { Icon.Mana,        "mana"        }
     };
 
 

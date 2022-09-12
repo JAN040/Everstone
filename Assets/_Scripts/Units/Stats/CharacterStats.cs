@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using static UnityEditor.IMGUI.Controls.PrimitiveBoundsHandle;
 /// <summary>
@@ -26,7 +27,7 @@ public class CharacterStats
             float oldVal = _healthPoints;
 
             _healthPoints = value;
-            Mathf.Clamp(_healthPoints, 0, this.MaxHP.GetValue());
+            _healthPoints = Mathf.Clamp(_healthPoints, 0, this.MaxHP.GetValue());
 
             OnHealthPointsChanged?.Invoke(_healthPoints, oldVal);
         }
@@ -44,7 +45,7 @@ public class CharacterStats
             float oldVal = _energy;
 
             _energy = value;
-            Mathf.Clamp(_energy, 0, this.MaxEnergy.GetValue());
+            _energy = Mathf.Clamp(_energy, 0, this.MaxEnergy.GetValue());
 
             OnEnergyChanged?.Invoke(_energy, oldVal);
         }
@@ -62,8 +63,7 @@ public class CharacterStats
             float oldVal = _mana;
 
             _mana = value;
-
-            Mathf.Clamp(_mana, 0, this.MaxMana.GetValue());
+            _mana = Mathf.Clamp(_mana, 0, this.MaxMana.GetValue());
 
             OnManaChanged?.Invoke(_mana, oldVal);
         }
@@ -105,6 +105,8 @@ public class CharacterStats
     public event Action<float, float> OnEnergyChanged;
     /// <summary> Takes two float paramaters, indicating the old and new Mana amount </summary>
     public event Action<float, float> OnManaChanged;
+    /// <summary> Takes the changed stat as parameter </summary>
+    public event Action<Stat> OnStatChanged;
 
     #endregion EVENTS
 
@@ -181,6 +183,25 @@ public class CharacterStats
 
         //WeaponProficiencies = null;
         SetDefaultWeaponProficiencies(0f, 0f);
+        SetStatEvents();
+    }
+
+    private void SetStatEvents()
+    {
+        PhysicalDamage.OnStatChanged += StatChanged;
+        Armor.OnStatChanged += StatChanged;
+        ArtsDamage.OnStatChanged += StatChanged;
+        ArtsResist.OnStatChanged += StatChanged;
+        MaxHP.OnStatChanged += StatChanged;
+        MaxEnergy.OnStatChanged += StatChanged;
+        EnergyRecovery.OnStatChanged += StatChanged;
+        MaxMana.OnStatChanged += StatChanged;
+        ManaRecovery.OnStatChanged += StatChanged;
+        CooldownReduction.OnStatChanged += StatChanged;
+        Speed.OnStatChanged += StatChanged;
+        DodgeChance.OnStatChanged += StatChanged;
+        HealEfficiency.OnStatChanged += StatChanged;
+        BlockChance.OnStatChanged += StatChanged;
     }
 
     public void SetDefaultWeaponProficiencies(float baseDamageBonus, float baseAccuracyBonus)
@@ -204,5 +225,75 @@ public class CharacterStats
     public float GetEnergyNormalized()
     {
         return Energy / MaxEnergy.GetValue();
+    }
+
+    public void AddModifier(StatModifier modifier)
+    {
+        if (modifier == null || modifier.Value == 0)
+            return;
+
+        Stat stat = GetStatFromStatType(modifier.ModifyingStatType);
+
+        stat.AddModifier(modifier);
+    }
+
+    public Stat GetStatFromStatType(StatType type)
+    {
+        switch (type)
+        {
+            case StatType.PhysicalDamage:
+                return PhysicalDamage;
+
+            case StatType.Armor:
+                return Armor;
+
+            case StatType.ArtsDamage:
+                return ArtsDamage;
+
+            case StatType.ArtsResist:
+                return ArtsResist;
+
+            case StatType.MaxHP:
+                return MaxHP;
+
+            case StatType.MaxEnergy:
+                return MaxEnergy;
+
+            case StatType.EnergyRecovery:
+                return EnergyRecovery;
+
+            case StatType.MaxMana:
+                return MaxMana;
+
+            case StatType.ManaRecovery:
+                return ManaRecovery;
+
+            case StatType.CooldownReduction:
+                return CooldownReduction;
+
+            case StatType.Speed:
+                return Speed;
+
+            case StatType.DodgeChance:
+                return DodgeChance;
+
+            case StatType.HealEfficiency:
+                return HealEfficiency;
+
+            case StatType.BlockChance:
+                return BlockChance;
+
+            case StatType.WeaponAccuracy:
+            case StatType.Proficiency:
+            case StatType.WeaponProficiency:
+            default:
+                Debug.LogError($"GetStatFromStatType: Unexpected stat type {type}");
+                return null;
+        }
+    }
+
+    private void StatChanged(Stat stat)
+    {
+        OnStatChanged?.Invoke(stat);
     }
 }

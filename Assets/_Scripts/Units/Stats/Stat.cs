@@ -30,6 +30,9 @@ public class Stat
     public bool CanBeNegative { get => canBeNegative; private set => canBeNegative = value; }
     public StatGrowthParameters GrowthParameters { get => growthParameters; private set => growthParameters = value; }
 
+
+    public event Action<Stat> OnStatChanged;
+
     #endregion
 
 
@@ -64,6 +67,8 @@ public class Stat
     public void SetBaseValue(float newBaseValue)
     {
         this.baseValue = newBaseValue;
+
+        OnStatChanged?.Invoke(this);
     }
 
     /// <summary>
@@ -143,6 +148,8 @@ public class Stat
 
         statModifiers.Add(modifier);
 
+        OnStatChanged?.Invoke(this);
+
         return true;
     }
 
@@ -158,6 +165,8 @@ public class Stat
             Debug.LogError($"Failed to remove modifier {modifier.Value}, {modifier.Type}, for statType {modifier.ModifyingStatType}");
             return false;
         }
+
+        OnStatChanged?.Invoke(this);
 
         return true;
     }

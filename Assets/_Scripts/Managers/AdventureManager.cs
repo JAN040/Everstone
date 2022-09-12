@@ -11,12 +11,22 @@ public class AdventureManager : MonoBehaviour
 
     #region UI References
 
+    [Header("UI References")]
     [SerializeField] GameObject PauseMenu;
     [SerializeField] GameObject UnitPrefab;
+    [SerializeField] GameObject AllyStatusBar;
+    [SerializeField] GameObject EnemyStatusBar;
+
+    [Space]
+    [SerializeField] Button     PauseButton;
+    [SerializeField] Sprite     PauseButton_ContinueImage;
+    [SerializeField] Sprite     PauseButton_PauseImage;
+
 
     #endregion UI References
 
-
+    [Space]
+    [Header("Variables")]
     [SerializeField] Image background;
     [SerializeField] bool IsPaused = false;
     [SerializeField] ScriptableEnemy targetedEnemy = null;
@@ -41,12 +51,33 @@ public class AdventureManager : MonoBehaviour
         set
         {
             targetedEnemy = value;
+            SetStatusBarUnit(value, Faction.Enemies);
+
             foreach (var ally in AlliedUnitsList)
             {
                 ally.Prefab.GetComponent<Unit>().TargetOpponent = targetedEnemy;
             }
         }
     }
+
+    //who to display in unit status bars
+    private ScriptableUnitBase selectedAlly;
+    public ScriptableUnitBase SelectedAlly
+    {
+        get => selectedAlly;
+        set
+        {
+            selectedAlly = value;
+            //we always want to show heros stats instead of nothing when
+            //  the up-to-now selected unit dies
+            if (selectedAlly == null)
+                selectedAlly = Hero;
+            
+            SetStatusBarUnit(value, Faction.Allies);
+        }
+    }
+
+
     #endregion 	VARIABLES
 
 
@@ -62,6 +93,9 @@ public class AdventureManager : MonoBehaviour
             background.sprite = GameManager.Instance?.CurrentLocation?.background;
 
         InitStage(true);
+
+        SelectedAlly = Hero;
+        TargetedEnemy = null;
     }
 
     // Update is called once per frame
@@ -75,21 +109,29 @@ public class AdventureManager : MonoBehaviour
 
     public void TogglePause()
     {
-        IsPaused = !IsPaused;
-
-        //DONT FORGET TO UNPAUSE AFTER ANY BUTTON CLICKS
-        // (quitting the scene doesnt reset the timescale)
-        //Update() still gets called even when timescale = 0
-        //use time.unscaledDeltaTime to measure time even when timescale = 0
-        Time.timeScale = IsPaused ? 0 : 1;
+        Pause(!IsPaused);
 
         TogglePausedMenu();
+    }
+
+    //DONT FORGET TO UNPAUSE AFTER ANY BUTTON CLICKS
+    // (quitting the scene doesnt reset the timescale)
+    //Update() still gets called even when timescale = 0
+    //use time.unscaledDeltaTime to measure time even when timescale = 0
+    public void Pause(bool isPaused)
+    {
+        IsPaused = isPaused;
+
+        Time.timeScale = isPaused ? 0 : 1;
     }
 
     private void TogglePausedMenu()
     {
         if (PauseMenu == null)
             return;
+
+        //pause button image swap
+        PauseButton.image.sprite = IsPaused ? PauseButton_ContinueImage : PauseButton_PauseImage;
 
         PauseMenu.SetActive(IsPaused);
     }
@@ -255,27 +297,44 @@ public class AdventureManager : MonoBehaviour
         unit.Prefab = Instantiate(UnitPrefab, new Vector2(spawnX, -0.25f), Quaternion.identity);
 
         unit.Prefab.GetComponent<Unit>().Initialize(unit.BaseStats, unit, UnitGrid, Hero);
-        unit.Prefab.GetComponent<Unit>().OnSetTarget += SetTargetEnemy;
+        unit.Prefab.GetComponent<Unit>().OnSetTarget += SetTarget;
         unit.Prefab.GetComponent<Unit>().OnUnitDeath += HandleUnitDeath;
+        unit.Prefab.GetComponent<Unit>().OnStatChanged += UnitStatChanged;
+
         unit.Prefab.layer = LayerMask.NameToLayer(layer.ToString());
     }
 
-    public void SetTargetEnemy(ScriptableUnitBase unit)
-    {
-        foreach (var enemy in EnemyUnitsList)
-        {
-            enemy.Prefab.GetComponent<Unit>().IsTargeted = false;
-        }
+    #endregion Unit Spawning
 
+    /// <summary>
+    /// Needs faction parameter for when the unit is null
+    /// </summary>
+    public void SetTarget(ScriptableUnitBase unit, Faction faction)
+    {
         if (unit == null)
         {
-            TargetedEnemy = null;
+            if (faction == Faction.Allies)
+                SelectedAlly = null;
+            else
+                TargetedEnemy = null;
+            
+            return;
         }
-        else
+
+        if (faction == Faction.Enemies)
         {
+            foreach (var enemy in EnemyUnitsList)
+            {
+                enemy.Prefab.GetComponent<Unit>().IsTargeted = false;
+            }
+            
             TargetedEnemy = unit as ScriptableEnemy;
 
             unit.Prefab.GetComponent<Unit>().IsTargeted = true;
+        }
+        else
+        {
+            SelectedAlly = unit;
         }
     }
 
@@ -295,17 +354,45 @@ public class AdventureManager : MonoBehaviour
         Destroy(unit.Prefab);
 
         if (unit.Faction == Faction.Allies)
+        {
+            if (SelectedAlly == unit)
+                SelectedAlly = null;
+
             AlliedUnitsList.Remove(unit);
+        }
         else
         {
-            EnemyUnitsList.Remove(unit as ScriptableEnemy);
-
             if (TargetedEnemy == unit)
                 TargetedEnemy = null;
+
+            EnemyUnitsList.Remove(unit as ScriptableEnemy);
         }
 
         UnitGrid.Remove(unit);
     }
 
-    #endregion Unit Spawning
+    /// <summary>
+    /// The method that handles the OnStatChanged event of Unit.
+    /// When any of its stats are changed, we should update the StatusBar
+    ///     (if the unit is selected, and therefore shown in the StatusBar)
+    /// </summary>
+    private void UnitStatChanged(ScriptableUnitBase unit, Stat stat)
+    {
+        //only do an update if the unit is selected
+        if (unit.Faction == Faction.Allies && SelectedAlly == unit)
+        {
+            AllyStatusBar.GetComponent<UnitStatusBar>()?.UpdateStats();
+        }
+        else if (unit.Faction == Faction.Enemies && targetedEnemy == unit)
+        {
+            EnemyStatusBar.GetComponent<UnitStatusBar>()?.UpdateStats();
+        }
+    }
+
+    private void SetStatusBarUnit(ScriptableUnitBase unit, Faction faction)
+    {
+        var bar = faction == Faction.Allies ? AllyStatusBar : EnemyStatusBar;
+        
+        bar.GetComponent<UnitStatusBar>().UnitRef = unit;
+    }
 }
