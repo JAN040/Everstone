@@ -456,31 +456,31 @@ public class CharacterCreationManager : MonoBehaviour
             },
 
             //weapon skills
-            {
-                WeaponType.Dagger.ToString(),
-                new EquipmentSkillLevel(Skill.Equipment_Skill, stats, points_Dagger,
-                    0, points_Dagger/10f, WeaponType.Dagger)
-            },
-            {
-                WeaponType.Sword.ToString(),
-                new EquipmentSkillLevel(Skill.Equipment_Skill, stats, points_Sword,
-                    0, points_Sword/10f, WeaponType.Sword)
-            },
-            {
-                WeaponType.Axe.ToString(),
-                new EquipmentSkillLevel(Skill.Equipment_Skill, stats, points_Axe,
-                    0, points_Axe/10f, WeaponType.Axe)
-            },
-            {
-                WeaponType.Shield.ToString(),
-                new EquipmentSkillLevel(Skill.Equipment_Skill, stats, points_Shield,
-                    0, points_Shield/10f, WeaponType.Shield)
-            },
-            {
-                WeaponType.Staff.ToString(),
-                new EquipmentSkillLevel(Skill.Equipment_Skill, stats, points_Staff,
-                    0, points_Staff/10f, WeaponType.Staff)
-            },
+            //{
+            //    WeaponType.Dagger.ToString(),
+            //    new EquipmentSkillLevel(Skill.Equipment_Skill, stats, points_Dagger,
+            //        0, points_Dagger/10f, WeaponType.Dagger)
+            //},
+            //{
+            //    WeaponType.Sword.ToString(),
+            //    new EquipmentSkillLevel(Skill.Equipment_Skill, stats, points_Sword,
+            //        0, points_Sword/10f, WeaponType.Sword)
+            //},
+            //{
+            //    WeaponType.Axe.ToString(),
+            //    new EquipmentSkillLevel(Skill.Equipment_Skill, stats, points_Axe,
+            //        0, points_Axe/10f, WeaponType.Axe)
+            //},
+            //{
+            //    WeaponType.Shield.ToString(),
+            //    new EquipmentSkillLevel(Skill.Equipment_Skill, stats, points_Shield,
+            //        0, points_Shield/10f, WeaponType.Shield)
+            //},
+            //{
+            //    WeaponType.Staff.ToString(),
+            //    new EquipmentSkillLevel(Skill.Equipment_Skill, stats, points_Staff,
+            //        0, points_Staff/10f, WeaponType.Staff)
+            //},
         };
     }
 

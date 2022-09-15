@@ -239,8 +239,12 @@ public class UnitGrid
             firstRowDown = target[0, 1];
         }
 
+        if (firstRowUp == null && firstRowDown == null)
+        {
+            return null; //when the first column is empty, there are no enemies/valid targets
+        }
         //if the first row only has one unit, that one will always be the target
-        if (firstRowDown == null)
+        else if (firstRowDown == null)
             return firstRowUp;
         else if (firstRowUp == null)
             return firstRowDown;

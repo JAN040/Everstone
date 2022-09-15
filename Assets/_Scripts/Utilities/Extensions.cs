@@ -28,6 +28,19 @@ public static class Extensions
         return (int)Math.Round(num);
     }
 
+    //round down and convert to kilo format, ie. 1345 = 1.34K
+    public static string ToKiloString(this float num)
+    {
+        if (num > 1000f)
+        {
+            num /= 1000f;
+            return $"{num:0.00}K";
+        }
+
+        return ((int)num).ToString();
+    }
+
+
     /// <summary>
     /// Gets the next value of the enum (numerically)
     ///     if current value is the max, it returns the lowest value.

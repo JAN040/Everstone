@@ -19,31 +19,31 @@ public class UnitData
         },
         {
             UnitClass.Mage,
-            new UnitClassData(UnitClass.Mage, new List<SpecialSkill>(){ SpecialSkill.SelfBuff, SpecialSkill.SelfHeal },
+            new UnitClassData(UnitClass.Mage, new List<SpecialAbility>(){ SpecialAbility.SelfBuff, SpecialAbility.SelfHeal },
                 StatScaling.Low, StatScaling.Low, StatScaling.VeryLow, 50,
                 StatScaling.High, DamageType.Arts, true)
         },
         {
             UnitClass.Artillery,
-            new UnitClassData(UnitClass.Artillery, new List<SpecialSkill>(){ SpecialSkill.AoeAtk},
+            new UnitClassData(UnitClass.Artillery, new List<SpecialAbility>(){ SpecialAbility.AoeAtk},
                 StatScaling.Low, StatScaling.VeryHigh, StatScaling.Normal, 0,
                 StatScaling.High, isRanged: true)
         },
         {
             UnitClass.Controller,
-            new UnitClassData(UnitClass.Controller, new List<SpecialSkill>(){ SpecialSkill.CC, SpecialSkill.OpponentTeamDebuff, SpecialSkill.TeamBuff},
+            new UnitClassData(UnitClass.Controller, new List<SpecialAbility>(){ SpecialAbility.CC, SpecialAbility.OpponentTeamDebuff, SpecialAbility.TeamBuff},
                 StatScaling.Low, StatScaling.Normal, StatScaling.Normal, 15,
                 StatScaling.Low)
         },
         {
             UnitClass.Bruiser,
-            new UnitClassData(UnitClass.Bruiser, new List<SpecialSkill>(){ SpecialSkill.SelfHeal},
+            new UnitClassData(UnitClass.Bruiser, new List<SpecialAbility>(){ SpecialAbility.SelfHeal},
                 StatScaling.Normal, StatScaling.Normal, StatScaling.Normal, 10,
                 StatScaling.Normal)
         },
         {
             UnitClass.Battlemage,
-            new UnitClassData(UnitClass.Battlemage, new List<SpecialSkill>(){ SpecialSkill.OpponentTeamDebuff},
+            new UnitClassData(UnitClass.Battlemage, new List<SpecialAbility>(){ SpecialAbility.OpponentTeamDebuff},
                 StatScaling.Normal, StatScaling.Normal, StatScaling.Normal, 40,
                 StatScaling.Normal, DamageType.Arts)
         },
@@ -55,7 +55,7 @@ public class UnitData
         },
         {
             UnitClass.Titan,
-            new UnitClassData(UnitClass.Titan, new List<SpecialSkill>(){ SpecialSkill.CC},
+            new UnitClassData(UnitClass.Titan, new List<SpecialAbility>(){ SpecialAbility.CC},
                 StatScaling.VeryLow, StatScaling.VeryHigh, StatScaling.VeryHigh, 0,
                 StatScaling.VeryHigh)
         },
@@ -67,13 +67,13 @@ public class UnitData
         },
         {
             UnitClass.Assassin,
-            new UnitClassData(UnitClass.Assassin, new List<SpecialSkill>(){ SpecialSkill.SelfBuff},
+            new UnitClassData(UnitClass.Assassin, new List<SpecialAbility>(){ SpecialAbility.SelfBuff},
                 StatScaling.High, StatScaling.Low, StatScaling.Low, 0,
                 StatScaling.High, isRanged: true, onlyUseSpecialSkills: true)
         },
         {
             UnitClass.Healer,
-            new UnitClassData(UnitClass.Healer, new List<SpecialSkill>(){ SpecialSkill.TeamHeal},
+            new UnitClassData(UnitClass.Healer, new List<SpecialAbility>(){ SpecialAbility.TeamHeal},
                 StatScaling.Low, StatScaling.Low, StatScaling.VeryLow, 20,
                 StatScaling.Low, isRanged: true, onlyUseSpecialSkills: true)
         },

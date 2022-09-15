@@ -74,6 +74,7 @@ public class CharacterStats
 
     #endregion NON STAT VALUES
 
+
     #region STAT FIELDS
 
     [Header("Stat object stats")]
@@ -89,13 +90,14 @@ public class CharacterStats
     [SerializeField] private Stat speed;
     [SerializeField] private Stat dodgeChance;
     [SerializeField] private Stat healEfficiency;
-    [SerializeField] private Stat baseAccuracy;
+    //[SerializeField] private Stat baseAccuracy;
     [SerializeField] private Stat maxMana;
     [SerializeField] private Stat manaRecovery;
-    [SerializeField] private Stat blockChance;
+    //[SerializeField] private Stat blockChance;
     [SerializeField] private Stat cooldownReduction;
 
     #endregion STAT FIELDS
+
 
     #region EVENTS
 
@@ -119,45 +121,47 @@ public class CharacterStats
     public Stat ArtsResist { get => artsResist; private set => artsResist = value; }
     public Stat MaxHP { get => maxHP; private set => maxHP = value; }
     public Stat MaxEnergy { get => maxEnergy; private set => maxEnergy = value; }
-    public Stat EnergyRecovery { get => energyRecovery; private set => energyRecovery = value; }
     public Stat Speed { get => speed; private set => speed = value; }
-    public Stat DodgeChance { get => dodgeChance; private set => dodgeChance = value; }
-    public Stat HealEfficiency { get => healEfficiency; private set => healEfficiency = value; }
+
 
     #endregion BASE STATS
 
 
     #region HERO STATS
 
-    public Stat BaseAccuracy { get => baseAccuracy; private set => baseAccuracy = value; }
+    public Stat DodgeChance { get => dodgeChance; private set => dodgeChance = value; }
+    public Stat HealEfficiency { get => healEfficiency; private set => healEfficiency = value; }
 
-    #endregion HERO STATS
-
-
-    #region PLAYER STATS
+    /// <summary>
+    /// Recovery of 1 means 1 energy recovered per second while in battle till full.
+    /// </summary>
+    public Stat EnergyRecovery { get => energyRecovery; private set => energyRecovery = value; }
 
     public Stat MaxMana { get => maxMana; private set => maxMana = value; }
+    /// <summary>
+    /// Recovery of 1 means 1 mana recovered at the end of each encounter.
+    /// </summary>
     public Stat ManaRecovery { get => manaRecovery; private set => manaRecovery = value; }
-
-    //weapon related
-    public Stat BlockChance { get => blockChance; private set => blockChance = value; }
+    
+    //we get this chance from the weapon
+    //public Stat BlockChance { get => blockChance; private set => blockChance = value; }
 
     /// <summary>
     /// Additional CDR from items/potions
     /// </summary>
     public Stat CooldownReduction { get => cooldownReduction; private set => cooldownReduction = value; }
 
+    //public Stat BaseAccuracy { get => baseAccuracy; private set => baseAccuracy = value; }
 
-    public Dictionary<WeaponType, WeaponProficiency> WeaponProficiencies { get; private set; }
+    //public Dictionary<WeaponType, WeaponProficiency> WeaponProficiencies { get; private set; }
 
-    #endregion PLAYER STATS
+    #endregion HERO STATS
 
 
     public CharacterStats(float physicalDamage, float artsDamage, float maxHP, float defense, float artsResist,
                           float maxEnergy, float speed, float dodgeChance,
-                          float baseAccuracy = 0,
-                          float maxMana = 0, float manaRecovery = 0, float energyRecovery = 0, float cooldownReduction = 0,
-                          float blockChance = 0, float healEfficiency = 0)
+                          float maxMana = 0, float manaRecovery = 0, float energyRecovery = 1, float cooldownReduction = 0,
+                          float healEfficiency = 1)
     {
         PhysicalDamage = new Stat(physicalDamage, StatType.PhysicalDamage, false);
         Armor = new Stat(defense, StatType.Armor, false);
@@ -170,19 +174,20 @@ public class CharacterStats
         EnergyRecovery = new Stat(energyRecovery, StatType.EnergyRecovery, true);
         Speed = new Stat(speed, StatType.Speed, false);
         DodgeChance = new Stat(dodgeChance, StatType.DodgeChance, false);
-        HealEfficiency = new Stat(0, StatType.HealEfficiency, true);
+        HealEfficiency = new Stat(healEfficiency, StatType.HealEfficiency, true);
 
-        BaseAccuracy = new Stat(baseAccuracy, StatType.WeaponAccuracy, false);
 
         MaxMana = new Stat(maxMana, StatType.MaxMana, false);
         _mana = maxMana;
         ManaRecovery = new Stat(manaRecovery, StatType.ManaRecovery, true);
         MaxPets = 0;
         CooldownReduction = new Stat(cooldownReduction, StatType.CooldownReduction, true);
-        BlockChance = new Stat(blockChance, StatType.BlockChance, false);
-
+        
+        //BlockChance = new Stat(blockChance, StatType.BlockChance, false);
+        //BaseAccuracy = new Stat(baseAccuracy, StatType.WeaponAccuracy, false);
         //WeaponProficiencies = null;
-        SetDefaultWeaponProficiencies(0f, 0f);
+        //SetDefaultWeaponProficiencies(0f, 0f);
+        
         SetStatEvents();
     }
 
@@ -201,30 +206,44 @@ public class CharacterStats
         Speed.OnStatChanged += StatChanged;
         DodgeChance.OnStatChanged += StatChanged;
         HealEfficiency.OnStatChanged += StatChanged;
-        BlockChance.OnStatChanged += StatChanged;
+        //BlockChance.OnStatChanged += StatChanged;
     }
 
-    public void SetDefaultWeaponProficiencies(float baseDamageBonus, float baseAccuracyBonus)
-    {
-        WeaponProficiencies = new Dictionary<WeaponType, WeaponProficiency>();
+    //public void SetDefaultWeaponProficiencies(float baseDamageBonus, float baseAccuracyBonus)
+    //{
+    //    WeaponProficiencies = new Dictionary<WeaponType, WeaponProficiency>();
 
-        foreach (WeaponType weapon in (WeaponType[])Enum.GetValues(typeof(WeaponType)))
-        {
-            if (weapon == WeaponType.None)
-                continue;
+    //    foreach (WeaponType weapon in (WeaponType[])Enum.GetValues(typeof(WeaponType)))
+    //    {
+    //        if (weapon == WeaponType.None)
+    //            continue;
 
-            WeaponProficiencies.Add(weapon, new WeaponProficiency(weapon, baseDamageBonus, baseAccuracyBonus));
-        }
-    }
+    //        WeaponProficiencies.Add(weapon, new WeaponProficiency(weapon, baseDamageBonus, baseAccuracyBonus));
+    //    }
+    //}
 
     public float GetHpNormalized()
     {
+        if (MaxHP.GetValue() <= 0)
+            return 0;
+
         return HealthPoints / MaxHP.GetValue();
     }
 
     public float GetEnergyNormalized()
     {
+        if (MaxEnergy.GetValue() <= 0)
+            return 0;
+
         return Energy / MaxEnergy.GetValue();
+    }
+
+    public float GetManaNormalized()
+    {
+        if (MaxMana.GetValue() <= 0)
+            return 0;
+        
+        return Mana / MaxMana.GetValue();
     }
 
     public void AddModifier(StatModifier modifier)
@@ -281,8 +300,6 @@ public class CharacterStats
                 return HealEfficiency;
 
             case StatType.BlockChance:
-                return BlockChance;
-
             case StatType.WeaponAccuracy:
             case StatType.Proficiency:
             case StatType.WeaponProficiency:

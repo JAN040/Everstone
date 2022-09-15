@@ -15,10 +15,10 @@ public class UnitClassData
     public StatScaling Armor;
     public float       ArtsResist;
 
-    public List<SpecialSkill> SpecialSkills;
+    public List<SpecialAbility> SpecialSkills;
     public bool OnlyUseSpecialSkills;
 
-    public UnitClassData(UnitClass @class, List<SpecialSkill> specialSkills,
+    public UnitClassData(UnitClass @class, List<SpecialAbility> specialSkills,
         StatScaling speed, StatScaling constitution, StatScaling armor, float artsResist,
         StatScaling damage, DamageType damageType = DamageType.Physical, bool isRanged = false,
         bool onlyUseSpecialSkills = false)

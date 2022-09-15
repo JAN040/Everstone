@@ -11,10 +11,10 @@ TagManager:
   - 
   - Water
   - UI
-  - UI_2
   - Allies_Layer
   - Enemies_Layer
-  - 
+  - ProjectileLayer
+  - UI_2
   - UI_Overlay
   - 
   - 

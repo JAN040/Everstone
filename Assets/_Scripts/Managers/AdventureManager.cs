@@ -16,6 +16,7 @@ public class AdventureManager : MonoBehaviour
     [SerializeField] GameObject UnitPrefab;
     [SerializeField] GameObject AllyStatusBar;
     [SerializeField] GameObject EnemyStatusBar;
+    [SerializeField] GameObject PlayerEnergyBar;
 
     [Space]
     [SerializeField] Button     PauseButton;
@@ -29,16 +30,16 @@ public class AdventureManager : MonoBehaviour
     [Header("Variables")]
     [SerializeField] Image background;
     [SerializeField] bool IsPaused = false;
-    [SerializeField] ScriptableEnemy targetedEnemy = null;
 
-    private ScriptableAdventureLocation CurrentLocation;
+    [SerializeField] ScriptableAdventureLocation CurrentLocation;
 
-    private ScriptableHero Hero;
-    private List<ScriptableUnitBase> AlliedUnitsList;
-    private List<ScriptableEnemy> EnemyUnitsList;
+    private ScriptableHero PlayerHero;
+    [SerializeField] List<ScriptableUnitBase> AlliedUnitsList;
+    [SerializeField] List<ScriptableEnemy> EnemyUnitsList;
 
     private UnitGrid UnitGrid = new UnitGrid();
 
+    [SerializeField] ScriptableEnemy targetedEnemy = null;
     private ScriptableEnemy TargetedEnemy
     {
         get
@@ -50,18 +51,27 @@ public class AdventureManager : MonoBehaviour
         }
         set
         {
+            var enemyUnit = targetedEnemy?.Prefab?.GetComponent<Unit>();
+            if (value == null)
+            {
+                if (enemyUnit == null || enemyUnit.IsDead)
+                {   //if the unit died; select a default target for the status bar
+                    SetStatusBarUnit(UnitGrid.GetDefaultTarget(Faction.Enemies), Faction.Enemies);
+                }
+                //if the target was deselected manually, but the unit is still alive, keep the status bar as-is
+            }
+
             targetedEnemy = value;
-            SetStatusBarUnit(value, Faction.Enemies);
 
             foreach (var ally in AlliedUnitsList)
             {
-                ally.Prefab.GetComponent<Unit>().TargetOpponent = targetedEnemy;
+                ally.Prefab.GetComponent<Unit>().PreferredTargetOpponent = targetedEnemy;
             }
         }
     }
 
     //who to display in unit status bars
-    private ScriptableUnitBase selectedAlly;
+    [SerializeField] ScriptableUnitBase selectedAlly;
     public ScriptableUnitBase SelectedAlly
     {
         get => selectedAlly;
@@ -71,7 +81,7 @@ public class AdventureManager : MonoBehaviour
             //we always want to show heros stats instead of nothing when
             //  the up-to-now selected unit dies
             if (selectedAlly == null)
-                selectedAlly = Hero;
+                selectedAlly = PlayerHero;
             
             SetStatusBarUnit(value, Faction.Allies);
         }
@@ -94,8 +104,9 @@ public class AdventureManager : MonoBehaviour
 
         InitStage(true);
 
-        SelectedAlly = Hero;
+        SelectedAlly = PlayerHero;
         TargetedEnemy = null;
+        PlayerEnergyBar.GetComponent<PlayerEnergyBar>().Initialize(PlayerHero, null);
     }
 
     // Update is called once per frame
@@ -144,10 +155,10 @@ public class AdventureManager : MonoBehaviour
         if (initAllies)
         {   //Handle allies (and hero)
             AlliedUnitsList = new List<ScriptableUnitBase>();
-            Hero = GameManager.Instance.PlayerManager.PlayerHero;
+            PlayerHero = GameManager.Instance.PlayerManager.PlayerHero;
 
-            if (Hero != null)
-                AlliedUnitsList.Add(Hero);
+            if (PlayerHero != null)
+                AlliedUnitsList.Add(PlayerHero);
 
             if (GameManager.Instance.Allies != null)
                 AlliedUnitsList.AddRange(GameManager.Instance.Allies);
@@ -296,7 +307,7 @@ public class AdventureManager : MonoBehaviour
 
         unit.Prefab = Instantiate(UnitPrefab, new Vector2(spawnX, -0.25f), Quaternion.identity);
 
-        unit.Prefab.GetComponent<Unit>().Initialize(unit.BaseStats, unit, UnitGrid, Hero);
+        unit.Prefab.GetComponent<Unit>().Initialize(unit.BaseStats, unit, UnitGrid, PlayerHero);
         unit.Prefab.GetComponent<Unit>().OnSetTarget += SetTarget;
         unit.Prefab.GetComponent<Unit>().OnUnitDeath += HandleUnitDeath;
         unit.Prefab.GetComponent<Unit>().OnStatChanged += UnitStatChanged;
@@ -340,7 +351,7 @@ public class AdventureManager : MonoBehaviour
 
     private void HandleUnitDeath(ScriptableUnitBase unit)
     {
-        if (unit == Hero)
+        if (unit == PlayerHero)
         {
             //TODO: game over
             Debug.Log("Hero died. Game over.");

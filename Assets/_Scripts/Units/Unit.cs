@@ -65,7 +65,7 @@ public class Unit : MonoBehaviour
     /// </summary>
     public Vector2 IdlePosition;
 
-    private bool isTargeted = false;
+    [SerializeField] bool isTargeted = false;
     public bool IsTargeted
     {
         get => isTargeted;
@@ -92,7 +92,7 @@ public class Unit : MonoBehaviour
     /// <summary>
     /// Non targetable targets cant be hit with a direct attack, only AOE
     /// </summary>
-    private bool isTargetable = true;
+    [SerializeField] bool isTargetable = true;
     public bool IsTargetable
     {
         get => isTargetable;
@@ -113,7 +113,7 @@ public class Unit : MonoBehaviour
     /// <summary>
     /// Determines prefab button clickability
     /// </summary>
-    private bool isInteractable = true;
+    [SerializeField] bool isInteractable = true;
     public bool IsInteractable
     {
         get => isInteractable;
@@ -129,7 +129,7 @@ public class Unit : MonoBehaviour
     /// Used for excluding the unit from battle when it dies
     ///     (for the duration of the death animation)
     /// </summary>
-    private bool isDead = false;
+    [SerializeField] bool isDead = false;
     public bool IsDead
     {
         get => isDead;
@@ -145,18 +145,17 @@ public class Unit : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Decided by who the player targets (for allies) or randomly (enemies)
+    /// </summary>
+    public ScriptableUnitBase PreferredTargetOpponent;
+
+    /// <summary>
+    /// The target this unit is currently attacking
+    /// </summary>
+    public ScriptableUnitBase CurrentTargetOpponent;
+
     [SerializeField] bool IsAttacking = false;
-
-    public ScriptableUnitBase TargetOpponent;
-
-    private bool IsTargetOpponentValid {
-        get
-        {
-            return TargetOpponent != null &&
-                   TargetOpponent.Prefab != null &&
-                 ! TargetOpponent.Prefab.GetComponent<Unit>().IsDead; 
-        }
-    }
 
     private float BasicAttackForce { 
         get { return BasicAttackForce_Base * GetMineToHeroSpeedRatio(); }
@@ -167,6 +166,7 @@ public class Unit : MonoBehaviour
     }
 
     #endregion VARIABLES
+
 
     #region UNITY METHODS
 
@@ -211,13 +211,13 @@ public class Unit : MonoBehaviour
 
         if (IsAttacking)
         {
-            if (!IsTargetOpponentValid)
+            if (!IsValidTarget(CurrentTargetOpponent))
             {
                 this.StopAttacking(true);
                 return;
             }
 
-            Vector3 targetPos = TargetOpponent.Prefab.transform.position;
+            Vector3 targetPos = CurrentTargetOpponent.Prefab.transform.position;
             Vector3 f = targetPos - transform.position;
 
             f = f.normalized * BasicAttackForce;
@@ -511,11 +511,13 @@ public class Unit : MonoBehaviour
 
     private void BasicAttack()
     {
-        if (!IsTargetOpponentValid) //reselect a target if needed
-            TargetOpponent = UnitGridRef.GetDefaultTarget(GetOpponentFaction());
+        if (!IsValidTarget(PreferredTargetOpponent)) //reselect a preffered target if needed
+            PreferredTargetOpponent = UnitGridRef.GetDefaultTarget(GetOpponentFaction());
         
+        CurrentTargetOpponent = PreferredTargetOpponent;
+
         //if we have a valid target
-        if (IsTargetOpponentValid)
+        if (IsValidTarget(CurrentTargetOpponent))
         {
             this.IsAttacking = true;
             this.Stats.Energy = 0;
@@ -551,5 +553,12 @@ public class Unit : MonoBehaviour
         yield return new WaitForSeconds(t);
 
         RemoveVelocity();
+    }
+
+    private bool IsValidTarget(ScriptableUnitBase opponentTarget)
+    {
+        return opponentTarget != null &&
+               opponentTarget.Prefab != null &&
+               !opponentTarget.Prefab.GetComponent<Unit>().IsDead;
     }
 }

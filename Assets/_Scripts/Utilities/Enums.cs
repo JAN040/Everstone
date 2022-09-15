@@ -73,7 +73,7 @@ public enum StatScaling
     VeryHigh
 }
 
-public enum SpecialSkill
+public enum SpecialAbility
 {
     CC,             //stuns the enemy (could be freeze or someth when/if i add elements)
     OpponentDebuff, OpponentTeamDebuff,
