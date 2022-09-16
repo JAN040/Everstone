@@ -41,20 +41,10 @@ public class PlayerEnergyBar : MonoBehaviour
 
     #region UNITY METHODS
 
-    // increase energy every frame till full
     void Update()
     {
-        var playerStats = PlayerHero?.Prefab?.GetComponent<Unit>()?.Stats;
-        if (playerStats == null || PlayerHero.Prefab.GetComponent<Unit>().IsDead)
-            return;
-
-        if (playerStats.GetEnergyNormalized() < 1)
-        {
-            playerStats.Energy += playerStats.EnergyRecovery.GetValue() * Time.deltaTime / 10;
-        }
-
         UpdateUI();
-    } 
+    }
 
     #endregion UNITY METHODS
 
@@ -82,9 +72,10 @@ public class PlayerEnergyBar : MonoBehaviour
 
     private void UpdateUI()
     {
-        var playerStats = PlayerHero?.Prefab?.GetComponent<Unit>()?.Stats;
-        if (playerStats == null)
+        if (PlayerHero == null || PlayerHero.Prefab == null)
             return;
+
+        var playerStats = PlayerHero.Prefab.GetComponent<Unit>().Stats;
 
         EnergyBar.fillAmount = playerStats.GetEnergyNormalized();
         EnergyBar_Max_Text.text = playerStats.MaxEnergy.GetValue().ToKiloString();

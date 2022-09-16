@@ -56,7 +56,7 @@ public class CharacterCreationManager : MonoBehaviour
 
 
 
-    #region UI Objects
+    #region UI References
 
     [Space]
     [Header("UI component references")]
@@ -80,8 +80,8 @@ public class CharacterCreationManager : MonoBehaviour
     public List<Sprite> playerIconList;
 
     [Space]
-
     [Header("Dropdown controls")]
+
     [SerializeField]
     [Tooltip("Reference to the hero class selection dropdown.")]
     TMP_Dropdown heroClassDropdown;
@@ -113,10 +113,15 @@ public class CharacterCreationManager : MonoBehaviour
     [SerializeField] Button SkillPointsButton_Plus_Arts;
     [SerializeField] Button SkillPointsButton_Minus_Arts;
 
-    #endregion UI Objects
+    [Header("Other")]
+    [SerializeField] Toggle HardcoreCheckbox;
+
+
+    #endregion UI References
 
 
     #endregion VARIABLES
+
 
     #region UNITY METHODS
 
@@ -323,11 +328,13 @@ public class CharacterCreationManager : MonoBehaviour
     /// </summary>
     public void Randomize()
     {
+        heroName.text = "Player";
         iconDropdown.value           = UnityEngine.Random.Range(0, iconDropdown.options.Count);
         heroClassDropdown.value      = UnityEngine.Random.Range(0, heroClassDropdown.options.Count);
         heroBackgroundDropdown.value = UnityEngine.Random.Range(1, heroBackgroundDropdown.options.Count);
         difficultyDropdown.value     = UnityEngine.Random.Range(1, difficultyDropdown.options.Count);
-        
+        HardcoreCheckbox.isOn = Helpers.DiceRoll(0.25f);
+
         iconDropdown.RefreshShownValue();
         heroClassDropdown.RefreshShownValue();
         heroBackgroundDropdown.RefreshShownValue();
@@ -390,7 +397,7 @@ public class CharacterCreationManager : MonoBehaviour
         GameManager.Instance.PlayerManager.PlayerHero.MenuSprite = GetSelectedCharacterPortrait();
         GameManager.Instance.PlayerManager.PlayerHero.SetLevelSystem(new LevelSystem(skills, stats));
         GameManager.Instance.Currency = GetSelectedBackground().startingCurrencyAmount;
-        GameManager.Instance.SetGameDifficulty((Difficulty)difficultyDropdown.value);
+        GameManager.Instance.SetGameDifficulty((Difficulty)difficultyDropdown.value, HardcoreCheckbox.isOn);
 
         //leave character creation scene
         SceneManagementSystem.Instance.LoadScene(Scenes.Outskirts);

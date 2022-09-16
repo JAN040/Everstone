@@ -28,6 +28,17 @@ public static class Extensions
         return (int)Math.Round(num);
     }
 
+    /// <summary>
+    /// Same as round but takes care of the < 0.5 hp scenario xD
+    /// </summary>
+    public static int RoundHP(this float num)
+    {
+        if (num < 1f && num > 0)
+            return 1;
+        
+        return (int)Math.Round(num);
+    }
+
     //round down and convert to kilo format, ie. 1345 = 1.34K
     public static string ToKiloString(this float num)
     {

@@ -2,14 +2,12 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Nice, easy to understand enum-based game manager. For larger and more complex games, look into
-/// state machines. But this will serve just fine for most games.
-/// </summary>
+[System.Serializable]
 public class GameManager : Singleton<GameManager>
 {
+    #region VARIABLES
+
     [SerializeField] private int currency;
-    [SerializeField] private Dictionary<string, int> AdventureLocationProgress;
     [SerializeField] private Difficulty gameDifficulty;
 
     /// <summary>
@@ -33,61 +31,32 @@ public class GameManager : Singleton<GameManager>
     public ScriptableAdventureLocation CurrentLocation { get; private set; }
     public List<ScriptableAdventureLocation> AdventureLocationData { get; set; } = null;
 
-    //public static event Action<GameState> OnBeforeStateChanged;
-    //public static event Action<GameState> OnAfterStateChanged;
-
-    //public GameState State { get; private set; }
     public int Currency { get => currency; set => currency = value; }
     public Difficulty GameDifficulty { get => gameDifficulty; private set => gameDifficulty = value; }
 
+    public bool IsHardcore { get; private set; }
+
+    #endregion VARIABLES
 
 
-    // Kick the game off with the first state
+    #region UNITY METHODS
+
     void Start()
     {
         PlayerManager = new PlayerManager();
-        UnitData      = new UnitData();
-    }
+        UnitData = new UnitData();
+    } 
+
+    #endregion UNITY METHODS
+
 
     #region METHODS
 
-    //public void ChangeState(GameState newState)
-    //{
-    //    OnBeforeStateChanged?.Invoke(newState);
 
-    //    State = newState;
-    //    switch (newState)
-    //    {
-    //        case GameState.Starting:
-    //            //HandleStarting();
-    //            break;
-    //        case GameState.SpawningHeroes:
-    //            //HandleSpawningHeroes();
-    //            break;
-    //        case GameState.SpawningEnemies:
-    //            //HandleSpawningEnemies();
-    //            break;
-    //        case GameState.HeroTurn:
-    //            //HandleHeroTurn();
-    //            break;
-    //        case GameState.EnemyTurn:
-    //            break;
-    //        case GameState.Win:
-    //            break;
-    //        case GameState.Lose:
-    //            break;
-    //        default:
-    //            throw new ArgumentOutOfRangeException(nameof(newState), newState, null);
-    //    }
-
-    //    OnAfterStateChanged?.Invoke(newState);
-
-    //    //Debug.Log($"New state: {newState}");
-    //}
-
-    public void SetGameDifficulty(Difficulty newDifficulty)
+    public void SetGameDifficulty(Difficulty newDifficulty, bool isHardcore)
     {
         GameDifficulty = newDifficulty;
+        IsHardcore = isHardcore;
     }
 
     public void SetCurrentLocation(ScriptableAdventureLocation location)
@@ -95,52 +64,19 @@ public class GameManager : Singleton<GameManager>
         CurrentLocation = location;
     }
 
-    private void HandleStarting()
+    public void SaveGame()
     {
-        // Do some start setup, could be environment, cinematics etc
+        GameData data = new GameData()
+        {
 
-        // Eventually call ChangeState again with your next state
-
-        //ChangeState(GameState.SpawningHeroes);
+        };
+        //Serialize(data, location);
     }
 
-    private void HandleSpawningHeroes()
+    public void LoadGame()
     {
-        //UnitManager.Instance.SpawnHeroes();
-
-        //ChangeState(GameState.SpawningEnemies);
-    }
-
-    private void HandleSpawningEnemies()
-    {
-
-        // Spawn enemies
-
-        //ChangeState(GameState.HeroTurn);
-    }
-
-    private void HandleHeroTurn()
-    {
-        // If you're making a turn based game, this could show the turn menu, highlight available units etc
-
-        // Keep track of how many units need to make a move, once they've all finished, change the state. This could
-        // be monitored in the unit manager or the units themselves.
+        //GameData data = Deserialize(location);
     }
 
     #endregion METHODS
-}
-
-/// <summary>
-/// This is obviously an example and I have no idea what kind of game you're making.
-/// You can use a similar manager for controlling your menu states or dynamic-cinematics, etc
-/// </summary>
-[Serializable]
-public enum GameState {
-    Starting,
-    SpawningHeroes,
-    SpawningEnemies,
-    HeroTurn,
-    EnemyTurn,
-    Win,
-    Lose,
 }

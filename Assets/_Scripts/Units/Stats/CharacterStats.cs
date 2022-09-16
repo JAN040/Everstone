@@ -29,7 +29,8 @@ public class CharacterStats
             _healthPoints = value;
             _healthPoints = Mathf.Clamp(_healthPoints, 0, this.MaxHP.GetValue());
 
-            OnHealthPointsChanged?.Invoke(_healthPoints, oldVal);
+            if (oldVal != _healthPoints)
+                OnHealthPointsChanged?.Invoke(_healthPoints, oldVal);
         }
     }
 
@@ -101,7 +102,7 @@ public class CharacterStats
 
     #region EVENTS
 
-    /// <summary> Takes two float paramaters, indicating the old and new HP amount </summary>
+    /// <summary> Takes two float paramaters, indicating the new and the old HP amount </summary>
     public event Action<float, float> OnHealthPointsChanged;
     /// <summary> Takes two float paramaters, indicating the old and new Energy amount </summary>
     public event Action<float, float> OnEnergyChanged;

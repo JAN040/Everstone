@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 using UnityEngine.UI;
 using static UnityEngine.EventSystems.EventTrigger;
 
 public class AdventureManager : MonoBehaviour
 {
-    #region 	VARIABLES
+    #region VARIABLES
+
 
     #region UI References
 
@@ -23,8 +25,11 @@ public class AdventureManager : MonoBehaviour
     [SerializeField] Sprite     PauseButton_ContinueImage;
     [SerializeField] Sprite     PauseButton_PauseImage;
 
+    [Space]
+    [SerializeField] TextMeshProUGUI Timer;
 
     #endregion UI References
+
 
     [Space]
     [Header("Variables")]
@@ -51,15 +56,21 @@ public class AdventureManager : MonoBehaviour
         }
         set
         {
-            var enemyUnit = targetedEnemy?.Prefab?.GetComponent<Unit>();
+            var currentTargetedEnemyUnit = (targetedEnemy != null && targetedEnemy.Prefab != null) ?
+                targetedEnemy.Prefab.GetComponent<Unit>()
+                :
+                null;
+
             if (value == null)
             {
-                if (enemyUnit == null || enemyUnit.IsDead)
+                if (currentTargetedEnemyUnit == null || currentTargetedEnemyUnit.IsDead)
                 {   //if the unit died; select a default target for the status bar
                     SetStatusBarUnit(UnitGrid.GetDefaultTarget(Faction.Enemies), Faction.Enemies);
                 }
                 //if the target was deselected manually, but the unit is still alive, keep the status bar as-is
             }
+            else
+                SetStatusBarUnit(value, Faction.Enemies);
 
             targetedEnemy = value;
 
@@ -70,8 +81,10 @@ public class AdventureManager : MonoBehaviour
         }
     }
 
-    //who to display in unit status bars
     [SerializeField] ScriptableUnitBase selectedAlly;
+    /// <summary>
+    /// who to display in the ally unit status bar
+    /// </summary>
     public ScriptableUnitBase SelectedAlly
     {
         get => selectedAlly;
@@ -87,6 +100,7 @@ public class AdventureManager : MonoBehaviour
         }
     }
 
+    float timer = 0f;
 
     #endregion 	VARIABLES
 
@@ -106,13 +120,17 @@ public class AdventureManager : MonoBehaviour
 
         SelectedAlly = PlayerHero;
         TargetedEnemy = null;
+
+        var playerStats = PlayerHero.Prefab.GetComponent<Unit>().Stats;
+        playerStats.Mana = playerStats.MaxMana.GetValue();
         PlayerEnergyBar.GetComponent<PlayerEnergyBar>().Initialize(PlayerHero, null);
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        timer += Time.deltaTime;
+        Timer.text = $"{(int)timer}s";
     }
 
     #endregion 	UNITY METHODS
@@ -152,6 +170,7 @@ public class AdventureManager : MonoBehaviour
         //get encounter type
         EncounterType encounter = CurrentLocation.GetNextEncounter();
 
+
         if (initAllies)
         {   //Handle allies (and hero)
             AlliedUnitsList = new List<ScriptableUnitBase>();
@@ -177,6 +196,12 @@ public class AdventureManager : MonoBehaviour
             SpawnAllies();
         }
 
+        //reset ally status bar to the hero
+        SelectedAlly = PlayerHero;
+
+        //TODO: set energy to 'starting energy' stat
+        PlayerHero.Prefab.GetComponent<Unit>().Stats.Energy = 0;
+
         if (encounter == EncounterType.Event)
         {
             //handle events
@@ -189,8 +214,9 @@ public class AdventureManager : MonoBehaviour
         //spawn enemies/chests
         SpawnEnemies();
 
+        TargetedEnemy = null;
 
-        //notify about stage number (current progress)
+        //TODO: notify about stage number (current progress)
     }
 
 
@@ -310,7 +336,6 @@ public class AdventureManager : MonoBehaviour
         unit.Prefab.GetComponent<Unit>().Initialize(unit.BaseStats, unit, UnitGrid, PlayerHero);
         unit.Prefab.GetComponent<Unit>().OnSetTarget += SetTarget;
         unit.Prefab.GetComponent<Unit>().OnUnitDeath += HandleUnitDeath;
-        unit.Prefab.GetComponent<Unit>().OnStatChanged += UnitStatChanged;
 
         unit.Prefab.layer = LayerMask.NameToLayer(layer.ToString());
     }
@@ -363,42 +388,27 @@ public class AdventureManager : MonoBehaviour
         }
 
         Destroy(unit.Prefab);
+        UnitGrid.Remove(unit);
 
         if (unit.Faction == Faction.Allies)
         {
+            AlliedUnitsList.Remove(unit);
+
             if (SelectedAlly == unit)
                 SelectedAlly = null;
-
-            AlliedUnitsList.Remove(unit);
         }
         else
         {
+            EnemyUnitsList.Remove(unit as ScriptableEnemy);
+
             if (TargetedEnemy == unit)
                 TargetedEnemy = null;
-
-            EnemyUnitsList.Remove(unit as ScriptableEnemy);
-        }
-
-        UnitGrid.Remove(unit);
-    }
-
-    /// <summary>
-    /// The method that handles the OnStatChanged event of Unit.
-    /// When any of its stats are changed, we should update the StatusBar
-    ///     (if the unit is selected, and therefore shown in the StatusBar)
-    /// </summary>
-    private void UnitStatChanged(ScriptableUnitBase unit, Stat stat)
-    {
-        //only do an update if the unit is selected
-        if (unit.Faction == Faction.Allies && SelectedAlly == unit)
-        {
-            AllyStatusBar.GetComponent<UnitStatusBar>()?.UpdateStats();
-        }
-        else if (unit.Faction == Faction.Enemies && targetedEnemy == unit)
-        {
-            EnemyStatusBar.GetComponent<UnitStatusBar>()?.UpdateStats();
+            else if (EnemyStatusBar.GetComponent<UnitStatusBar>().UnitRef == unit)
+                SetStatusBarUnit(UnitGrid.GetDefaultTarget(Faction.Enemies), Faction.Enemies);
         }
     }
+
+    
 
     private void SetStatusBarUnit(ScriptableUnitBase unit, Faction faction)
     {

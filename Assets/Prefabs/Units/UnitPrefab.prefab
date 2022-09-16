@@ -463,8 +463,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6637542071658122930}
-  - component: {fileID: 6637542071658122932}
   - component: {fileID: 6637542071658122933}
+  - component: {fileID: 9016785441587880480}
   - component: {fileID: 5241386405639819621}
   m_Layer: 0
   m_Name: UnitPrefab
@@ -489,32 +489,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &6637542071658122932
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6637542071658122928}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.12}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1.85, y: 1.85}
-  m_EdgeRadius: 0
 --- !u!50 &6637542071658122933
 Rigidbody2D:
   serializedVersion: 4
@@ -536,6 +510,22 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!70 &9016785441587880480
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6637542071658122928}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0.1}
+  m_Size: {x: 1.85, y: 1.8897514}
+  m_Direction: 0
 --- !u!114 &5241386405639819621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -553,7 +543,7 @@ MonoBehaviour:
   BasicAttackForce_Base: 50
   Material_Dissolve: {fileID: 2100000, guid: 53bb19500aee5f84c938670d4c670a99, type: 2}
   RigidBody: {fileID: 6637542071658122933}
-  Collider: {fileID: 6637542071658122932}
+  Collider: {fileID: 0}
   Button: {fileID: 6637542072274994522}
   Image_Frame: {fileID: 6637542072375983109}
   Image_Portrait: {fileID: 4698574776425522977}
@@ -652,14 +642,6 @@ MonoBehaviour:
         AdditionMultiplier: 0
         PowerMultiplier: 0
         DivisionMultiplier: 0
-    baseAccuracy:
-      baseValue: 0
-      type: 0
-      canBeNegative: 0
-      growthParameters:
-        AdditionMultiplier: 0
-        PowerMultiplier: 0
-        DivisionMultiplier: 0
     maxMana:
       baseValue: 0
       type: 0
@@ -669,14 +651,6 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     manaRecovery:
-      baseValue: 0
-      type: 0
-      canBeNegative: 0
-      growthParameters:
-        AdditionMultiplier: 0
-        PowerMultiplier: 0
-        DivisionMultiplier: 0
-    blockChance:
       baseValue: 0
       type: 0
       canBeNegative: 0
@@ -694,8 +668,13 @@ MonoBehaviour:
         DivisionMultiplier: 0
   UnitDataRef: {fileID: 0}
   IdlePosition: {x: 0, y: 0}
+  isTargeted: 0
+  isTargetable: 1
+  isInteractable: 1
+  isDead: 0
+  PreferredTargetOpponent: {fileID: 0}
+  CurrentTargetOpponent: {fileID: 0}
   IsAttacking: 0
-  TargetOpponent: {fileID: 0}
 --- !u!1 &6637542071833872387
 GameObject:
   m_ObjectHideFlags: 0

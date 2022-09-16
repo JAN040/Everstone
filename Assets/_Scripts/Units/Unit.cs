@@ -180,7 +180,6 @@ public class Unit : MonoBehaviour
     {
         Stats.OnHealthPointsChanged -= OnUnitHPChanged;
         Stats.OnEnergyChanged       -= OnUnitEnergyChanged;
-        Stats.OnStatChanged         -= StatChanged;
     }
 
     private void Update()
@@ -189,7 +188,9 @@ public class Unit : MonoBehaviour
         if (IsDead || IsAttacking)
             return;
 
-        Stats.Energy += GetEnergyRecovery();
+        //energy gain
+        float modifier = UnitDataRef == HeroRef ? Stats.EnergyRecovery.GetValue() : GetEnergyRecovery();
+        Stats.Energy += modifier * Time.deltaTime;
 
         //start attacking/action if energy full
         if (Stats.Energy >= Stats.MaxEnergy.GetValue())
@@ -262,7 +263,7 @@ public class Unit : MonoBehaviour
 
     public event Action<ScriptableUnitBase, Faction> OnSetTarget;
     public event Action<ScriptableUnitBase> OnUnitDeath;
-    public event Action<ScriptableUnitBase, Stat> OnStatChanged;
+    //public event Action<ScriptableUnitBase, Stat> OnStatChanged;
 
 
     public void Initialize(CharacterStats stats, ScriptableUnitBase unitData, UnitGrid grid, ScriptableHero hero)
@@ -356,7 +357,6 @@ public class Unit : MonoBehaviour
         Stats.HealthPoints = Stats.MaxHP.GetValue();
         Stats.OnHealthPointsChanged += OnUnitHPChanged;
         Stats.OnEnergyChanged += OnUnitEnergyChanged;
-        Stats.OnStatChanged += StatChanged;
     }
 
 
@@ -405,8 +405,8 @@ public class Unit : MonoBehaviour
 
     public virtual void ReduceHPByAmount(float amount)
     {
-        Debug.Log($"{UnitDataRef.Faction} Unit {UnitDataRef.Name} took {amount} damage.");
         Stats.HealthPoints -= amount;
+        Debug.Log($"{UnitDataRef.Faction} Unit {UnitDataRef.Name} took {amount} damage (now has {Stats.HealthPoints} HP)");
     }
 
     /// <summary>
@@ -420,22 +420,11 @@ public class Unit : MonoBehaviour
         {
             Die();
         }
-
-        //pretend MaxHP was changed since HealthPoints is not a Stat but float (and it doesnt matter anyway)
-        OnStatChanged?.Invoke(UnitDataRef, Stats.MaxHP);
-
-        //TODO: update hp bar
-        //TODO: animate hp bar
     }
 
     private void OnUnitEnergyChanged(float arg1, float arg2)
     {
         Image_EnergyBar.fillAmount = Stats.GetEnergyNormalized();
-    }
-
-    private void StatChanged(Stat stat)
-    {
-        OnStatChanged?.Invoke(UnitDataRef, stat);
     }
 
     protected virtual void Die()
@@ -484,12 +473,13 @@ public class Unit : MonoBehaviour
         transform.position = Vector2.MoveTowards(a, Vector2.Lerp(a, b, LerpDelta), MovementSpeed);
     }
 
+    //non-hero units use this formula to get the multiplier for Time.deltaTime
     private float GetEnergyRecovery()
     {
         float speedMultiplier = GameManager.Instance.UnitData.SpeedRatioMultiplier;
         var ratio = GetMineToHeroSpeedRatio();
 
-        return speedMultiplier * ratio * Time.deltaTime;
+        return speedMultiplier * ratio;
     }
 
     private float GetMineToHeroSpeedRatio()

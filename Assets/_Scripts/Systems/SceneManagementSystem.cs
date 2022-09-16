@@ -15,6 +15,8 @@ public class SceneManagementSystem : Singleton<SceneManagementSystem>
     //  and starting multiple transition coroutines
     public bool IsSwitchingLocation = false;
 
+    public Scenes CurrentScene;
+
     #endregion
 
 
@@ -90,9 +92,13 @@ public class SceneManagementSystem : Singleton<SceneManagementSystem>
         //allow the new scene to show
         SceneManager.LoadScene((int)sc);
 
+        CurrentScene = sc;
+
         transition.SetTrigger("End");
         
         IsSwitchingLocation = false;
+
+        //TODO: save game
     }
 }
 
