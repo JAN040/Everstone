@@ -19,6 +19,8 @@ public class Unit : MonoBehaviour
     [SerializeField] float MovementSpeed_Base;
     [SerializeField] float BasicAttackForce_Base;
     [SerializeField] Material Material_Dissolve;
+    [SerializeField] GameObject StatusIndicatorPrefab;
+
 
     #region UI References
 
@@ -29,10 +31,12 @@ public class Unit : MonoBehaviour
     [SerializeField] Collider2D Collider;
     [SerializeField] Button Button; //for selecting the unit as targeted
     [SerializeField] Image Image_Frame;
+    [SerializeField] Image Image_DamageEffect;
     [SerializeField] Image Image_Portrait;
     [SerializeField] Image Image_PortraitBackground;
     [SerializeField] Image Image_TargetIcon;
     [SerializeField] Image Image_HealthBar;
+    [SerializeField] Image Image_BackHealthBar;
     [SerializeField] Image Image_EnergyBar;
 
     [Space]
@@ -44,7 +48,12 @@ public class Unit : MonoBehaviour
     [SerializeField] Sprite Sprite_Frame_Elite;
     [SerializeField] Sprite Sprite_Frame_Boss;
 
+    [Space]
+    [SerializeField] Sprite BackHealth_Damage;
+    [SerializeField] Sprite BackHealth_Heal;
+
     #endregion UI References
+
 
     [Space]
     [Header("Script properties")]
@@ -165,6 +174,11 @@ public class Unit : MonoBehaviour
         get { return MovementSpeed_Base * GetMineToHeroSpeedRatio(); }
     }
 
+    //healthbar animation
+    [SerializeField] float ChipSpeed = 2f;
+    [SerializeField] float LerpTimer = 0;
+
+
     #endregion VARIABLES
 
 
@@ -188,9 +202,11 @@ public class Unit : MonoBehaviour
         if (IsDead || IsAttacking)
             return;
 
+        //animate HP changes
+        UpdateHpUI();
+
         //energy gain
-        float modifier = UnitDataRef == HeroRef ? Stats.EnergyRecovery.GetValue() : GetEnergyRecovery();
-        Stats.Energy += modifier * Time.deltaTime;
+        GainEnergy();
 
         //start attacking/action if energy full
         if (Stats.Energy >= Stats.MaxEnergy.GetValue())
@@ -202,6 +218,12 @@ public class Unit : MonoBehaviour
                 BasicAttack();
             }
         }
+    }
+
+    private void GainEnergy()
+    {
+        float modifier = UnitDataRef == HeroRef ? Stats.EnergyRecovery.GetValue() : GetEnergyRecovery();
+        Stats.Energy += modifier * Time.deltaTime;
     }
 
     //Handle movement
@@ -282,8 +304,12 @@ public class Unit : MonoBehaviour
         if (UnitDataRef.Faction == Faction.Allies)
             IsTargetable = false;
 
-        Image_HealthBar.fillAmount = Stats.GetHpNormalized();
-        Image_EnergyBar.fillAmount = Stats.GetEnergyNormalized();
+        Image_HealthBar.fillAmount     = Stats.GetHpNormalized();
+        Image_BackHealthBar.fillAmount = Stats.GetHpNormalized();
+        Image_EnergyBar.fillAmount     = Stats.GetEnergyNormalized();
+
+        if (unitData == HeroRef)    //hero unit has a separate UI element for energy
+            Image_EnergyBar.gameObject.SetActive(false);
     }
 
     private void SetUnitData(ScriptableUnitBase unitData)
@@ -368,16 +394,27 @@ public class Unit : MonoBehaviour
         {
             case DamageType.Physical:
                 dmgAmount = CalcDmgAmountPhysical(damage.PhysicalDamage);
+                CreateStatusIndicator(dmgAmount.Round().ToString(), Color.red);
                 break;
+
             case DamageType.Arts:
                 dmgAmount = CalcDmgAmountArts(damage.ArtsDamage);
+                CreateStatusIndicator(dmgAmount.Round().ToString(), Color.blue);
                 break;
+
             case DamageType.Mixed:
-                dmgAmount = CalcDmgAmountPhysical(damage.PhysicalDamage) + CalcDmgAmountArts(damage.ArtsDamage);
+                float physDmg = CalcDmgAmountPhysical(damage.PhysicalDamage);
+                float artsDmg = CalcDmgAmountArts(damage.ArtsDamage);
+                dmgAmount = physDmg + artsDmg;
+                CreateStatusIndicator(physDmg.Round().ToString(), Color.red);
+                CreateStatusIndicator(artsDmg.Round().ToString(), Color.blue);
                 break;
+
             case DamageType.True:
                 dmgAmount = damage.TrueDamage;
+                CreateStatusIndicator(dmgAmount.Round().ToString(), Color.white);
                 break;
+
             default:
                 Debug.LogWarning($"Unset damage type");
                 break;
@@ -386,6 +423,18 @@ public class Unit : MonoBehaviour
         ReduceHPByAmount(dmgAmount);
     }
 
+    private void CreateStatusIndicator(string text, Color color)
+    {
+        var curPos = transform.position;
+        var indicator = Instantiate(StatusIndicatorPrefab, new Vector2(curPos.x + 1, curPos.y - 1), Quaternion.identity);
+        indicator.GetComponent<StatusChangeIndicator>().SetTextAndColor(text, color, GetIndicatorTargetDirection());
+    }
+
+    private FacingDirection GetIndicatorTargetDirection()
+    {
+        return UnitDataRef.Faction == Faction.Enemies ?
+            FacingDirection.Right : FacingDirection.Left;
+    }
 
     private float CalcDmgAmountPhysical(float physicalDamage)
     {
@@ -410,11 +459,11 @@ public class Unit : MonoBehaviour
     }
 
     /// <summary>
-    /// Handle animations and check for death
+    /// Reset animation timer and check for death
     /// </summary>
     private void OnUnitHPChanged(float newAmount, float oldAmount)
     {
-        Image_HealthBar.fillAmount = Stats.GetHpNormalized();
+        LerpTimer = 0;
 
         if (newAmount <= 0)
         {
@@ -458,6 +507,7 @@ public class Unit : MonoBehaviour
     private void SetDissolveMaterial(Material material)
     {
         Image_Frame.material = material;
+        Image_DamageEffect.material = material;
         Image_Portrait.material = material;
         Image_PortraitBackground.material = material;
         Image_TargetIcon.material = material;
@@ -550,5 +600,48 @@ public class Unit : MonoBehaviour
         return opponentTarget != null &&
                opponentTarget.Prefab != null &&
                !opponentTarget.Prefab.GetComponent<Unit>().IsDead;
+    }
+
+    /// <summary>
+    /// Handle Hp bar animation
+    /// </summary>
+    private void UpdateHpUI()
+    {
+        float fillFront = Image_HealthBar.fillAmount;
+        float fillBack = Image_BackHealthBar.fillAmount;
+        float hpFraction = Stats.GetHpNormalized();
+
+        if (fillBack > hpFraction)
+        {
+            //unit took damage
+            Image_BackHealthBar.sprite = BackHealth_Damage;
+            Image_DamageEffect.color = new Color(1f, 0, 0, 0.4f);   //red with 100/255 transparency
+            Image_HealthBar.fillAmount = hpFraction;
+
+            LerpTimer += Time.deltaTime;
+            float percentComplete = LerpTimer / ChipSpeed;
+
+            //Debug.Log($"Animating damage taken for unit: {unitRef.Name}, percent complete: {percentComplete}");
+
+            Image_BackHealthBar.fillAmount = Mathf.Lerp(fillBack, hpFraction, percentComplete * percentComplete);
+            Image_DamageEffect.color = Color.Lerp(Image_DamageEffect.color, Color.clear, percentComplete * 2);
+        }
+        else if (fillFront < hpFraction)
+        {
+            //unit got healed
+            Image_BackHealthBar.sprite = BackHealth_Heal;
+            Image_DamageEffect.color = new Color(0, 1f, 0, 0.4f);   //green with 100/255 transparency
+            Image_BackHealthBar.fillAmount = hpFraction;
+
+            LerpTimer += Time.deltaTime;
+            float percentComplete = LerpTimer / ChipSpeed;
+
+            //Debug.Log($"Animating healing for unit: {unitRef.Name}, percent complete: {percentComplete}");
+
+            Image_HealthBar.fillAmount = Mathf.Lerp(fillFront, hpFraction, percentComplete * percentComplete);
+            Image_DamageEffect.color = Color.Lerp(Image_DamageEffect.color, Color.clear, percentComplete * 2);
+        }
+        else
+            Image_DamageEffect.color = Color.clear;
     }
 }

@@ -194,19 +194,24 @@ public class CharacterStats
 
     private void SetStatEvents()
     {
-        PhysicalDamage.OnStatChanged += StatChanged;
-        Armor.OnStatChanged += StatChanged;
-        ArtsDamage.OnStatChanged += StatChanged;
-        ArtsResist.OnStatChanged += StatChanged;
-        MaxHP.OnStatChanged += StatChanged;
-        MaxEnergy.OnStatChanged += StatChanged;
-        EnergyRecovery.OnStatChanged += StatChanged;
-        MaxMana.OnStatChanged += StatChanged;
-        ManaRecovery.OnStatChanged += StatChanged;
+        PhysicalDamage.OnStatChanged    += StatChanged;
+        Armor.OnStatChanged             += StatChanged;
+        ArtsDamage.OnStatChanged        += StatChanged;
+        ArtsResist.OnStatChanged        += StatChanged;
+        
+        MaxHP.OnStatChanged             += StatChanged;
+        MaxHP.OnStatChanged             += InvokeEmpty_HealthPointsChanged;
+        MaxEnergy.OnStatChanged         += StatChanged;
+        MaxEnergy.OnStatChanged         += InvokeEmpty_EnergyChanged;
+
+        EnergyRecovery.OnStatChanged    += StatChanged;
+        MaxMana.OnStatChanged           += StatChanged;
+        ManaRecovery.OnStatChanged      += StatChanged;
         CooldownReduction.OnStatChanged += StatChanged;
-        Speed.OnStatChanged += StatChanged;
-        DodgeChance.OnStatChanged += StatChanged;
-        HealEfficiency.OnStatChanged += StatChanged;
+        Speed.OnStatChanged             += StatChanged;
+        DodgeChance.OnStatChanged       += StatChanged;
+        HealEfficiency.OnStatChanged    += StatChanged;
+
         //BlockChance.OnStatChanged += StatChanged;
     }
 
@@ -222,6 +227,22 @@ public class CharacterStats
     //        WeaponProficiencies.Add(weapon, new WeaponProficiency(weapon, baseDamageBonus, baseAccuracyBonus));
     //    }
     //}
+
+    /// <summary>
+    /// A helper method to invoke OnEnergyChanged when MaxEnergy Stat gets changed
+    /// </summary>
+    private void InvokeEmpty_EnergyChanged(Stat stat)
+    {
+        OnEnergyChanged.Invoke(0, 0);
+    }
+
+    /// <summary>
+    /// A helper method to invoke OnEnergyChanged when MaxHp Stat gets changed
+    /// </summary>
+    private void InvokeEmpty_HealthPointsChanged(Stat stat)
+    {
+        OnHealthPointsChanged?.Invoke(0, 0);
+    }
 
     public float GetHpNormalized()
     {

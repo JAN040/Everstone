@@ -33,6 +33,7 @@ public class AdventureManager : MonoBehaviour
 
     [Space]
     [Header("Variables")]
+
     [SerializeField] Image background;
     [SerializeField] bool IsPaused = false;
 
@@ -96,7 +97,7 @@ public class AdventureManager : MonoBehaviour
             if (selectedAlly == null)
                 selectedAlly = PlayerHero;
             
-            SetStatusBarUnit(value, Faction.Allies);
+            SetStatusBarUnit(selectedAlly, Faction.Allies);
         }
     }
 
@@ -159,8 +160,10 @@ public class AdventureManager : MonoBehaviour
         if (PauseMenu == null)
             return;
 
-        //pause button image swap
-        PauseButton.image.sprite = IsPaused ? PauseButton_ContinueImage : PauseButton_PauseImage;
+        //pause button icon swap
+        Transform icon = PauseButton.transform.Find("Icon");
+        if (icon != null && icon.GetComponent<Image>() != null)
+            icon.GetComponent<Image>().sprite = IsPaused ? PauseButton_ContinueImage : PauseButton_PauseImage;
 
         PauseMenu.SetActive(IsPaused);
     }

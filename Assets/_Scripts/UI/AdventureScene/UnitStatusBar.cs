@@ -11,6 +11,7 @@ public class UnitStatusBar : MonoBehaviour
 
     #region VARIABLES
 
+
     #region UI References
 
     [Header("UI References")]
@@ -49,6 +50,7 @@ public class UnitStatusBar : MonoBehaviour
     [SerializeField] Sprite InfoPartBorder_Sprite_Gold;
 
     #endregion UI References
+
 
     [Space]
     [Header("Variables")]
