@@ -164,3 +164,24 @@ public enum UserLayers
     Allies_Layer,
     Enemies_Layer
 }
+
+public enum CostType
+{
+    Energy,
+    Mana,
+    EnergyAndMana
+}
+
+public enum Ability
+{
+    BasicAttack,
+    Dodge,
+    Block
+}
+
+public enum ToggleMode
+{
+    None,
+    Toggled,
+    UnToggled
+}

@@ -36,6 +36,16 @@ public class GameManager : Singleton<GameManager>
 
     public bool IsHardcore { get; private set; }
 
+
+    #region Player prefs
+
+
+    public float BattleGameSpeed = 1f;
+
+
+    #endregion Player prefs
+
+
     #endregion VARIABLES
 
 

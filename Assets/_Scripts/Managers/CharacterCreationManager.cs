@@ -393,9 +393,17 @@ public class CharacterCreationManager : MonoBehaviour
 
         Dictionary<string, SkillLevel> skills = GenerateSkillSystem(stats);
 
+        //hero instantiation
         GameManager.Instance.PlayerManager.SetHero(hero);
         GameManager.Instance.PlayerManager.PlayerHero.MenuSprite = GetSelectedCharacterPortrait();
         GameManager.Instance.PlayerManager.PlayerHero.SetLevelSystem(new LevelSystem(skills, stats));
+
+        //player abilities setup
+        GameManager.Instance.PlayerManager.SetAbilities(
+            ResourceSystem.Instance.GetClassicPlayerAbilities(),
+            ResourceSystem.Instance.GetSpecialPlayerAbilities()
+        );
+
         GameManager.Instance.Currency = GetSelectedBackground().startingCurrencyAmount;
         GameManager.Instance.SetGameDifficulty((Difficulty)difficultyDropdown.value, HardcoreCheckbox.isOn);
 

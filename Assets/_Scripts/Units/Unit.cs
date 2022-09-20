@@ -449,7 +449,10 @@ public class Unit : MonoBehaviour
 
     public virtual void Heal(float healAmount)
     {
-        Stats.HealthPoints += healAmount * Stats.HealEfficiency.GetValue();
+        float totalHeal = healAmount * Stats.HealEfficiency.GetValue();
+        CreateStatusIndicator(totalHeal.Round().ToString(), Color.green);
+
+        Stats.HealthPoints += totalHeal;
     }
 
     public virtual void ReduceHPByAmount(float amount)
@@ -512,6 +515,7 @@ public class Unit : MonoBehaviour
         Image_PortraitBackground.material = material;
         Image_TargetIcon.material = material;
         Image_HealthBar.material = material;
+        Image_BackHealthBar.material = material;
         Image_EnergyBar.material = material;
     }
 

@@ -21,6 +21,10 @@ public class AbilityUI : MonoBehaviour
     [SerializeField] Image CooldownImage;
     [SerializeField] TextMeshProUGUI CooldownText;
 
+    [SerializeField] GameObject CostPanel;
+    [SerializeField] TextMeshProUGUI CostText_Energy;
+    [SerializeField] TextMeshProUGUI CostText_Mana;
+
 
     #endregion UI References
 
@@ -29,7 +33,7 @@ public class AbilityUI : MonoBehaviour
     [Header("Variables")]
 
     [SerializeField] ScriptableAbility Ability;
-    private ScriptableHero PlayerHero;
+    private Unit PlayerHeroUnit;
 
 
     #endregion VARIABLES
@@ -44,8 +48,8 @@ public class AbilityUI : MonoBehaviour
         if (Ability == null)
             return;
         
-        if (Ability.Cooldown > 0)
-            Ability.Cooldown -= Time.deltaTime;
+        if (Ability.CurrentCooldown > 0)
+            Ability.CurrentCooldown -= Time.deltaTime;
         
         UpdateUI(false);
     }
@@ -53,9 +57,9 @@ public class AbilityUI : MonoBehaviour
     #endregion UNITY METHODS
 
 
-    public void Initialize(ScriptableHero hero, ScriptableAbility ability)
+    public void Initialize(Unit heroUnit, ScriptableAbility ability)
     {
-        PlayerHero = hero;
+        PlayerHeroUnit = heroUnit;
         Ability = ability;
 
         UpdateUI(true);
@@ -69,35 +73,91 @@ public class AbilityUI : MonoBehaviour
             CooldownImage.fillAmount = 0;
             CooldownText.text = "";
 
+            if (CostText_Energy != null)
+                CostText_Energy.text = "";
+            if (CostText_Mana != null)
+                CostText_Mana.text = "";
+
             return;
         }
 
         if (init)
         {
             AbilityImage.sprite = Ability.MenuImage;
+            Ability.SetCostText(CostText_Energy, CostText_Mana);
         }
 
         float cd = Ability.GetCooldownNormalized();
 
         AbilityButton.interactable = cd <= 0;
+        CostPanel.SetActive(cd <= 0);   //cost should only be visible when the skill is ready
+
         CooldownImage.fillAmount = cd;
-        CooldownText.text = GetCooldownText(Ability.CurrentCooldown);
+        CooldownText.text = Ability.GetCooldownText();
     }
 
-    private string GetCooldownText(float cd)
-    {
-        //if more than a minute
-        if (cd > 60f)
-            return $"{ (int)cd / 60 }m";
-        else if (cd > 0)
-            return $"{ (int)cd }";
-        else
-            return "";
-    }
-
+   
     //when ability is clicked
     public void Activate()
     {
+        //handle the cost
+        if (!HandleAbilityCost())
+        {
+            Debug.LogWarning($"Tried to activate ability {Ability.Name} but it failed because it cost more than the player had.");
+            return;
+        }
 
+        Ability.Activate();
+
+        //handle the cooldown
+        float cd = Ability.Cooldown;
+        
+        if (Ability.IsCDRValid) 
+            cd -= cd * PlayerHeroUnit.Stats.CooldownReduction.GetValue();
+        
+        Ability.CurrentCooldown = cd;
+    }
+
+    private bool HandleAbilityCost()
+    {
+        var stats = PlayerHeroUnit.Stats;
+        float eCost;
+        float mCost;
+
+        if (Ability.CostType == CostType.Energy)
+        {
+            eCost = Ability.EnergyCost;
+
+            if (stats.Energy >= eCost)
+            {
+                stats.Energy -= eCost;
+                return true;
+            }
+        }
+        else if (Ability.CostType == CostType.Mana)
+        {
+            mCost = Ability.ManaCost;
+
+            if (stats.Mana >= mCost)
+            {
+                stats.Mana -= mCost;
+                return true;
+            }
+        }
+        else if (Ability.CostType == CostType.EnergyAndMana)
+        {
+            eCost = Ability.EnergyCost;
+            mCost = Ability.ManaCost;
+
+            if (stats.Energy >= eCost && stats.Mana >= mCost)
+            {
+                stats.Energy -= eCost;
+                stats.Mana -= mCost;
+                
+                return true;
+            }
+        }
+
+        return false;
     }
 }

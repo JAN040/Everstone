@@ -7,9 +7,12 @@ using UnityEngine;
 /// I make this a MonoBehaviour as sometimes I add some debug/development references in the editor.
 /// If you don't feel free to make this a standard class
 /// </summary>
-public class ResourceSystem : StaticInstance<ResourceSystem> {
+public class ResourceSystem : Singleton<ResourceSystem> {
     private List<ScriptableHero> Heroes { get; set; }
     private Dictionary<string, ScriptableHero> _HeroesDict;
+
+    private List<ScriptableAbility> PlayerClassicAbilities { get; set; }
+    private List<ScriptableAbility> PlayerSpecialAbilities { get; set; }
 
     private List<ScriptableBackground> HeroBackgrounds { get; set; }
     private Dictionary<string, ScriptableBackground> _HeroBackgroundsDict;
@@ -40,17 +43,19 @@ public class ResourceSystem : StaticInstance<ResourceSystem> {
     };
 
 
-    protected override void Awake() {
-        base.Awake();
+    //protected override void Awake() {
+    //    base.Awake();
+    //}
+
+    private void Start()
+    {
         AssembleResources();
     }
+
 
     private void AssembleResources() {
         Heroes = Resources.LoadAll<ScriptableHero>("Heroes/Classes").ToList();
         _HeroesDict = Heroes.ToDictionary(r => r.ClassName, r => r);
-
-        HeroBackgrounds = Resources.LoadAll<ScriptableBackground>("Heroes/Backgrounds").ToList();
-        _HeroBackgroundsDict = HeroBackgrounds.ToDictionary(x => x.backgroundName, x => x);
 
         AdventureLocations = Resources.LoadAll<ScriptableAdventureLocation>("Locations/Adventure").ToList();
         _AdventureLocationsDict = AdventureLocations.ToDictionary(x => x.locationName, x => x);
@@ -72,16 +77,33 @@ public class ResourceSystem : StaticInstance<ResourceSystem> {
     public ScriptableBackground GetRandomBackground() => HeroBackgrounds[Random.Range(0, HeroBackgrounds.Count)];
     public List<string> GetHeroBackgrounds()
     {
+        HeroBackgrounds = Resources.LoadAll<ScriptableBackground>("Heroes/Backgrounds").ToList();
+        _HeroBackgroundsDict = HeroBackgrounds.ToDictionary(x => x.backgroundName, x => x);
+
         var names = new List<string>();
         
+        //add the "None" background first
         var BGnone = HeroBackgrounds.FirstOrDefault(x => x.backgroundName.ToLower() == "none");
         names.Add(BGnone.backgroundName);
-        
+
+        //add the other backgrounds after
         var BGother = _HeroBackgroundsDict.Keys.OrderBy(x => x).ToList();
         BGother.RemoveAll(x => x.ToLower() == "none");
         names.AddRange(BGother);
 
         return names;
+    }
+
+    public List<ScriptableAbility> GetClassicPlayerAbilities()
+    {
+        PlayerClassicAbilities = Resources.LoadAll<ScriptableAbility>("Heroes/Abilities/Classic").ToList();
+        return new List<ScriptableAbility>(PlayerClassicAbilities);
+    }
+
+    public List<ScriptableAbility> GetSpecialPlayerAbilities()
+    {
+        PlayerSpecialAbilities = Resources.LoadAll<ScriptableAbility>("Heroes/Abilities/Special").ToList();
+        return new List<ScriptableAbility>(PlayerSpecialAbilities);
     }
 
     public List<ScriptableAdventureLocation> GetAdventureLocations() => AdventureLocations.OrderBy(x => x.name).OrderBy(x => x.difficulty).ToList();

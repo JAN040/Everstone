@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using static UnityEngine.EventSystems.EventTrigger;
+using System.Linq;
 
 public class AdventureManager : MonoBehaviour
 {
@@ -21,12 +21,19 @@ public class AdventureManager : MonoBehaviour
     [SerializeField] GameObject PlayerEnergyBar;
 
     [Space]
+    [SerializeField] GameObject PlayerAttackButton;
+    [SerializeField] GameObject PlayerDodgeButton;
+
+    [Space]
     [SerializeField] Button     PauseButton;
     [SerializeField] Sprite     PauseButton_ContinueImage;
     [SerializeField] Sprite     PauseButton_PauseImage;
 
+    [SerializeField] TextMeshProUGUI GameSpeedButtonText;
+
+
     [Space]
-    [SerializeField] TextMeshProUGUI Timer;
+    [SerializeField] TextMeshProUGUI TimerText;
 
     #endregion UI References
 
@@ -36,6 +43,7 @@ public class AdventureManager : MonoBehaviour
 
     [SerializeField] Image background;
     [SerializeField] bool IsPaused = false;
+    [SerializeField] float gameSpeed;
 
     [SerializeField] ScriptableAdventureLocation CurrentLocation;
 
@@ -101,12 +109,35 @@ public class AdventureManager : MonoBehaviour
         }
     }
 
-    float timer = 0f;
+    public float GameSpeed
+    {
+        get => gameSpeed;
+        set
+        {
+            gameSpeed = value;
+            Time.timeScale = gameSpeed;
+            GameSpeedButtonText.text = $"{gameSpeed:0.0}";
+
+            //set the preference to the manager, so that next time the battle starts the same speed will be used
+            GameManager.Instance.BattleGameSpeed = gameSpeed;
+        }
+    }
+
+    float Timer = 0f;
+
+
+    //selected abilities
+    private List<ScriptableAbility> PlayerClassicAbilities = null;
+    
+    //selected + special cases like basic attack & dodge
+    private List<ScriptableAbility> AllPlayerAbilities = new List<ScriptableAbility>();
+
 
     #endregion 	VARIABLES
 
 
     #region 	UNITY METHODS
+
 
     // Start is called before the first frame update
     void Start()
@@ -124,14 +155,22 @@ public class AdventureManager : MonoBehaviour
 
         var playerStats = PlayerHero.Prefab.GetComponent<Unit>().Stats;
         playerStats.Mana = playerStats.MaxMana.GetValue();
-        PlayerEnergyBar.GetComponent<PlayerEnergyBar>().Initialize(PlayerHero, null);
+        PlayerEnergyBar.GetComponent<PlayerEnergyBar>().Initialize(PlayerHero, PlayerClassicAbilities);
     }
 
     // Update is called once per frame
     void Update()
     {
-        timer += Time.deltaTime;
-        Timer.text = $"{(int)timer}s";
+        Timer += Time.deltaTime;
+        TimerText.text = $"{(int)Timer}s";
+    }
+
+    private void OnDestroy()
+    {
+        ResetTimeScale();
+
+        foreach (var ability in AllPlayerAbilities)
+            ability.OnAbilityActivated -= AbilityActivated;
     }
 
     #endregion 	UNITY METHODS
@@ -152,7 +191,15 @@ public class AdventureManager : MonoBehaviour
     {
         IsPaused = isPaused;
 
-        Time.timeScale = isPaused ? 0 : 1;
+        Time.timeScale = isPaused ? 0 : GameSpeed;
+    }
+
+    /// <summary>
+    /// Should be used when leaving the battle scene
+    /// </summary>
+    public void ResetTimeScale()
+    {
+        Time.timeScale = 1;
     }
 
     private void TogglePausedMenu()
@@ -168,6 +215,17 @@ public class AdventureManager : MonoBehaviour
         PauseMenu.SetActive(IsPaused);
     }
 
+    public void OnGameSpeedChange()
+    {
+        var tempSpeed = GameSpeed;
+        tempSpeed += 0.5f;
+
+        if (tempSpeed > 3f)
+            tempSpeed = 0.5f;
+
+        GameSpeed = tempSpeed;
+    }
+
     private void InitStage(bool initAllies)
     {
         //get encounter type
@@ -177,7 +235,7 @@ public class AdventureManager : MonoBehaviour
         if (initAllies)
         {   //Handle allies (and hero)
             AlliedUnitsList = new List<ScriptableUnitBase>();
-            PlayerHero = GameManager.Instance.PlayerManager.PlayerHero;
+            InitPlayerHero();
 
             if (PlayerHero != null)
                 AlliedUnitsList.Add(PlayerHero);
@@ -197,6 +255,8 @@ public class AdventureManager : MonoBehaviour
             AlliedUnitsList.AddRange(extraAllies);
 
             SpawnAllies();
+
+            InitPlayerAbilities();
         }
 
         //reset ally status bar to the hero
@@ -220,8 +280,52 @@ public class AdventureManager : MonoBehaviour
         TargetedEnemy = null;
 
         //TODO: notify about stage number (current progress)
+
+        GameSpeed = GameManager.Instance.BattleGameSpeed;
     }
 
+    private void InitPlayerHero()
+    {
+        PlayerHero = GameManager.Instance.PlayerManager.PlayerHero;
+    }
+
+    private void InitPlayerAbilities()
+    {
+        var pManager = GameManager.Instance.PlayerManager;
+
+        if (pManager.ClassicAbilities != null)
+        {
+            var selectedAbilities = pManager.ClassicAbilities.Where(x => x.IsSelected).ToList();
+            if (selectedAbilities.Count > 0)
+            { 
+                PlayerClassicAbilities = new List<ScriptableAbility>();
+                PlayerClassicAbilities.AddRange(selectedAbilities);
+                
+                AllPlayerAbilities.AddRange(selectedAbilities);
+            }
+        }
+
+        var atkAbility   = pManager.SpecialAbilities.FirstOrDefault(x => x.Ability == Ability.BasicAttack);
+        var dodgeAbility = pManager.SpecialAbilities.FirstOrDefault(x => x.Ability == Ability.Dodge);
+        var pUnit = PlayerHero.Prefab.GetComponent<Unit>();
+
+        if (atkAbility != null)
+            AllPlayerAbilities.Add(atkAbility);
+        
+        if (dodgeAbility != null)
+            AllPlayerAbilities.Add(dodgeAbility);
+         
+        PlayerAttackButton.GetComponent<AbilityUI>().Initialize(pUnit, atkAbility);
+        PlayerDodgeButton.GetComponent<AbilityUI>().Initialize(pUnit, dodgeAbility);
+
+        foreach (var ability in AllPlayerAbilities)
+            ability.OnAbilityActivated += AbilityActivated;
+    }
+
+    private void AbilityActivated(ScriptableAbility ability)
+    {
+
+    }
 
     public void Test_ResetStage()
     {
@@ -410,8 +514,6 @@ public class AdventureManager : MonoBehaviour
                 SetStatusBarUnit(UnitGrid.GetDefaultTarget(Faction.Enemies), Faction.Enemies);
         }
     }
-
-    
 
     private void SetStatusBarUnit(ScriptableUnitBase unit, Faction faction)
     {

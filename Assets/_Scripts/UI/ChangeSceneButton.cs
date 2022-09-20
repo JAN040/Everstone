@@ -8,4 +8,9 @@ public class ChangeSceneButton : MonoBehaviour
     {
         SceneManagementSystem.Instance.LoadScene(sceneNum);
     }
+
+    public void TestPrint()
+    {
+        Debug.Log("Button click registered");
+    }
 }

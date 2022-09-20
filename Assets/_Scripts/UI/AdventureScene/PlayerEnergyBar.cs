@@ -66,7 +66,7 @@ public class PlayerEnergyBar : MonoBehaviour
         {
             ability = (PlayerAbilities != null && PlayerAbilities.Count > i) ? PlayerAbilities[i] : null;
 
-            AbilityPrefabList[i].GetComponent<AbilityUI>().Initialize(PlayerHero, ability);
+            AbilityPrefabList[i].GetComponent<AbilityUI>().Initialize(PlayerHero.Prefab.GetComponent<Unit>(), ability);
         }
     }
 
