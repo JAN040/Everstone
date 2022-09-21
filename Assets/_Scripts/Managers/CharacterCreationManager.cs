@@ -333,7 +333,7 @@ public class CharacterCreationManager : MonoBehaviour
         heroClassDropdown.value      = UnityEngine.Random.Range(0, heroClassDropdown.options.Count);
         heroBackgroundDropdown.value = UnityEngine.Random.Range(1, heroBackgroundDropdown.options.Count);
         difficultyDropdown.value     = UnityEngine.Random.Range(1, difficultyDropdown.options.Count);
-        HardcoreCheckbox.isOn = Helpers.DiceRoll(0.25f);
+        HardcoreCheckbox.isOn = Helper.DiceRoll(0.25f);
 
         iconDropdown.RefreshShownValue();
         heroClassDropdown.RefreshShownValue();

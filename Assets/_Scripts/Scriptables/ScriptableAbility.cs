@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-[CreateAssetMenu(menuName = "Scriptable/Units/New Hero Ability", fileName = "SO_Ability_")]
+[CreateAssetMenu(menuName = "Scriptable/Other/New Hero Ability", fileName = "SO_Ability_")]
 public class ScriptableAbility : ScriptableObject
 {
     #region PROPERTIES
@@ -49,6 +49,13 @@ public class ScriptableAbility : ScriptableObject
                 currentCooldown = 0;
         }
     }
+
+    /// <summary>
+    /// Amount of cooldown when the ability went on cooldown.
+    /// Not necessarily the same as Cooldown because of the AntiSpamCooldown mechanic
+    /// </summary>
+    [NonSerialized]
+    public float CooldownAtStart;
 
 
     [Space]
@@ -114,18 +121,25 @@ public class ScriptableAbility : ScriptableObject
 
 
     public event Action<ScriptableAbility> OnAbilityActivated;
-
+    public event Action<bool> OnAbilityToggled;
 
     public void Activate()
     {
+        if (ToggleMode != ToggleMode.None)
+        {
+            if (ToggleMode == ToggleMode.Toggled)
+                ToggleMode = ToggleMode.UnToggled;
+            else
+                ToggleMode = ToggleMode.Toggled;
+
+            OnAbilityToggled?.Invoke(ToggleMode == ToggleMode.Toggled);
+
+            Debug.Log($"Toggled ability '{this.Name}'. It is now {ToggleMode}");
+        }
+        else
+            Debug.Log($"Activated ability '{this.Name}'");
+        
         OnAbilityActivated?.Invoke(this);
-        Debug.Log($"Activated ability '{this.Name}'");
-    }
-
-
-    public float GetCooldownNormalized()
-    {
-        return Cooldown <= 0 ? 0 : CurrentCooldown / Cooldown;
     }
 
     public string GetCooldownText()
@@ -143,6 +157,7 @@ public class ScriptableAbility : ScriptableObject
     {
         if (CurrentCooldown < cdAmount)
         {
+            CooldownAtStart = cdAmount;
             CurrentCooldown = cdAmount;
         }
     }
@@ -162,6 +177,11 @@ public class ScriptableAbility : ScriptableObject
             costText_Energy.text = $"<color=#C06217>{eCost}</color>";
         if (costText_Mana != null)
             costText_Mana.text = $"<color=#27A3FD>{mCost}</color>";
+    }
+
+    public float GetCooldownNormalized()
+    {
+        return CooldownAtStart <= 0 ? 0 : CurrentCooldown / CooldownAtStart;
     }
 }
 

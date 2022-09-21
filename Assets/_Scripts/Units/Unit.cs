@@ -270,7 +270,7 @@ public class Unit : MonoBehaviour
         if (this.IsAttacking && enemyUnitScript != null && !enemyUnitScript.IsDead)
         {
             var damage = new Damage(Stats.PhysicalDamage.GetValue(), Stats.ArtsDamage.GetValue());
-            enemyUnitScript.TakeDamage(damage);
+            enemyUnitScript.TakeDamage(damage, true);
 
             //stop attacking
             this.StopAttacking();
@@ -386,8 +386,16 @@ public class Unit : MonoBehaviour
     }
 
 
-    public virtual void TakeDamage(Damage damage)
+    public virtual void TakeDamage(Damage damage, bool canEvade)
     {
+        //evasion check
+        if (canEvade && Helper.DiceRoll(this.Stats.DodgeChance.GetValue()))
+        {
+            CreateStatusIndicator("Dodged!", Color.white);
+
+            return;
+        }
+
         float dmgAmount = 0;
 
         switch (damage.Type)
@@ -539,7 +547,7 @@ public class Unit : MonoBehaviour
     private float GetMineToHeroSpeedRatio()
     {
         if (this.UnitDataRef == HeroRef)
-            return 1;
+            return 1f;
 
         float MAX_SPEED_RATIO = 10f;
         float MIN_SPEED_RATIO = 0.1f;
@@ -553,7 +561,7 @@ public class Unit : MonoBehaviour
         return ratio;
     }
 
-    private void BasicAttack()
+    public void BasicAttack()
     {
         if (!IsValidTarget(PreferredTargetOpponent)) //reselect a preffered target if needed
             PreferredTargetOpponent = UnitGridRef.GetDefaultTarget(GetOpponentFaction());

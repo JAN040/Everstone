@@ -251,7 +251,7 @@ public class UnitGrid
         //otherwise roll a dice to see which of the front row units will be targeted
         else
         {
-            if (Helpers.DiceRoll(0.5f))
+            if (Helper.DiceRoll(0.5f))
                 return firstRowUp;
             else
                 return firstRowDown;

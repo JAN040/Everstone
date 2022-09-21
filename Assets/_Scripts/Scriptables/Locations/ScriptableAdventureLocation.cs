@@ -77,11 +77,11 @@ public class ScriptableAdventureLocation : ScriptableObject
             return HasPlayerClearedFirstBoss ? EncounterType.MonsterNest : EncounterType.BossEnemy;
 
         //check if its an event
-        if (Helpers.DiceRoll(LocationData.EVENT_CHANCE))
+        if (Helper.DiceRoll(LocationData.EVENT_CHANCE))
             return EncounterType.Event;
 
         //check if its a multi enemy encounter
-        if (Helpers.DiceRoll(GetMultiEnemyChance()))
+        if (Helper.DiceRoll(GetMultiEnemyChance()))
         {
             return EncounterType.MultipleEnemy;
         }
@@ -107,7 +107,7 @@ public class ScriptableAdventureLocation : ScriptableObject
                 result.Add(GetRandomEnemy());
 
                 //roll to see if we add even more (max 6 enemies)
-                while (Helpers.DiceRoll(LocationData.MULTI_ENEMY_ADD_MORE_ENEMIES_CHANCE) && result.Count < 6)
+                while (Helper.DiceRoll(LocationData.MULTI_ENEMY_ADD_MORE_ENEMIES_CHANCE) && result.Count < 6)
                     result.Add(GetRandomEnemy());
 
                 break;
@@ -130,7 +130,7 @@ public class ScriptableAdventureLocation : ScriptableObject
 
     public ScriptableEnemy GetRandomEnemy()
     {
-        bool isElite = Helpers.DiceRoll(GetEliteEnemyChance());
+        bool isElite = Helper.DiceRoll(GetEliteEnemyChance());
         List<ScriptableEnemy> effectivePool = isElite ?
             effectivePool = EnemyPool.Where(x => x.Type == EnemyType.Elite).ToList()
             :

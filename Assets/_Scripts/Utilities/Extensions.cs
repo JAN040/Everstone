@@ -39,6 +39,14 @@ public static class Extensions
         return (int)Math.Round(num);
     }
 
+    public static Unit GetUnit(this ScriptableUnitBase scriptableUnit)
+    {
+        if (scriptableUnit == null || scriptableUnit.Prefab == null)
+            return null;
+
+        return scriptableUnit.Prefab.GetComponent<Unit>();
+    }
+
     //round down and convert to kilo format, ie. 1345 = 1.34K
     public static string ToKiloString(this float num)
     {

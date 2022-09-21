@@ -55,6 +55,9 @@ public class AdventureSelectManager : MonoBehaviour
             
             locationPrefabList.Add(currentPrefab);
         }
+
+        //TODO: remove, this is for faster testing only
+        OnAdventureLocationSelected(locations.FirstOrDefault(x => x.locationName.Equals("Forest")));
     }
 	
     #endregion 	UNITY METHODS

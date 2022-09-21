@@ -96,7 +96,7 @@ public class UnitStatusBar : MonoBehaviour
     //TODO: animations
     private void Update()
     {
-        if (UnitRef == null && UnitRef.Prefab == null)
+        if (UnitRef == null || UnitRef.Prefab == null)
             return;
 
         if (Input.GetKeyDown(KeyCode.H))

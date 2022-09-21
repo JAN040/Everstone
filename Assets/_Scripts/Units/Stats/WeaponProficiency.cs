@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 /// </summary>
 public class WeaponProficiency
 {
-    private readonly float ACCURACY_GROWTH = 0.01f;
-    private readonly float DAMAGE_GROWTH = 1f;
+    //private readonly float ACCURACY_GROWTH = 0.01f;
+    //private readonly float DAMAGE_GROWTH = 1f;
 
 
 
@@ -20,14 +20,14 @@ public class WeaponProficiency
    
     public WeaponProficiency(WeaponType weaponType, float damageBonus, float accuracyBonus)
     {
-        WeaponType = weaponType;
-        DamageBonus = new Stat(damageBonus, StatType.WeaponProficiency, false);
-        AccuracyBonus = new Stat(accuracyBonus, StatType.WeaponProficiency, false); ;
+        //WeaponType = weaponType;
+        //DamageBonus = new Stat(damageBonus, StatType.WeaponProficiency, false);
+        //AccuracyBonus = new Stat(accuracyBonus, StatType.WeaponProficiency, false); ;
     }
 
     public void Grow(int level)
     {
-        DamageBonus.SetBaseValue(DamageBonus.GetBaseValue() + DAMAGE_GROWTH);
-        AccuracyBonus.SetBaseValue(AccuracyBonus.GetBaseValue() + ACCURACY_GROWTH);
+        //DamageBonus.SetBaseValue(DamageBonus.GetBaseValue() + DAMAGE_GROWTH);
+        //AccuracyBonus.SetBaseValue(AccuracyBonus.GetBaseValue() + ACCURACY_GROWTH);
     }
 }

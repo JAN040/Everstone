@@ -185,3 +185,12 @@ public enum ToggleMode
     Toggled,
     UnToggled
 }
+
+public enum Effect
+{
+    Poison,
+    EvasionBuff,
+    ShieldBlock,
+    Slow,
+    //etc.
+}

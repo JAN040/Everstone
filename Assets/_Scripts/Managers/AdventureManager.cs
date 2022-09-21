@@ -132,6 +132,7 @@ public class AdventureManager : MonoBehaviour
     //selected + special cases like basic attack & dodge
     private List<ScriptableAbility> AllPlayerAbilities = new List<ScriptableAbility>();
 
+    [SerializeField] float AbilityAntiSpamCD = 2f;
 
     #endregion 	VARIABLES
 
@@ -297,11 +298,15 @@ public class AdventureManager : MonoBehaviour
         {
             var selectedAbilities = pManager.ClassicAbilities.Where(x => x.IsSelected).ToList();
             if (selectedAbilities.Count > 0)
-            { 
+            {
                 PlayerClassicAbilities = new List<ScriptableAbility>();
                 PlayerClassicAbilities.AddRange(selectedAbilities);
-                
-                AllPlayerAbilities.AddRange(selectedAbilities);
+
+                //remove the last element till we only have 7 selected abilities
+                while (PlayerClassicAbilities.Count > 7)
+                    PlayerClassicAbilities.RemoveAt(PlayerClassicAbilities.Count - 1);
+
+                AllPlayerAbilities.AddRange(PlayerClassicAbilities);
             }
         }
 
@@ -320,11 +325,6 @@ public class AdventureManager : MonoBehaviour
 
         foreach (var ability in AllPlayerAbilities)
             ability.OnAbilityActivated += AbilityActivated;
-    }
-
-    private void AbilityActivated(ScriptableAbility ability)
-    {
-
     }
 
     public void Test_ResetStage()
@@ -520,5 +520,44 @@ public class AdventureManager : MonoBehaviour
         var bar = faction == Faction.Allies ? AllyStatusBar : EnemyStatusBar;
         
         bar.GetComponent<UnitStatusBar>().UnitRef = unit;
+    }
+
+    private void AbilityActivated(ScriptableAbility ability)
+    {
+        AllPlayerAbilities.ForEach(x => x.AddAntiSpamCooldown(AbilityAntiSpamCD));
+
+        switch (ability.Ability)
+        {
+            case Ability.BasicAttack:
+                CastAbility_BasicAttack(ability);
+                break;
+
+            case Ability.Dodge:
+                CastAbility_Dodge(ability);
+                break;
+
+            case Ability.Block:
+                CastAbility_Block(ability);
+                break;
+
+            default:
+                Debug.LogWarning($"Activated ability ({ability.Name}) that has no implementation in the AdventureManager!");
+                break;
+        }
+    }
+
+    private void CastAbility_BasicAttack(ScriptableAbility ability)
+    {
+        PlayerHero.GetUnit()?.BasicAttack();
+    }
+
+    private void CastAbility_Dodge(ScriptableAbility ability)
+    {
+        throw new NotImplementedException();
+    }
+
+    private void CastAbility_Block(ScriptableAbility ability)
+    {
+        throw new NotImplementedException();
     }
 }

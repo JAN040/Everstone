@@ -25,6 +25,8 @@ public class AbilityUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI CostText_Energy;
     [SerializeField] TextMeshProUGUI CostText_Mana;
 
+    [Space]
+    [SerializeField] Animator Animator;
 
     #endregion UI References
 
@@ -33,6 +35,7 @@ public class AbilityUI : MonoBehaviour
     [Header("Variables")]
 
     [SerializeField] ScriptableAbility Ability;
+
     private Unit PlayerHeroUnit;
 
 
@@ -54,6 +57,12 @@ public class AbilityUI : MonoBehaviour
         UpdateUI(false);
     }
 
+    private void OnDestroy()
+    {
+        if (Ability != null)
+            Ability.OnAbilityToggled -= ToggleAbility;
+    }
+
     #endregion UNITY METHODS
 
 
@@ -62,7 +71,16 @@ public class AbilityUI : MonoBehaviour
         PlayerHeroUnit = heroUnit;
         Ability = ability;
 
+        if (Ability != null)
+            Ability.OnAbilityToggled += ToggleAbility;
+
         UpdateUI(true);
+    }
+
+    private void ToggleAbility(bool isToggled)
+    {
+        if (Animator != null)
+            Animator.SetBool("IsToggled", isToggled);
     }
 
     private void UpdateUI(bool init)
@@ -89,36 +107,47 @@ public class AbilityUI : MonoBehaviour
 
         float cd = Ability.GetCooldownNormalized();
 
-        AbilityButton.interactable = cd <= 0;
-        CostPanel.SetActive(cd <= 0);   //cost should only be visible when the skill is ready
+        //for the button to be interactable the ability needs to be off cooldown and have enough mana/energy for its use
+        AbilityButton.interactable = (cd <= 0) && HandleAbilityCost(true);
+
+        //cost should only be visible when the skill is ready
+        CostPanel.SetActive(cd <= 0);
 
         CooldownImage.fillAmount = cd;
         CooldownText.text = Ability.GetCooldownText();
     }
 
-   
     //when ability is clicked
     public void Activate()
     {
         //handle the cost
-        if (!HandleAbilityCost())
+        if (!HandleAbilityCost(false))
         {
             Debug.LogWarning($"Tried to activate ability {Ability.Name} but it failed because it cost more than the player had.");
             return;
         }
-
-        Ability.Activate();
 
         //handle the cooldown
         float cd = Ability.Cooldown;
         
         if (Ability.IsCDRValid) 
             cd -= cd * PlayerHeroUnit.Stats.CooldownReduction.GetValue();
-        
+
+        Ability.CooldownAtStart = cd;
         Ability.CurrentCooldown = cd;
+
+        Ability.Activate();
     }
 
-    private bool HandleAbilityCost()
+    /// <summary>
+    /// Handles Ability cost calculations and Energy & Mana stat decrements.
+    /// </summary>
+    /// <param name="testOnly">
+    /// If true, will not decrement Energy & Mana stats but only check if the player has enough
+    ///     to actually cast the ability.
+    /// </param>
+    /// <returns></returns>
+    private bool HandleAbilityCost(bool testOnly)
     {
         var stats = PlayerHeroUnit.Stats;
         float eCost;
@@ -130,7 +159,9 @@ public class AbilityUI : MonoBehaviour
 
             if (stats.Energy >= eCost)
             {
-                stats.Energy -= eCost;
+                if (!testOnly)
+                    stats.Energy -= eCost;
+
                 return true;
             }
         }
@@ -140,7 +171,9 @@ public class AbilityUI : MonoBehaviour
 
             if (stats.Mana >= mCost)
             {
-                stats.Mana -= mCost;
+                if (!testOnly)
+                    stats.Mana -= mCost;
+
                 return true;
             }
         }
@@ -151,8 +184,11 @@ public class AbilityUI : MonoBehaviour
 
             if (stats.Energy >= eCost && stats.Mana >= mCost)
             {
-                stats.Energy -= eCost;
-                stats.Mana -= mCost;
+                if (!testOnly)
+                {
+                    stats.Energy -= eCost;
+                    stats.Mana -= mCost;
+                }
                 
                 return true;
             }

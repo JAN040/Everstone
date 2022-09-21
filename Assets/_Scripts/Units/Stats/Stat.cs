@@ -55,10 +55,10 @@ public class Stat
     /// Meant for modifying base stats on level up
     /// </summary>
     /// <returns></returns>
-    public float GetBaseValue()
-    {
-        return this.baseValue;
-    }
+    //public float GetBaseValue()
+    //{
+    //    return this.baseValue;
+    //}
 
     /// <summary>
     /// Meant for modifying base stats on level up

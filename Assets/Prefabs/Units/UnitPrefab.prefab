@@ -730,7 +730,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LerpDelta: 0.15
   MovementSpeed_Base: 0.15
-  BasicAttackForce_Base: 50
+  BasicAttackForce_Base: 70
   Material_Dissolve: {fileID: 2100000, guid: 53bb19500aee5f84c938670d4c670a99, type: 2}
   StatusIndicatorPrefab: {fileID: 6908614878156508830, guid: 82d11929d6bc67c4ea4ef78885891d62, type: 3}
   RigidBody: {fileID: 6637542071658122933}

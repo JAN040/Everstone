@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0538acc9f8b876428eb411a4bfc3265, type: 3}
+  m_Name: SO_Ability_Block
+  m_EditorClassIdentifier: 
+  Ability: 2
+  MenuImage: {fileID: 21300000, guid: 4004ae3d7cf6e8a4ca5dd3691b59ec9f, type: 3}
+  Name: Block
+  Description: 'Toggled: Use your shield to block (Stats increase depending on shield
+    attributes) but lose {effect1}% of your energy regen.'
+  Level: 0
+  ToggleMode: 2
+  Cooldown: 2
+  EffectValue: 0.9
+  EffectValue_2: 0
+  EffectValue_3: 0
+  EffectValue_4: 0
+  EffectValue_5: 0
+  IsCDRValid: 0
+  IsRanged: 0
+  IsRandomTarget: 0
+  IsSelected: 1
+  UnlockCost: 0
+  CostType: 0
+  EnergyCost: 1
+  ManaCost: 0
