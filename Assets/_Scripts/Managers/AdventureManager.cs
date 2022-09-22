@@ -324,7 +324,12 @@ public class AdventureManager : MonoBehaviour
         PlayerDodgeButton.GetComponent<AbilityUI>().Initialize(pUnit, dodgeAbility);
 
         foreach (var ability in AllPlayerAbilities)
-            ability.OnAbilityActivated += AbilityActivated;
+        {
+            if (ability.ToggleMode != ToggleMode.None)
+                ability.OnAbilityToggled += AbilityToggled;
+            else
+                ability.OnAbilityActivated += AbilityActivated;
+        }
     }
 
     public void Test_ResetStage()
@@ -524,7 +529,7 @@ public class AdventureManager : MonoBehaviour
 
     private void AbilityActivated(ScriptableAbility ability)
     {
-        AllPlayerAbilities.ForEach(x => x.AddAntiSpamCooldown(AbilityAntiSpamCD));
+        AddAbilityAntiSpamCooldown();
 
         switch (ability.Ability)
         {
@@ -536,15 +541,33 @@ public class AdventureManager : MonoBehaviour
                 CastAbility_Dodge(ability);
                 break;
 
-            case Ability.Block:
-                CastAbility_Block(ability);
-                break;
-
             default:
                 Debug.LogWarning($"Activated ability ({ability.Name}) that has no implementation in the AdventureManager!");
                 break;
         }
     }
+
+    private void AbilityToggled(ScriptableAbility ability, bool isToggled)
+    {
+        AddAbilityAntiSpamCooldown();
+
+        switch (ability.Ability)
+        {
+            case Ability.ShieldBlock:
+                ToggleAbility_ShieldBlock(ability, isToggled);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void AddAbilityAntiSpamCooldown()
+    {
+        AllPlayerAbilities.ForEach(x => x.AddAntiSpamCooldown(AbilityAntiSpamCD));
+    }
+
+
+    #region Ability Cast Methods
 
     private void CastAbility_BasicAttack(ScriptableAbility ability)
     {
@@ -553,11 +576,35 @@ public class AdventureManager : MonoBehaviour
 
     private void CastAbility_Dodge(ScriptableAbility ability)
     {
-        throw new NotImplementedException();
+        var statusEffect = ResourceSystem.Instance.GetStatusEffect(StatusEffect.EvasionBuff);
+        statusEffect.SetEffectValues(ability.EffectValue);
+
+        PlayerHero.GetUnit()?.AddStatusEffect(statusEffect);
     }
 
-    private void CastAbility_Block(ScriptableAbility ability)
+    #endregion Ability Cast Methods
+
+
+
+
+    #region Ability Toggle Methods
+
+
+    private void ToggleAbility_ShieldBlock(ScriptableAbility ability, bool isToggled)
     {
-        throw new NotImplementedException();
+        if (isToggled)
+        {
+            var statusEffect = ResourceSystem.Instance.GetStatusEffect(StatusEffect.ShieldBlock);
+            statusEffect.SetEffectValues(ability.EffectValue, ability.EffectValue_2);
+
+            PlayerHero.GetUnit()?.AddStatusEffect(statusEffect);
+        }
+        else
+        {
+            PlayerHero.GetUnit().RemoveStatusEffect(StatusEffect.ShieldBlock);
+        }
     }
+
+
+    #endregion Ability Toggle Methods
 }

@@ -77,7 +77,7 @@ public class AbilityUI : MonoBehaviour
         UpdateUI(true);
     }
 
-    private void ToggleAbility(bool isToggled)
+    private void ToggleAbility(ScriptableAbility ability, bool isToggled)
     {
         if (Animator != null)
             Animator.SetBool("IsToggled", isToggled);

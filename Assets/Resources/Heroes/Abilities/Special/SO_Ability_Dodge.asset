@@ -15,15 +15,21 @@ MonoBehaviour:
   Ability: 1
   MenuImage: {fileID: 21300000, guid: c1217014d5bd41a4c93ba5fbd54dc5f6, type: 3}
   Name: Dodge
-  Description: Try extra hard to dodge the incoming attacks for a while.
+  Description: 'Try extra hard to dodge the incoming attacks for a while.
+
+    Increases
+    dodge chance by [value1].'
   Level: 1
   ToggleMode: 0
   Cooldown: 10
-  EffectValue: 0
+  EffectValue: 30
   EffectValue_2: 0
   EffectValue_3: 0
   EffectValue_4: 0
   EffectValue_5: 0
+  OnActivateEffects: 
+  OnToggledEffects: 
+  OnUnToggledEffects: 
   IsCDRValid: 0
   IsRanged: 0
   IsRandomTarget: 0

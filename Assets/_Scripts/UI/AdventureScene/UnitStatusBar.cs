@@ -5,6 +5,7 @@ using TMPro;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.FilePathAttribute;
 
 public class UnitStatusBar : MonoBehaviour
 {
@@ -35,6 +36,11 @@ public class UnitStatusBar : MonoBehaviour
     [SerializeField] TextMeshProUGUI Speed_Text;
     [SerializeField] TextMeshProUGUI Defense_Text;
     [SerializeField] TextMeshProUGUI Resist_Text;
+
+    [Space]
+    [Header("Effect panel grid")]
+    [SerializeField] GridLayoutGroup EffectPanelGrid;
+    [SerializeField] GameObject EffectPanelPrefab;
 
     [Space]
     [Header("References for sprite swapping")]
@@ -71,22 +77,25 @@ public class UnitStatusBar : MonoBehaviour
         get => unitRef;
         set
         {
-            if (unitRef != null && unitRef.Prefab != null)
+            if (unitRef != null && unitRef.GetUnit() != null)
             {
-                unitRef.Prefab.GetComponent<Unit>().Stats.OnHealthPointsChanged -= HealthPointsChanged;
-                unitRef.Prefab.GetComponent<Unit>().Stats.OnStatChanged -= UnitStatChanged;
+                unitRef.GetUnit().Stats.OnHealthPointsChanged -= HealthPointsChanged;
+                unitRef.GetUnit().Stats.OnStatChanged -= UnitStatChanged;
+                unitRef.GetUnit().OnUnitStatusEffectAdded -= SpawnStatusEffectPanel;
             }
 
             unitRef = value;
-            if (value != null && value.Prefab != null)
+            if (value != null && value.GetUnit() != null)
             {
-                unitRef.Prefab.GetComponent<Unit>().Stats.OnHealthPointsChanged += HealthPointsChanged;
-                unitRef.Prefab.GetComponent<Unit>().Stats.OnStatChanged += UnitStatChanged;
+                unitRef.GetUnit().Stats.OnHealthPointsChanged += HealthPointsChanged;
+                unitRef.GetUnit().Stats.OnStatChanged += UnitStatChanged;
+                unitRef.GetUnit().OnUnitStatusEffectAdded += SpawnStatusEffectPanel;
             }
 
             SetUpUI();
         }
     }
+
 
     #endregion VARIABLES
 
@@ -277,5 +286,16 @@ public class UnitStatusBar : MonoBehaviour
         LerpTimer = 0;
 
         Health_Text.text = $"{Health.RoundHP()}/{MaxHealth.RoundHP()}";
+    }
+
+    private void SpawnStatusEffectPanel(ScriptableStatusEffect effect)
+    {
+        var spawnedPrefab = Instantiate(EffectPanelPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        
+        spawnedPrefab.transform.SetParent(EffectPanelGrid.transform, false);
+        spawnedPrefab.transform.localScale = Vector3.one;
+        spawnedPrefab.GetComponent<StatusEffectUI>()?.Initialize(effect);
+
+        effect.Prefab = spawnedPrefab;
     }
 }

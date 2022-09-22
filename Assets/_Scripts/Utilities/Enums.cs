@@ -176,7 +176,7 @@ public enum Ability
 {
     BasicAttack,
     Dodge,
-    Block
+    ShieldBlock
 }
 
 public enum ToggleMode
@@ -186,7 +186,7 @@ public enum ToggleMode
     UnToggled
 }
 
-public enum Effect
+public enum StatusEffect
 {
     Poison,
     EvasionBuff,

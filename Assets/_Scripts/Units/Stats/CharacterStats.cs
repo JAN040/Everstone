@@ -1,9 +1,8 @@
-
 using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
-using static UnityEditor.IMGUI.Controls.PrimitiveBoundsHandle;
+
 /// <summary>
 /// A struct containing the base character stats
 /// </summary>

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -64,6 +65,8 @@ public class Unit : MonoBehaviour
     public CharacterStats Stats { get => stats; private set => stats = value; }
 
     [SerializeField] ScriptableUnitBase UnitDataRef;
+
+    [SerializeField] List<ScriptableStatusEffect> ActiveEffects;
 
     private UnitGrid UnitGridRef;
 
@@ -179,7 +182,9 @@ public class Unit : MonoBehaviour
     [SerializeField] float LerpTimer = 0;
 
 
+
     #endregion VARIABLES
+
 
 
     #region UNITY METHODS
@@ -208,6 +213,9 @@ public class Unit : MonoBehaviour
         //energy gain
         GainEnergy();
 
+        //update effects
+        UpdateStatusEffects();
+
         //start attacking/action if energy full
         if (Stats.Energy >= Stats.MaxEnergy.GetValue())
         {
@@ -219,6 +227,16 @@ public class Unit : MonoBehaviour
             }
         }
     }
+
+    private void UpdateStatusEffects()
+    {
+        //make a new list cause AllPlayerAbilities is modified when an effect expires
+        foreach (var effect in new List<ScriptableStatusEffect>(ActiveEffects))
+        {
+            effect.Update();
+        }
+    }
+
 
     private void GainEnergy()
     {
@@ -283,8 +301,11 @@ public class Unit : MonoBehaviour
     #endregion UNITY METHODS
 
 
+
     public event Action<ScriptableUnitBase, Faction> OnSetTarget;
     public event Action<ScriptableUnitBase> OnUnitDeath;
+    //event for the status bar to update stuff
+    public event Action<ScriptableStatusEffect> OnUnitStatusEffectAdded;
     //public event Action<ScriptableUnitBase, Stat> OnStatChanged;
 
 
@@ -446,13 +467,14 @@ public class Unit : MonoBehaviour
 
     private float CalcDmgAmountPhysical(float physicalDamage)
     {
-        var tempDamage = physicalDamage - Stats.Armor.GetValue();
-        return tempDamage > 0 ? tempDamage : 0;
+        var dmg = physicalDamage - Stats.Armor.GetValue();
+        return dmg > 0 ? dmg : 0;
     }
     private float CalcDmgAmountArts(float artsDamage)
     {
-        //arts resist can be negative
-        return artsDamage - artsDamage * Stats.ArtsResist.GetValue();
+        //arts resist can be negative (Note: its stored as a whole value, eg. 5 res means 0.05 dmg red., thats why division by 100)
+        var dmg = artsDamage - ( artsDamage * (Stats.ArtsResist.GetValue() / 100f) );
+        return dmg > 0 ? dmg : 0;
     }
 
     public virtual void Heal(float healAmount)
@@ -655,5 +677,60 @@ public class Unit : MonoBehaviour
         }
         else
             Image_DamageEffect.color = Color.clear;
+    }
+
+    public void AddStatusEffect(ScriptableStatusEffect newEffect)
+    {
+        if (newEffect == null)
+            return;
+
+        var dupeEffect = ActiveEffects.FirstOrDefault(x => x.Effect == newEffect.Effect && x.IsActive); 
+        
+        //if the same effect exists in the list
+        if (dupeEffect != null)
+        {
+            //if the effects are stackable, stack them, otherwise keep the newer effect
+            if (newEffect.IsStackable && dupeEffect.IsStackable)
+            {
+                dupeEffect.StackEffect(newEffect);
+                
+                newEffect = dupeEffect;
+            }
+            else
+            {
+                dupeEffect.Deactivate();
+            }
+        }
+
+        newEffect.OnEffectExpired += EffectExpired;
+        newEffect.Activate();
+
+        ActiveEffects.Add(newEffect);
+
+        //TODO: add modifiers ??
+
+        OnUnitStatusEffectAdded?.Invoke(newEffect);
+    }
+
+    public void RemoveStatusEffect(StatusEffect effect)
+    {
+        var effectToRemove = ActiveEffects.FirstOrDefault(x => x.Effect == effect);
+        
+        if (effectToRemove == null)
+        {
+            Debug.LogWarning($"Couldnt find an active effect '{effect}' on unit {UnitDataRef.Name}");
+            return;
+        }
+
+        effectToRemove.Deactivate();
+    }
+
+
+    private void EffectExpired(ScriptableStatusEffect effect)
+    {
+        effect.OnEffectExpired -= EffectExpired;
+        ActiveEffects.Remove(effect);
+
+        //TODO: remove modifiers
     }
 }

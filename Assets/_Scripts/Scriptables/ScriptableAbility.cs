@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-[CreateAssetMenu(menuName = "Scriptable/Other/New Hero Ability", fileName = "SO_Ability_")]
+[CreateAssetMenu(menuName = "Scriptable/z_Other/New Hero Ability", fileName = "SO_Ability_")]
 public class ScriptableAbility : ScriptableObject
 {
     #region PROPERTIES
@@ -17,7 +17,7 @@ public class ScriptableAbility : ScriptableObject
 
     public string Name;
 
-    [TextArea(3, 5)]
+    [TextArea(4, 8)]
     public string Description;
 
     //0 => locked
@@ -71,7 +71,12 @@ public class ScriptableAbility : ScriptableObject
     public float EffectValue_4;
     public float EffectValue_5;
 
-    
+    [Space]
+
+    public List<StatusEffect> OnActivateEffects;
+    public List<StatusEffect> OnToggledEffects;
+    public List<StatusEffect> OnUnToggledEffects;
+
 
     //TODO
     //[SerializeField] List<UnlockCondition> UnlockConditions;
@@ -121,7 +126,8 @@ public class ScriptableAbility : ScriptableObject
 
 
     public event Action<ScriptableAbility> OnAbilityActivated;
-    public event Action<bool> OnAbilityToggled;
+    public event Action<ScriptableAbility, bool> OnAbilityToggled;
+
 
     public void Activate()
     {
@@ -132,9 +138,11 @@ public class ScriptableAbility : ScriptableObject
             else
                 ToggleMode = ToggleMode.Toggled;
 
-            OnAbilityToggled?.Invoke(ToggleMode == ToggleMode.Toggled);
-
             Debug.Log($"Toggled ability '{this.Name}'. It is now {ToggleMode}");
+            
+            OnAbilityToggled?.Invoke(this, ToggleMode == ToggleMode.Toggled);
+            
+            return;
         }
         else
             Debug.Log($"Activated ability '{this.Name}'");

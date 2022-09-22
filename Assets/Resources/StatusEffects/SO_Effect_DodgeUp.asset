@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f83b6d9a1057094397327c6dbc85b96, type: 3}
+  m_Name: SO_Effect_DodgeUp
+  m_EditorClassIdentifier: 
+  Effect: 1
+  MenuImage: {fileID: 21300000, guid: b5b757ea60aa9f94cb19ca3245390407, type: 3}
+  Name: Improved dodge chance
+  Description: Dodge chance is increased by [value_1].
+  Duration: 0.5
+  EffectValue: 0
+  EffectValue_2: 0
+  EffectValue_3: 0
+  EffectValue_4: 0
+  EffectValue_5: 0
+  DisplayValue: 
+  IsStackable: 0

@@ -13,6 +13,7 @@ public class ResourceSystem : Singleton<ResourceSystem> {
 
     private List<ScriptableAbility> PlayerClassicAbilities { get; set; }
     private List<ScriptableAbility> PlayerSpecialAbilities { get; set; }
+    private List<ScriptableStatusEffect> StatusEffects { get; set; }
 
     private List<ScriptableBackground> HeroBackgrounds { get; set; }
     private Dictionary<string, ScriptableBackground> _HeroBackgroundsDict;
@@ -56,6 +57,8 @@ public class ResourceSystem : Singleton<ResourceSystem> {
     private void AssembleResources() {
         Heroes = Resources.LoadAll<ScriptableHero>("Heroes/Classes").ToList();
         _HeroesDict = Heroes.ToDictionary(r => r.ClassName, r => r);
+
+        StatusEffects = Resources.LoadAll<ScriptableStatusEffect>("StatusEffects").ToList();
 
         AdventureLocations = Resources.LoadAll<ScriptableAdventureLocation>("Locations/Adventure").ToList();
         _AdventureLocationsDict = AdventureLocations.ToDictionary(x => x.locationName, x => x);
@@ -109,4 +112,9 @@ public class ResourceSystem : Singleton<ResourceSystem> {
     public List<ScriptableAdventureLocation> GetAdventureLocations() => AdventureLocations.OrderBy(x => x.name).OrderBy(x => x.difficulty).ToList();
 
     public string GetIconTag(Icon icon) => $"<sprite name=\"{TMP_IconDict[icon]}\">";
+
+    public ScriptableStatusEffect GetStatusEffect(StatusEffect effect)
+    {
+        return StatusEffects.FirstOrDefault(x => x.Effect == effect);
+    }
 }   

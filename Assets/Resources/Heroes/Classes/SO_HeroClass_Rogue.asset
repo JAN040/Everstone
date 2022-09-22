@@ -89,7 +89,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     dodgeChance:
-      baseValue: 15
+      baseValue: 0.1
       type: 12
       canBeNegative: 0
       growthParameters:
