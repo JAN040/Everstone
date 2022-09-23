@@ -30,5 +30,5 @@ MonoBehaviour:
   IsSelected: 0
   UnlockCost: 0
   CostType: 0
-  EnergyCost: 5
+  EnergyCost: 4
   ManaCost: 0

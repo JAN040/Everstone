@@ -135,24 +135,33 @@ public class Stat
             return amount;
     }
 
+    /// <returns>True on success</returns>
     public bool AddModifier(StatModifier modifier)
     {
-        if (statModifiers == null)
-            statModifiers = new List<StatModifier>();
+        if (modifier == null)
+            return false;
 
-        if (modifier == null || modifier.ModifyingStatType != this.Type)
+        if (modifier.ModifyingStatType != this.Type)
         {
             Debug.LogWarning($"Trying to add modifier of type {modifier.ModifyingStatType} to stat of type {this.Type}");
             return false;
         }
 
+        if (statModifiers == null)
+            statModifiers = new List<StatModifier>();
+        
+        var oldValue = GetValue();
+
         statModifiers.Add(modifier);
+        
+        Debug.Log($"Added {modifier.Type} modifier of '{modifier.Value}' to Stat '{modifier.ModifyingStatType}'. Prev. val: '{oldValue}', New val: '{GetValue()}");
 
         OnStatChanged?.Invoke(this);
 
         return true;
     }
 
+    /// <returns>True on success</returns>
     public bool RemoveModifier(StatModifier modifier)
     {
         if (modifier == null || statModifiers == null || statModifiers.Count == 0)
@@ -160,12 +169,16 @@ public class Stat
             return false;
         }
 
+        var oldValue = GetValue();
+
         if (!statModifiers.Remove(modifier))
         {
             Debug.LogError($"Failed to remove modifier {modifier.Value}, {modifier.Type}, for statType {modifier.ModifyingStatType}");
             return false;
         }
 
+        Debug.Log($"Removed {modifier.Type} modifier of '{modifier.Value}' to Stat '{modifier.ModifyingStatType}'. Prev. val: '{oldValue}', New val: '{GetValue()}");
+        
         OnStatChanged?.Invoke(this);
 
         return true;
@@ -176,18 +189,15 @@ public class Stat
         float flatModifiers = 0;
         float percentModifiers = 0;
 
-        if (statModifiers != null && statModifiers.Count > 0)
+        if (statModifiers != null)
         {
             foreach (StatModifier modifier in statModifiers)
             {
                 if (modifier.Type == ModifierType.Flat)
-                {
                     flatModifiers += modifier.Value;
-                }
+                
                 else if (modifier.Type == ModifierType.Percent)
-                {
                     percentModifiers += modifier.Value;
-                }
             }
         }
 

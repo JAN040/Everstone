@@ -172,11 +172,26 @@ public enum CostType
     EnergyAndMana
 }
 
-public enum Ability
+public enum DamageType
 {
-    BasicAttack,
-    Dodge,
-    ShieldBlock
+    Physical,
+    Arts,
+    /// <summary>
+    /// Ignores armor and resistances
+    /// </summary>
+    True,
+    /// <summary>
+    /// Poison, burn, etc. Generally Ignores armor and resistances,
+    ///     but has a different StatusChangeIndicator text color (not white like True damage)
+    /// </summary>
+    Elemental
+}
+
+public enum ElementType
+{
+    None,
+    Poison,
+    Fire,
 }
 
 public enum ToggleMode
@@ -184,6 +199,14 @@ public enum ToggleMode
     None,
     Toggled,
     UnToggled
+}
+
+public enum Ability
+{
+    BasicAttack,
+    Dodge,
+    ShieldBlock,
+    PoisonSelf
 }
 
 public enum StatusEffect

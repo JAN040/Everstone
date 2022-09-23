@@ -149,7 +149,7 @@ public class AdventureManager : MonoBehaviour
         if (currLocationSprite != null)
             background.sprite = GameManager.Instance?.CurrentLocation?.background;
 
-        InitStage(true);
+        InitStage(true, true);
 
         SelectedAlly = PlayerHero;
         TargetedEnemy = null;
@@ -171,7 +171,11 @@ public class AdventureManager : MonoBehaviour
         ResetTimeScale();
 
         foreach (var ability in AllPlayerAbilities)
+        {
             ability.OnAbilityActivated -= AbilityActivated;
+            if (ability.ToggleMode != ToggleMode.None)
+                ability.OnAbilityToggled -= AbilityToggled;
+        }
     }
 
     #endregion 	UNITY METHODS
@@ -221,19 +225,22 @@ public class AdventureManager : MonoBehaviour
         var tempSpeed = GameSpeed;
         tempSpeed += 0.5f;
 
+        if (tempSpeed == 2.5f) //2.5x speed setting kinna useless
+            tempSpeed = 3f;
+
         if (tempSpeed > 3f)
             tempSpeed = 0.5f;
 
         GameSpeed = tempSpeed;
     }
 
-    private void InitStage(bool initAllies)
+    private void InitStage(bool isFirstTime, bool initAllies)
     {
         //get encounter type
         EncounterType encounter = CurrentLocation.GetNextEncounter();
 
 
-        if (initAllies)
+        if (isFirstTime || initAllies)
         {   //Handle allies (and hero)
             AlliedUnitsList = new List<ScriptableUnitBase>();
             InitPlayerHero();
@@ -257,7 +264,8 @@ public class AdventureManager : MonoBehaviour
 
             SpawnAllies();
 
-            InitPlayerAbilities();
+            if (isFirstTime)
+                InitPlayerAbilities();
         }
 
         //reset ally status bar to the hero
@@ -265,6 +273,7 @@ public class AdventureManager : MonoBehaviour
 
         //TODO: set energy to 'starting energy' stat
         PlayerHero.Prefab.GetComponent<Unit>().Stats.Energy = 0;
+        ResetAbilityToggles();
 
         if (encounter == EncounterType.Event)
         {
@@ -283,6 +292,20 @@ public class AdventureManager : MonoBehaviour
         //TODO: notify about stage number (current progress)
 
         GameSpeed = GameManager.Instance.BattleGameSpeed;
+    }
+
+    private void ResetPlayerStatusEffects()
+    {
+        PlayerHero.GetUnit().RemoveAllStatusEffects();
+    }
+
+    private void ResetAbilityToggles()
+    {
+        PlayerClassicAbilities.ForEach(x =>
+        {
+            if (x.ToggleMode == ToggleMode.Toggled)
+                x.ToggleMode = ToggleMode.UnToggled;
+        });
     }
 
     private void InitPlayerHero()
@@ -337,11 +360,14 @@ public class AdventureManager : MonoBehaviour
         ResetAllies();
         ResetEnemies();
 
-        InitStage(true);
+        InitStage(false, true);
     }
 
     private void ResetAllies()
     {
+        //reset ally leftover status effects -> called when the hero prefab is destroyed
+        //ResetPlayerStatusEffects();
+
         foreach (var ally in AlliedUnitsList)
         {
             Destroy(ally.Prefab);
@@ -541,11 +567,17 @@ public class AdventureManager : MonoBehaviour
                 CastAbility_Dodge(ability);
                 break;
 
+            case Ability.PoisonSelf:
+                CastAbility_PoisonSelf(ability);
+                break;
+
             default:
                 Debug.LogWarning($"Activated ability ({ability.Name}) that has no implementation in the AdventureManager!");
                 break;
         }
     }
+
+    
 
     private void AbilityToggled(ScriptableAbility ability, bool isToggled)
     {
@@ -567,7 +599,9 @@ public class AdventureManager : MonoBehaviour
     }
 
 
+
     #region Ability Cast Methods
+
 
     private void CastAbility_BasicAttack(ScriptableAbility ability)
     {
@@ -577,13 +611,23 @@ public class AdventureManager : MonoBehaviour
     private void CastAbility_Dodge(ScriptableAbility ability)
     {
         var statusEffect = ResourceSystem.Instance.GetStatusEffect(StatusEffect.EvasionBuff);
+        //dodge chance increase & "perfect dodge" duration
+        statusEffect.SetEffectValues(ability.EffectValue, ability.EffectValue_2);
+
+        PlayerHero.GetUnit()?.AddStatusEffect(statusEffect);
+    }
+
+    private void CastAbility_PoisonSelf(ScriptableAbility ability)
+    {
+        var statusEffect = ResourceSystem.Instance.GetStatusEffect(StatusEffect.Poison);
+        //poison amount
         statusEffect.SetEffectValues(ability.EffectValue);
 
         PlayerHero.GetUnit()?.AddStatusEffect(statusEffect);
     }
 
-    #endregion Ability Cast Methods
 
+    #endregion Ability Cast Methods
 
 
 
@@ -595,6 +639,7 @@ public class AdventureManager : MonoBehaviour
         if (isToggled)
         {
             var statusEffect = ResourceSystem.Instance.GetStatusEffect(StatusEffect.ShieldBlock);
+            //percent of shield stats, energy regen % red.
             statusEffect.SetEffectValues(ability.EffectValue, ability.EffectValue_2);
 
             PlayerHero.GetUnit()?.AddStatusEffect(statusEffect);

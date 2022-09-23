@@ -59,8 +59,8 @@ public class AbilityUI : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (Ability != null)
-            Ability.OnAbilityToggled -= ToggleAbility;
+        //if (Ability != null)
+        //    Ability.OnAbilityToggled -= ToggleAbility;
     }
 
     #endregion UNITY METHODS
@@ -71,17 +71,16 @@ public class AbilityUI : MonoBehaviour
         PlayerHeroUnit = heroUnit;
         Ability = ability;
 
-        if (Ability != null)
-            Ability.OnAbilityToggled += ToggleAbility;
+        //if (Ability != null)
+        //    Ability.OnAbilityToggled += ToggleAbility;
 
         UpdateUI(true);
     }
 
-    private void ToggleAbility(ScriptableAbility ability, bool isToggled)
-    {
-        if (Animator != null)
-            Animator.SetBool("IsToggled", isToggled);
-    }
+    //private void ToggleAbility(ScriptableAbility ability, bool isToggled)
+    //{
+        
+    //}
 
     private void UpdateUI(bool init)
     {
@@ -115,6 +114,10 @@ public class AbilityUI : MonoBehaviour
 
         CooldownImage.fillAmount = cd;
         CooldownText.text = Ability.GetCooldownText();
+
+        //Update toggled animation
+        if (Animator != null && Ability.ToggleMode != ToggleMode.None)
+            Animator.SetBool("IsToggled", Ability.ToggleMode == ToggleMode.Toggled);
     }
 
     //when ability is clicked

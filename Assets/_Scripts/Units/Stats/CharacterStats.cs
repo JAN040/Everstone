@@ -267,14 +267,44 @@ public class CharacterStats
         return Mana / MaxMana.GetValue();
     }
 
-    public void AddModifier(StatModifier modifier)
+    public bool AddModifiers(List<StatModifier> modifiers)
+    {
+        bool res = true;
+        
+        foreach (var modifier in modifiers)
+            res &= AddModifier(modifier);
+
+        return res;
+    }
+
+    public bool RemoveModifiers(List<StatModifier> modifiers)
+    {
+        bool res = true;
+
+        foreach (var modifier in modifiers)
+            res &= RemoveModifier(modifier);
+
+        return res;
+    }
+
+    public bool AddModifier(StatModifier modifier)
     {
         if (modifier == null || modifier.Value == 0)
-            return;
+            return false;
 
         Stat stat = GetStatFromStatType(modifier.ModifyingStatType);
 
-        stat.AddModifier(modifier);
+        return stat.AddModifier(modifier);
+    }
+
+    public bool RemoveModifier(StatModifier modifier)
+    {
+        if (modifier == null)
+            return false;
+
+        Stat stat = GetStatFromStatType(modifier.ModifyingStatType);
+
+        return stat.RemoveModifier(modifier);
     }
 
     public Stat GetStatFromStatType(StatType type)

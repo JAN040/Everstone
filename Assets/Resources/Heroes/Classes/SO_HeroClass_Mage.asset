@@ -97,7 +97,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     healEfficiency:
-      baseValue: 0
+      baseValue: 1
       type: 15
       canBeNegative: 1
       growthParameters:

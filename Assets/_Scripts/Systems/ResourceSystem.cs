@@ -28,7 +28,7 @@ public class ResourceSystem : Singleton<ResourceSystem> {
     /// To add icons: slice up sprite sheet -> right click-> create -> textmeshpro -> sprite asset -> 
     ///     project settings TMP set as default sprite asset. In the asset click "Update sprite asset"
     /// </summary>
-    private Dictionary<Icon, string> TMP_IconDict = new Dictionary<Icon, string>()
+    private static Dictionary<Icon, string> TMP_IconDict = new Dictionary<Icon, string>()
     {
         { Icon.Everstone,    "everstone" },
         { Icon.Infinity,     "infinity"  },
@@ -58,7 +58,7 @@ public class ResourceSystem : Singleton<ResourceSystem> {
         Heroes = Resources.LoadAll<ScriptableHero>("Heroes/Classes").ToList();
         _HeroesDict = Heroes.ToDictionary(r => r.ClassName, r => r);
 
-        StatusEffects = Resources.LoadAll<ScriptableStatusEffect>("StatusEffects").ToList();
+        StatusEffects = Resources.LoadAll<ScriptableStatusEffect>("Heroes/Abilities/StatusEffects").ToList();
 
         AdventureLocations = Resources.LoadAll<ScriptableAdventureLocation>("Locations/Adventure").ToList();
         _AdventureLocationsDict = AdventureLocations.ToDictionary(x => x.locationName, x => x);
@@ -111,10 +111,11 @@ public class ResourceSystem : Singleton<ResourceSystem> {
 
     public List<ScriptableAdventureLocation> GetAdventureLocations() => AdventureLocations.OrderBy(x => x.name).OrderBy(x => x.difficulty).ToList();
 
-    public string GetIconTag(Icon icon) => $"<sprite name=\"{TMP_IconDict[icon]}\">";
 
     public ScriptableStatusEffect GetStatusEffect(StatusEffect effect)
     {
-        return StatusEffects.FirstOrDefault(x => x.Effect == effect);
+        return Instantiate(StatusEffects.FirstOrDefault(x => x.Effect == effect));
     }
+
+    public static string GetIconTag(Icon icon) => $"<sprite name=\"{TMP_IconDict[icon]}\">";
 }   

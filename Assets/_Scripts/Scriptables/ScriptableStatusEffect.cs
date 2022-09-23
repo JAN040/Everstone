@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Scriptable/z_Other/New Status Effect", fileName = "SO_Effect_")]
+[CreateAssetMenu(menuName = "Scriptable/Ability/New Status Effect", fileName = "SO_Effect_")]
 public class ScriptableStatusEffect : ScriptableObject
 {
     #region PROPERTIES
@@ -47,6 +48,11 @@ public class ScriptableStatusEffect : ScriptableObject
     [NonSerialized]
     public GameObject Prefab;
 
+    [NonSerialized]
+    private Unit UnitRef;
+
+    [NonSerialized]
+    private List<StatModifier> AppliedStatModifiers = new List<StatModifier>();
 
     [Space]
     [Header("Effect values")]
@@ -77,6 +83,28 @@ public class ScriptableStatusEffect : ScriptableObject
     
     public bool IsActive { get; private set; } = false;
 
+   
+
+
+    #region Effect specific variables
+
+    /// <summary>
+    /// Dodge effect downgrades after cca 0.1s to provide a lesser buff
+    /// </summary>
+    private float secondsToModifierDowngrade;
+
+    /// <summary>
+    /// For poison and similar ticks
+    /// </summary>
+    private bool TickOnDurationEnd;
+
+    private bool TickAmount;
+
+    private bool CurrentTickAmount;
+
+
+    #endregion Effect specific variables
+
 
     #endregion PROPERTIES
 
@@ -84,17 +112,22 @@ public class ScriptableStatusEffect : ScriptableObject
     //public event Action<ScriptableAbility> OnAbilityActivated;
     public event Action<ScriptableStatusEffect> OnEffectExpired;
 
+
     /// <summary>
     /// Gets the effect running
     /// </summary>
-    public void Activate()
+    public void Activate(Unit unitRef)
     {
         if (IsActive)
             return;
 
+        UnitRef = unitRef;
+
         this.IsActive = true;
         this.CurrentDuration = Duration;
         this.DurationAtStart = Duration;
+
+        ApplyEffect();
     }
 
     public void Deactivate()
@@ -103,6 +136,9 @@ public class ScriptableStatusEffect : ScriptableObject
             return;
 
         this.IsActive = false;
+
+        RemoveEffect();
+
         Destroy(this.Prefab);
         OnEffectExpired?.Invoke(this);
     }
@@ -115,14 +151,86 @@ public class ScriptableStatusEffect : ScriptableObject
         if (!IsActive)
             return;
 
+        EffectSpecificUpdate();
+
         //-1 stands for infinite
         if (CurrentDuration != -1f)
         {
             CurrentDuration -= Time.deltaTime;
 
             if (CurrentDuration <= 0)
-                this.Deactivate();
+            {
+                if (TickOnDurationEnd)
+                    this.Tick();
+                else
+                    this.Deactivate();
+            }
         }
+    }
+
+    private void EffectSpecificUpdate()
+    {
+        switch (Effect)
+        {
+            case StatusEffect.Poison:
+                break;
+
+            case StatusEffect.EvasionBuff:
+                secondsToModifierDowngrade -= Time.deltaTime;
+                if (secondsToModifierDowngrade <= 0)
+                {
+                    //downgrade perfect dodge from 100 to 
+                    var modifier = AppliedStatModifiers.FirstOrDefault(x => x.ModifyingStatType == StatType.DodgeChance);
+                    modifier.Value = EffectValue;
+                    DisplayValue = $"{(int)(EffectValue * 100f)}";
+                }
+                break;
+
+            case StatusEffect.ShieldBlock:
+                break;
+
+            case StatusEffect.Slow:
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    private void Tick()
+    {
+        switch (Effect)
+        {
+            case StatusEffect.Poison:
+                //apply poison tick
+                UnitRef.TakeDamage(new Damage(EffectValue, ElementType.Poison), false);
+                EffectValue = (int) EffectValue / 2;
+
+                if (EffectValue <= 0)
+                {
+                    this.Deactivate();
+                    return;
+                }
+                else
+                {
+                    DisplayValue = EffectValue.ToString();
+                }
+
+                break;
+
+            case StatusEffect.EvasionBuff:
+                break;
+            case StatusEffect.ShieldBlock:
+                break;
+            case StatusEffect.Slow:
+                break;
+            default:
+                break;
+        }
+
+        //restart the next tick cycle
+        this.CurrentDuration = Duration;
+        this.DurationAtStart = Duration;
     }
 
     public float GetRemainingDurationNormalized()
@@ -152,11 +260,81 @@ public class ScriptableStatusEffect : ScriptableObject
         //add up effect values, extend durations etc.
         EffectValue += dupeEffect.EffectValue;
 
-        //for non infinte effects also add up duration
-        if (CurrentDuration != -1)
+        //for non infinte non tickable effects also add up duration
+        if (CurrentDuration != -1 && !TickOnDurationEnd)
         {
             CurrentDuration += dupeEffect.Duration;
             DurationAtStart += dupeEffect.Duration;
         }
+
+        if (Effect == StatusEffect.Poison)
+            DisplayValue = EffectValue.ToString();
     }
+
+    private void ApplyEffect()
+    {
+        switch (Effect)
+        {
+            case StatusEffect.Poison:
+                TickOnDurationEnd = true;
+                DisplayValue = EffectValue.ToString();
+
+                break;
+
+            case StatusEffect.EvasionBuff:
+                //add 100% dodge chance
+                ApplyStatModifier(new StatModifier(1, StatType.DodgeChance, ModifierType.Flat));
+
+                secondsToModifierDowngrade = EffectValue_2;
+                DisplayValue = "100";
+
+                break;
+
+            case StatusEffect.ShieldBlock:
+                //TODO: when equipment is done, get actual shield stats for the armor modifiers etc..
+                ApplyStatModifiers(new List<StatModifier>() {
+                    new StatModifier(20, StatType.Armor, ModifierType.Flat),
+                    new StatModifier(- EffectValue_2, StatType.EnergyRecovery, ModifierType.Percent),
+                });
+                DisplayValue = ResourceSystem.GetIconTag(Icon.Infinity);
+
+                break;
+
+            case StatusEffect.Slow:
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    private void ApplyStatModifiers(List<StatModifier> statModifiers)
+    {
+        statModifiers.ForEach(x => ApplyStatModifier(x));
+    }
+
+    private void ApplyStatModifier(StatModifier modifier)
+    {
+        UnitRef.Stats.AddModifier(modifier);
+        AppliedStatModifiers.Add(modifier);
+    }
+
+    private void RemoveStatModifier(StatModifier modifier)
+    {
+        UnitRef.Stats.RemoveModifier(modifier);
+        AppliedStatModifiers.Remove(modifier);
+    }
+
+    private void RemoveAllStatModifiers()
+    {
+        UnitRef.Stats.RemoveModifiers(AppliedStatModifiers);
+        AppliedStatModifiers.Clear();
+    }
+
+    private void RemoveEffect()
+    {
+        RemoveAllStatModifiers();
+    }
+
+    
 }

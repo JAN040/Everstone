@@ -66,7 +66,7 @@ public class Unit : MonoBehaviour
 
     [SerializeField] ScriptableUnitBase UnitDataRef;
 
-    [SerializeField] List<ScriptableStatusEffect> ActiveEffects;
+    private List<ScriptableStatusEffect> ActiveEffects = new List<ScriptableStatusEffect>();
 
     private UnitGrid UnitGridRef;
 
@@ -199,6 +199,8 @@ public class Unit : MonoBehaviour
     {
         Stats.OnHealthPointsChanged -= OnUnitHPChanged;
         Stats.OnEnergyChanged       -= OnUnitEnergyChanged;
+
+        RemoveAllStatusEffects();
     }
 
     private void Update()
@@ -406,14 +408,28 @@ public class Unit : MonoBehaviour
         Stats.OnEnergyChanged += OnUnitEnergyChanged;
     }
 
+    /// <summary>
+    /// If i ever need to inflict more than one damage type at once
+    /// </summary>
+    public void TakeDamage(List<Damage> damageList, bool canEvade)
+    {
+        if (canEvade && Helper.DiceRoll(this.Stats.DodgeChance.GetValue()))
+        {
+            Debug.Log($"Dodged. DodgeChance: {this.Stats.DodgeChance.GetValue()}");
+            CreateStatusIndicator("Dodged!", Color.white);
+            return;
+        }
 
-    public virtual void TakeDamage(Damage damage, bool canEvade)
+        damageList.ForEach(x => this.TakeDamage(x, false));
+    }
+
+    public void TakeDamage(Damage damage, bool canEvade)
     {
         //evasion check
         if (canEvade && Helper.DiceRoll(this.Stats.DodgeChance.GetValue()))
         {
+            Debug.Log($"Dodged. DodgeChance: {this.Stats.DodgeChance.GetValue()}");
             CreateStatusIndicator("Dodged!", Color.white);
-
             return;
         }
 
@@ -422,32 +438,27 @@ public class Unit : MonoBehaviour
         switch (damage.Type)
         {
             case DamageType.Physical:
-                dmgAmount = CalcDmgAmountPhysical(damage.PhysicalDamage);
-                CreateStatusIndicator(dmgAmount.Round().ToString(), Color.red);
+                var dmgAfterArmor = damage.Amount - Stats.Armor.GetValue();
+                dmgAmount = dmgAfterArmor > 0 ? dmgAfterArmor : 0;
                 break;
 
             case DamageType.Arts:
-                dmgAmount = CalcDmgAmountArts(damage.ArtsDamage);
-                CreateStatusIndicator(dmgAmount.Round().ToString(), Color.blue);
-                break;
-
-            case DamageType.Mixed:
-                float physDmg = CalcDmgAmountPhysical(damage.PhysicalDamage);
-                float artsDmg = CalcDmgAmountArts(damage.ArtsDamage);
-                dmgAmount = physDmg + artsDmg;
-                CreateStatusIndicator(physDmg.Round().ToString(), Color.red);
-                CreateStatusIndicator(artsDmg.Round().ToString(), Color.blue);
+                //arts resist can be negative (Note: its stored as a whole value, eg. 5 res means 0.05 dmg red., thats why division by 100)
+                var dmgAfterRes = damage.Amount - (damage.Amount * (Stats.ArtsResist.GetValue() / 100f));
+                dmgAmount = dmgAfterRes > 0 ? dmgAfterRes : 0;
                 break;
 
             case DamageType.True:
-                dmgAmount = damage.TrueDamage;
-                CreateStatusIndicator(dmgAmount.Round().ToString(), Color.white);
+            case DamageType.Elemental:
+                dmgAmount = damage.Amount;
                 break;
 
             default:
-                Debug.LogWarning($"Unset damage type");
+                Debug.LogWarning($"Unexpected damage type");
                 break;
         }
+
+        CreateStatusIndicator(dmgAmount.Round().ToString(), damage.GetIndicatorColor());
 
         ReduceHPByAmount(dmgAmount);
     }
@@ -465,19 +476,7 @@ public class Unit : MonoBehaviour
             FacingDirection.Right : FacingDirection.Left;
     }
 
-    private float CalcDmgAmountPhysical(float physicalDamage)
-    {
-        var dmg = physicalDamage - Stats.Armor.GetValue();
-        return dmg > 0 ? dmg : 0;
-    }
-    private float CalcDmgAmountArts(float artsDamage)
-    {
-        //arts resist can be negative (Note: its stored as a whole value, eg. 5 res means 0.05 dmg red., thats why division by 100)
-        var dmg = artsDamage - ( artsDamage * (Stats.ArtsResist.GetValue() / 100f) );
-        return dmg > 0 ? dmg : 0;
-    }
-
-    public virtual void Heal(float healAmount)
+    public void Heal(float healAmount)
     {
         float totalHeal = healAmount * Stats.HealEfficiency.GetValue();
         CreateStatusIndicator(totalHeal.Round().ToString(), Color.green);
@@ -514,10 +513,28 @@ public class Unit : MonoBehaviour
         this.IsDead = true;
         RemoveVelocity();
 
+        //deactivate all effects to avoid weird damage ticks and stuff
+        RemoveAllStatusEffects();
+
         Debug.Log($"Unit {UnitDataRef?.Name} has died.");
 
         //animate death
         StartCoroutine(PlayDeathAnimation());
+    }
+
+    public void RemoveAllStatusEffects()
+    {
+        foreach (var effect in new List<ScriptableStatusEffect>(ActiveEffects))
+        {
+            effect.Deactivate();
+        }
+
+        //deactivated effects signal an event which then removes them from the ActiveEffects list.
+        //  therefore the list should be empty when all effects are deactivated...
+        if (ActiveEffects.Count > 0)
+        {
+            Debug.LogWarning("RemoveAllStatusEffects(): ActiveEffects is still not empty!");
+        }
     }
 
     public IEnumerator PlayDeathAnimation()
@@ -684,6 +701,9 @@ public class Unit : MonoBehaviour
         if (newEffect == null)
             return;
 
+        if (ActiveEffects == null)
+            ActiveEffects = new List<ScriptableStatusEffect>();
+
         var dupeEffect = ActiveEffects.FirstOrDefault(x => x.Effect == newEffect.Effect && x.IsActive); 
         
         //if the same effect exists in the list
@@ -694,7 +714,7 @@ public class Unit : MonoBehaviour
             {
                 dupeEffect.StackEffect(newEffect);
                 
-                newEffect = dupeEffect;
+                return;   
             }
             else
             {
@@ -703,7 +723,7 @@ public class Unit : MonoBehaviour
         }
 
         newEffect.OnEffectExpired += EffectExpired;
-        newEffect.Activate();
+        newEffect.Activate(this);
 
         ActiveEffects.Add(newEffect);
 

@@ -238,7 +238,7 @@ public class CharacterCreationManager : MonoBehaviour
         //-1 means infinite in this case
         if (AvailableSkillPoints == -1)
         {   //Show infinity symbol
-            SkillPointsText.text = ResourceSystem.Instance.GetIconTag(Icon.Infinity);
+            SkillPointsText.text = ResourceSystem.GetIconTag(Icon.Infinity);
         }
         else
         {

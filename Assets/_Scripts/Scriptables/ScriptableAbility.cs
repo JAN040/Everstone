@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-[CreateAssetMenu(menuName = "Scriptable/z_Other/New Hero Ability", fileName = "SO_Ability_")]
+[CreateAssetMenu(menuName = "Scriptable/Ability/New Hero Ability", fileName = "SO_Ability_")]
 public class ScriptableAbility : ScriptableObject
 {
     #region PROPERTIES
@@ -70,12 +70,6 @@ public class ScriptableAbility : ScriptableObject
     public float EffectValue_3;
     public float EffectValue_4;
     public float EffectValue_5;
-
-    [Space]
-
-    public List<StatusEffect> OnActivateEffects;
-    public List<StatusEffect> OnToggledEffects;
-    public List<StatusEffect> OnUnToggledEffects;
 
 
     //TODO

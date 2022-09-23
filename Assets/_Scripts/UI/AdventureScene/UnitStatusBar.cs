@@ -111,12 +111,12 @@ public class UnitStatusBar : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.H))
         {
             Debug.Log($"Manually Healed unit {unitRef.Name} from {UnitRef.Prefab.GetComponent<Unit>().Stats.HealthPoints} to {UnitRef.Prefab.GetComponent<Unit>().Stats.HealthPoints + 20}");
-            UnitRef.Prefab.GetComponent<Unit>().Stats.HealthPoints += 20;
+            UnitRef.GetUnit().Heal(20);
         }
         if (Input.GetKeyDown(KeyCode.D))
         {
             Debug.Log($"Manually Damaged unit {unitRef.Name} from {UnitRef.Prefab.GetComponent<Unit>().Stats.HealthPoints} to {UnitRef.Prefab.GetComponent<Unit>().Stats.HealthPoints - 20}");
-            UnitRef.Prefab.GetComponent<Unit>().Stats.HealthPoints -= 20;
+            UnitRef.GetUnit().TakeDamage(new Damage(20, DamageType.True), false);
         }
 
         UpdateHpUI();
@@ -234,7 +234,7 @@ public class UnitStatusBar : MonoBehaviour
 
     private string GetIcon(Icon icon)
     {
-        return ResourceSystem.Instance.GetIconTag(icon);
+        return ResourceSystem.GetIconTag(icon);
     }
 
     private void UpdatePortrait()
