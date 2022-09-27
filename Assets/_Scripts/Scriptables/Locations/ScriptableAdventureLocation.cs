@@ -53,7 +53,7 @@ public class ScriptableAdventureLocation : ScriptableObject
     }
 
 
-    public List<ScriptableEnemy> EnemyPool { get; private set; }
+    public List<ScriptableNpcUnit> EnemyPool { get; private set; }
     //TODO eventPool ?
     //TODO boss ?
     //TODO nestSetup ?
@@ -62,7 +62,7 @@ public class ScriptableAdventureLocation : ScriptableObject
 
     #region METHODS
 
-    public void SetEnemyPool(List<ScriptableEnemy> pool)
+    public void SetEnemyPool(List<ScriptableNpcUnit> pool)
     {
         if (pool != null && pool.Count != 0)
             EnemyPool = pool;
@@ -92,9 +92,9 @@ public class ScriptableAdventureLocation : ScriptableObject
     /// <summary>
     /// Decide the enemies for the stage, from the ScriptableAdventureLocation enemy pool
     /// </summary>
-    public List<ScriptableEnemy> RollEnemies(EncounterType encounterType)
+    public List<ScriptableNpcUnit> RollEnemies(EncounterType encounterType)
     {
-        var result = new List<ScriptableEnemy>();
+        var result = new List<ScriptableNpcUnit>();
         switch (encounterType)
         {
             case EncounterType.SingleEnemy:
@@ -128,10 +128,10 @@ public class ScriptableAdventureLocation : ScriptableObject
         return result;
     }
 
-    public ScriptableEnemy GetRandomEnemy()
+    public ScriptableNpcUnit GetRandomEnemy()
     {
         bool isElite = Helper.DiceRoll(GetEliteEnemyChance());
-        List<ScriptableEnemy> effectivePool = isElite ?
+        List<ScriptableNpcUnit> effectivePool = isElite ?
             effectivePool = EnemyPool.Where(x => x.Type == EnemyType.Elite).ToList()
             :
             effectivePool = EnemyPool.Where(x => x.Type == EnemyType.Normal).ToList();

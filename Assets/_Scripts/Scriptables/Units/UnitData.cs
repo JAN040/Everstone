@@ -121,9 +121,14 @@ public class UnitData
     public float SpeedRatioMultiplier = 15;
 
 
-    public CharacterStats GetBaseStats(UnitClass unitClass, EnemyType enemyType, Difficulty gameDiff, ScriptableAdventureLocation locationData)
+    public CharacterStats GetBaseStats(UnitClass @class, EnemyType enemyType, Difficulty gameDiff, ScriptableAdventureLocation locationData)
     {
-        return GetEnemyStatsForClass(unitClass, CalculateStatModifier(enemyType, gameDiff, locationData));
+        return GetEnemyStatsForClass(@class, CalculateStatModifier(enemyType, gameDiff, locationData));
+    }
+
+    public bool IsClassRanged(UnitClass @class)
+    {
+        return ClassDataDict[@class].IsRanged;
     }
 
     private float CalculateStatModifier(EnemyType enemyType, Difficulty gameDiff, ScriptableAdventureLocation location)

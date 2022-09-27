@@ -1,8 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class UnitGrid
 {
@@ -222,7 +220,31 @@ public class UnitGrid
                 target[k, l] = null;
     }
 
-    public ScriptableUnitBase GetDefaultTarget(Faction faction)
+    public ScriptableUnitBase GetDefaultTarget(Faction faction, bool includeRanged)
+    {
+        var target = faction == Faction.Allies ? Allies : Enemies;
+
+        if (includeRanged)
+        {
+            int maxCol = target.GetLength(0) - 1;
+            int maxRow = target.GetLength(1) - 1;
+
+            //select randomly 5 times anywhere in the grid, if we dont find anything, then select from
+            //  the first row
+            for (int i = 0; i < 5; i++)
+            {
+                int randomCol = Random.Range(0, maxCol);
+                int randomRow = Random.Range(0, maxRow);
+
+                if (target[randomCol, randomRow] != null)
+                    return target[randomCol, randomRow];
+            }
+        }
+
+        return GetTargetFromFirstRow(faction);
+    }
+
+    private ScriptableUnitBase GetTargetFromFirstRow(Faction faction)
     {
         var target = faction == Faction.Allies ? Allies : Enemies;
         ScriptableUnitBase firstRowUp;
@@ -288,5 +310,21 @@ public class UnitGrid
                     target[k, l].Prefab.transform.position = 
                         new Vector2(idlePos.x + offsetAmnt, idlePos.y);
                 }
+    }
+
+    public bool IsInFirstRow(ScriptableUnitBase unit)
+    {
+        //search the first row of both grids for the unit
+
+        if (Allies[Allies.GetLength(0) - 1, 0]  == unit
+            || 
+            Allies[Allies.GetLength(0) - 1, 1]  == unit
+            ||
+            Enemies[0, 0] == unit
+            ||
+            Enemies[0, 1] == unit)
+            return true;
+
+        return false;
     }
 }

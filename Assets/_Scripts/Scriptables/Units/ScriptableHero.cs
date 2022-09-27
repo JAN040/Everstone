@@ -20,6 +20,7 @@ public class ScriptableHero : ScriptableUnitBase
     //pre-assigned values - GAME DATA
     //inherited: private CharacterStats _baseStats 
     public string ClassName;
+
     public PointAllocationData pointAllocationData = new PointAllocationData();
 
     [Space]

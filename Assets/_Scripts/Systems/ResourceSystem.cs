@@ -4,8 +4,8 @@ using UnityEngine;
 
 /// <summary>
 /// One repository for all scriptable objects. Create your query methods here to keep your business logic clean.
-/// I make this a MonoBehaviour as sometimes I add some debug/development references in the editor.
-/// If you don't feel free to make this a standard class
+/// Always instantiate ScriptableObjects when retrieving them, because sometimes the modified data gets 
+///     saved to the actual ScriptableObject file??? cringe
 /// </summary>
 public class ResourceSystem : Singleton<ResourceSystem> {
     private List<ScriptableHero> Heroes { get; set; }
@@ -21,7 +21,7 @@ public class ResourceSystem : Singleton<ResourceSystem> {
     private List<ScriptableAdventureLocation> AdventureLocations { get; set; }
     private Dictionary<string, ScriptableAdventureLocation> _AdventureLocationsDict;
 
-    private List<ScriptableEnemy> CommonEnemies { get; set; }
+    private List<ScriptableNpcUnit> CommonEnemies { get; set; }
 
 
     /// <summary>
@@ -44,10 +44,6 @@ public class ResourceSystem : Singleton<ResourceSystem> {
     };
 
 
-    //protected override void Awake() {
-    //    base.Awake();
-    //}
-
     private void Start()
     {
         AssembleResources();
@@ -57,37 +53,48 @@ public class ResourceSystem : Singleton<ResourceSystem> {
     private void AssembleResources() {
         Heroes = Resources.LoadAll<ScriptableHero>("Heroes/Classes").ToList();
         _HeroesDict = Heroes.ToDictionary(r => r.ClassName, r => r);
+        
+        HeroBackgrounds = Resources.LoadAll<ScriptableBackground>("Heroes/Backgrounds").ToList();
+        _HeroBackgroundsDict = HeroBackgrounds.ToDictionary(x => x.backgroundName, x => x);
+
 
         StatusEffects = Resources.LoadAll<ScriptableStatusEffect>("Heroes/Abilities/StatusEffects").ToList();
+        PlayerClassicAbilities = Resources.LoadAll<ScriptableAbility>("Heroes/Abilities/Classic").ToList();
+        PlayerSpecialAbilities = Resources.LoadAll<ScriptableAbility>("Heroes/Abilities/Special").ToList();
 
-        AdventureLocations = Resources.LoadAll<ScriptableAdventureLocation>("Locations/Adventure").ToList();
+
+        var locationData = Resources.LoadAll<ScriptableAdventureLocation>("Locations/Adventure").ToList();
+        AdventureLocations = new List<ScriptableAdventureLocation>();
+       
+        foreach (var location in locationData.OrderBy(x => x.name).OrderBy(x => x.difficulty))
+            AdventureLocations.Add(Instantiate(location));
+            
         _AdventureLocationsDict = AdventureLocations.ToDictionary(x => x.locationName, x => x);
+
 
         //load enemies
         foreach (var location in AdventureLocations)
         {
-            location.SetEnemyPool(Resources.LoadAll<ScriptableEnemy>($"Enemies/{location.locationName}").ToList());
+            location.SetEnemyPool(Resources.LoadAll<ScriptableNpcUnit>($"Enemies/{location.locationName}").ToList());
         }
 
-        CommonEnemies = Resources.LoadAll<ScriptableEnemy>("Enemies/_Common").ToList();
+        CommonEnemies = Resources.LoadAll<ScriptableNpcUnit>("Enemies/_Common").ToList();
     }
 
-    public ScriptableHero GetHero(string t) => _HeroesDict[t];
+    public ScriptableHero GetHero(string t) => Instantiate(_HeroesDict[t]);
     public List<string> GetHeroClasses() => _HeroesDict.Keys.OrderBy(x => x).ToList();
-    public ScriptableHero GetRandomHero() => Heroes[Random.Range(0, Heroes.Count)];
+    //public ScriptableHero GetRandomHero() => Instantiate(Heroes[Random.Range(0, Heroes.Count)]);
 
-    public ScriptableBackground GetBackground(string t) => _HeroBackgroundsDict[t];
-    public ScriptableBackground GetRandomBackground() => HeroBackgrounds[Random.Range(0, HeroBackgrounds.Count)];
+    public ScriptableBackground GetBackground(string t) => Instantiate(_HeroBackgroundsDict[t]);
+    //public ScriptableBackground GetRandomBackground() => HeroBackgrounds[Random.Range(0, HeroBackgrounds.Count)];
     public List<string> GetHeroBackgrounds()
     {
-        HeroBackgrounds = Resources.LoadAll<ScriptableBackground>("Heroes/Backgrounds").ToList();
-        _HeroBackgroundsDict = HeroBackgrounds.ToDictionary(x => x.backgroundName, x => x);
-
         var names = new List<string>();
         
         //add the "None" background first
         var BGnone = HeroBackgrounds.FirstOrDefault(x => x.backgroundName.ToLower() == "none");
-        names.Add(BGnone.backgroundName);
+        if (BGnone != null)
+            names.Add(BGnone.backgroundName);
 
         //add the other backgrounds after
         var BGother = _HeroBackgroundsDict.Keys.OrderBy(x => x).ToList();
@@ -99,18 +106,28 @@ public class ResourceSystem : Singleton<ResourceSystem> {
 
     public List<ScriptableAbility> GetClassicPlayerAbilities()
     {
-        PlayerClassicAbilities = Resources.LoadAll<ScriptableAbility>("Heroes/Abilities/Classic").ToList();
-        return new List<ScriptableAbility>(PlayerClassicAbilities);
+        var res = new List<ScriptableAbility>();
+
+        foreach (var ability in PlayerClassicAbilities)
+            res.Add(Instantiate(ability));
+
+        return res;
     }
 
     public List<ScriptableAbility> GetSpecialPlayerAbilities()
     {
-        PlayerSpecialAbilities = Resources.LoadAll<ScriptableAbility>("Heroes/Abilities/Special").ToList();
-        return new List<ScriptableAbility>(PlayerSpecialAbilities);
+        var res = new List<ScriptableAbility>();
+
+        foreach (var ability in PlayerSpecialAbilities)
+            res.Add(Instantiate(ability));
+
+        return res;
     }
 
-    public List<ScriptableAdventureLocation> GetAdventureLocations() => AdventureLocations.OrderBy(x => x.name).OrderBy(x => x.difficulty).ToList();
-
+    public List<ScriptableAdventureLocation> GetAdventureLocations()
+    {
+        return AdventureLocations.OrderBy(x => x.name).OrderBy(x => x.difficulty).ToList();
+    }
 
     public ScriptableStatusEffect GetStatusEffect(StatusEffect effect)
     {

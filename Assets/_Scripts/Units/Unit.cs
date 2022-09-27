@@ -21,7 +21,10 @@ public class Unit : MonoBehaviour
     [SerializeField] float BasicAttackForce_Base;
     [SerializeField] Material Material_Dissolve;
     [SerializeField] GameObject StatusIndicatorPrefab;
-
+    /// <summary>
+    /// Controls the Dissolve material fade in the death anim.
+    /// </summary>
+    private float Fade = 1f;
 
     #region UI References
 
@@ -97,11 +100,6 @@ public class Unit : MonoBehaviour
     }
 
     /// <summary>
-    /// Controls the Dissolve material fade in the death anim.
-    /// </summary>
-    private float Fade = 1f;
-
-    /// <summary>
     /// Non targetable targets cant be hit with a direct attack, only AOE
     /// </summary>
     [SerializeField] bool isTargetable = true;
@@ -158,6 +156,11 @@ public class Unit : MonoBehaviour
     }
 
     /// <summary>
+    /// Determines whether this unit can perform ranged attacks, or if it is limited to melee only
+    /// </summary>
+    public bool IsRanged;
+
+    /// <summary>
     /// Decided by who the player targets (for allies) or randomly (enemies)
     /// </summary>
     public ScriptableUnitBase PreferredTargetOpponent;
@@ -168,6 +171,8 @@ public class Unit : MonoBehaviour
     public ScriptableUnitBase CurrentTargetOpponent;
 
     [SerializeField] bool IsAttacking = false;
+
+    [SerializeField] AttackType AttackType;
 
     private float BasicAttackForce { 
         get { return BasicAttackForce_Base * GetMineToHeroSpeedRatio(); }
@@ -218,15 +223,11 @@ public class Unit : MonoBehaviour
         //update effects
         UpdateStatusEffects();
 
-        //start attacking/action if energy full
-        if (Stats.Energy >= Stats.MaxEnergy.GetValue())
+        //start attacking/action if energy full (the hero doesnt auto attack, all other units do)
+        if (Stats.Energy >= Stats.MaxEnergy.GetValue() && UnitDataRef != HeroRef)
         {
-            //the hero doesnt auto attack, all other units do
-            if (UnitDataRef != HeroRef)
-            {
-                //auto attack
-                BasicAttack();
-            }
+            //auto attack
+            BasicAttack();
         }
     }
 
@@ -246,13 +247,13 @@ public class Unit : MonoBehaviour
         Stats.Energy += modifier * Time.deltaTime;
     }
 
-    //Handle movement
+    //Handle melee basic attack & other movement
     private void FixedUpdate()
     {
         if (IsDead)
             return;
 
-        if (IsAttacking)
+        if (IsAttacking && AttackType == AttackType.Melee)
         {
             if (!IsValidTarget(CurrentTargetOpponent))
             {
@@ -603,7 +604,7 @@ public class Unit : MonoBehaviour
     public void BasicAttack()
     {
         if (!IsValidTarget(PreferredTargetOpponent)) //reselect a preffered target if needed
-            PreferredTargetOpponent = UnitGridRef.GetDefaultTarget(GetOpponentFaction());
+            PreferredTargetOpponent = UnitGridRef.GetDefaultTarget(GetOpponentFaction(), this.IsRanged);
         
         CurrentTargetOpponent = PreferredTargetOpponent;
 
@@ -611,6 +612,7 @@ public class Unit : MonoBehaviour
         if (IsValidTarget(CurrentTargetOpponent))
         {
             this.IsAttacking = true;
+            this.AttackType = this.IsRanged ? AttackType.Ranged : AttackType.Melee;
             this.Stats.Energy = 0;
         }
     }
@@ -650,7 +652,8 @@ public class Unit : MonoBehaviour
     {
         return opponentTarget != null &&
                opponentTarget.Prefab != null &&
-               !opponentTarget.Prefab.GetComponent<Unit>().IsDead;
+               !opponentTarget.Prefab.GetComponent<Unit>().IsDead &&
+               (!IsRanged && UnitGridRef.IsInFirstRow(opponentTarget));
     }
 
     /// <summary>

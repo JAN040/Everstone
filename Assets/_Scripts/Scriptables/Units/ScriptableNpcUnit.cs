@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
-/// Used to store enemy data
+/// Used to store non-player character unit data
 /// </summary>
 [CreateAssetMenu(menuName = "Scriptable/Units/New Enemy", fileName = "SO_Enemy_")]
-public class ScriptableEnemy : ScriptableUnitBase
+public class ScriptableNpcUnit : ScriptableUnitBase
 {
 
     /// <summary>
@@ -21,7 +21,7 @@ public class ScriptableEnemy : ScriptableUnitBase
 
     //TODO abilities list
 
-    public ScriptableEnemy()
+    public ScriptableNpcUnit()
     {
         this.Faction = Faction.Enemies;
     }
@@ -30,6 +30,4 @@ public class ScriptableEnemy : ScriptableUnitBase
     {
         _baseStats = GameManager.Instance.UnitData.GetBaseStats(Class, Type, gameDiff, locData);
     }
-
-
 }

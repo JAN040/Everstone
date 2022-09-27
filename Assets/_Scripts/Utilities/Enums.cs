@@ -217,3 +217,11 @@ public enum StatusEffect
     Slow,
     //etc.
 }
+
+
+public enum AttackType
+{
+    Melee,
+    Ranged,
+    Special
+}

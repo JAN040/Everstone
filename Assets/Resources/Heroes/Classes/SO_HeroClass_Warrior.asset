@@ -15,7 +15,7 @@ MonoBehaviour:
   Name: 
   Faction: 0
   Type: 0
-  MenuSprite: {fileID: 0}
+  MenuSprite: {fileID: 21300000, guid: f42f0e0be94bf3647a8b5e03b3b10bff, type: 3}
   FaceDirection: 1
   Description: 
   Prefab: {fileID: 0}
@@ -25,7 +25,7 @@ MonoBehaviour:
     _mana: 0
     maxPets: 0
     physicalDamage:
-      baseValue: 10
+      baseValue: 11
       type: 0
       canBeNegative: 0
       growthParameters:

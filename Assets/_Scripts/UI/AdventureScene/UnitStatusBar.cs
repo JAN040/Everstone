@@ -13,6 +13,11 @@ public class UnitStatusBar : MonoBehaviour
     #region VARIABLES
 
 
+    [Header("Parameters")]
+
+    [SerializeField] float TextHighlightSpeed = 2;
+
+
     #region UI References
 
     [Header("UI References")]
@@ -210,6 +215,40 @@ public class UnitStatusBar : MonoBehaviour
     private void UnitStatChanged(Stat stat)
     {
         UpdateStats();
+
+        switch (stat.Type)
+        {
+            case StatType.PhysicalDamage:
+            case StatType.ArtsDamage:
+                StartCoroutine(HighlightTextForSeconds(Attack_Text));
+                break;
+            case StatType.Armor:
+                StartCoroutine(HighlightTextForSeconds(Defense_Text));
+                break;
+            case StatType.ArtsResist:
+                StartCoroutine(HighlightTextForSeconds(Resist_Text));
+                break;
+            case StatType.MaxHP:
+                StartCoroutine(HighlightTextForSeconds(Health_Text));
+                break;
+            case StatType.Speed:
+                StartCoroutine(HighlightTextForSeconds(Speed_Text));
+                break;
+            default:
+                break;
+        }
+    }
+
+    private IEnumerator HighlightTextForSeconds(TextMeshProUGUI textComponent)
+    {
+        Color prevColor = textComponent.color;
+        textComponent.color = Color.red;
+
+        while (textComponent.color != prevColor)
+        {
+            textComponent.color = Color.Lerp(textComponent.color, prevColor, Time.deltaTime / TextHighlightSpeed);
+            yield return null;
+        }
     }
 
     public void UpdateStats()

@@ -85,4 +85,16 @@ public static class Extensions
         int j = Array.IndexOf<T>(Arr, src) + 1;
         return (Arr.Length == j) ? src : Arr[j];
     }
+
+    /// <summary>
+    /// Returns true if the item is one of the elements in the list (uses the List.Contains method)
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="item"></param>
+    /// <param name="list"></param>
+    /// <returns></returns>
+    public static bool In<T>(this T item, params T[] list)
+    {
+        return list.Contains(item);
+    }
 }

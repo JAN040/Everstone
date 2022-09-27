@@ -49,17 +49,17 @@ public class AdventureManager : MonoBehaviour
 
     private ScriptableHero PlayerHero;
     [SerializeField] List<ScriptableUnitBase> AlliedUnitsList;
-    [SerializeField] List<ScriptableEnemy> EnemyUnitsList;
+    [SerializeField] List<ScriptableNpcUnit> EnemyUnitsList;
 
     private UnitGrid UnitGrid = new UnitGrid();
 
-    [SerializeField] ScriptableEnemy targetedEnemy = null;
-    private ScriptableEnemy TargetedEnemy
+    [SerializeField] ScriptableNpcUnit targetedEnemy = null;
+    private ScriptableNpcUnit TargetedEnemy
     {
         get
         {
             if (targetedEnemy == null)
-                return UnitGrid.GetDefaultTarget(Faction.Enemies) as ScriptableEnemy;
+                return UnitGrid.GetDefaultTarget(Faction.Enemies, false) as ScriptableNpcUnit;
 
             return targetedEnemy;
         }
@@ -74,7 +74,7 @@ public class AdventureManager : MonoBehaviour
             {
                 if (currentTargetedEnemyUnit == null || currentTargetedEnemyUnit.IsDead)
                 {   //if the unit died; select a default target for the status bar
-                    SetStatusBarUnit(UnitGrid.GetDefaultTarget(Faction.Enemies), Faction.Enemies);
+                    SetStatusBarUnit(UnitGrid.GetDefaultTarget(Faction.Enemies, false), Faction.Enemies);
                 }
                 //if the target was deselected manually, but the unit is still alive, keep the status bar as-is
             }
@@ -395,12 +395,13 @@ public class AdventureManager : MonoBehaviour
         {
             //create prefab
             CreateUnitPrefab(ally);
+            InitUnitScript(ally);
 
             //TODO: load the saved ally positions if any, if not, place like this:
 
             //place the prefab in the grid (allies are teleported)
-            if (ally is ScriptableEnemy)
-                AddEnemyToGridByClass(ally as ScriptableEnemy, true);
+            if (ally is ScriptableNpcUnit)
+                AddEnemyToGridByClass(ally as ScriptableNpcUnit, true);
             else
                 UnitGrid.AddToFront(Faction.Allies, ally, true);
         }
@@ -416,6 +417,7 @@ public class AdventureManager : MonoBehaviour
 
             //create prefab
             CreateUnitPrefab(enemy);
+            InitUnitScript(enemy);
 
             //place the prefab in the grid
             AddEnemyToGridByClass(enemy, false);
@@ -425,7 +427,25 @@ public class AdventureManager : MonoBehaviour
         UnitGrid.SetupEnemyEntrance();
     }
 
-    private void AddEnemyToGridByClass(ScriptableEnemy unit, bool teleport)
+    private void InitUnitScript(ScriptableUnitBase unit)
+    {
+        var unitScript = unit.GetUnit();
+        if (unitScript == null)
+            return;
+
+        unitScript.Initialize(unit.BaseStats, unit, UnitGrid, PlayerHero);
+        unitScript.OnSetTarget += SetTarget;
+        unitScript.OnUnitDeath += HandleUnitDeath;
+
+        if (unit is ScriptableNpcUnit)
+            unitScript.IsRanged = GameManager.Instance.UnitData.IsClassRanged((unit as ScriptableNpcUnit).Class);
+
+        //TODO: assign this based on the equipped weapon!
+        if (unit is ScriptableHero)
+            unitScript.IsRanged = (unit as ScriptableHero).ClassName.Equals("Mage");
+    }
+
+    private void AddEnemyToGridByClass(ScriptableNpcUnit unit, bool teleport)
     {
         switch (unit.Class)
         {
@@ -470,11 +490,6 @@ public class AdventureManager : MonoBehaviour
         }
 
         unit.Prefab = Instantiate(UnitPrefab, new Vector2(spawnX, -0.25f), Quaternion.identity);
-
-        unit.Prefab.GetComponent<Unit>().Initialize(unit.BaseStats, unit, UnitGrid, PlayerHero);
-        unit.Prefab.GetComponent<Unit>().OnSetTarget += SetTarget;
-        unit.Prefab.GetComponent<Unit>().OnUnitDeath += HandleUnitDeath;
-
         unit.Prefab.layer = LayerMask.NameToLayer(layer.ToString());
     }
 
@@ -502,7 +517,7 @@ public class AdventureManager : MonoBehaviour
                 enemy.Prefab.GetComponent<Unit>().IsTargeted = false;
             }
             
-            TargetedEnemy = unit as ScriptableEnemy;
+            TargetedEnemy = unit as ScriptableNpcUnit;
 
             unit.Prefab.GetComponent<Unit>().IsTargeted = true;
         }
@@ -537,12 +552,12 @@ public class AdventureManager : MonoBehaviour
         }
         else
         {
-            EnemyUnitsList.Remove(unit as ScriptableEnemy);
+            EnemyUnitsList.Remove(unit as ScriptableNpcUnit);
 
             if (TargetedEnemy == unit)
                 TargetedEnemy = null;
             else if (EnemyStatusBar.GetComponent<UnitStatusBar>().UnitRef == unit)
-                SetStatusBarUnit(UnitGrid.GetDefaultTarget(Faction.Enemies), Faction.Enemies);
+                SetStatusBarUnit(UnitGrid.GetDefaultTarget(Faction.Enemies, false), Faction.Enemies);
         }
     }
 
