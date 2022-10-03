@@ -47,6 +47,9 @@ TagManager:
   - name: Units
     uniqueID: 3569299455
     locked: 0
+  - name: SpecialEffects
+    uniqueID: 3233735245
+    locked: 0
   - name: UI
     uniqueID: 4259722393
     locked: 0

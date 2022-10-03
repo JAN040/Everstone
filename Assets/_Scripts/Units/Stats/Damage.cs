@@ -12,7 +12,7 @@ using UnityEngine;
 /// </summary>
 public class Damage
 {
-    public float Amount { get; private set; }
+    public float Amount { get; set; }
     //public float PhysicalDamage { get; private set; }
     //public float ArtsDamage { get; private set; }
     //public float TrueDamage { get; private set; }

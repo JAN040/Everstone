@@ -42,14 +42,20 @@ VisualEffect:
   m_GameObject: {fileID: 343490207923580227}
   m_Enabled: 1
   m_Asset: {fileID: 8926484042661614526, guid: daacb7ddb3fc59a40984fb1c27024b51, type: 3}
-  m_InitialEventName: OnPlay
-  m_InitialEventNameOverriden: 0
+  m_InitialEventName: 
+  m_InitialEventNameOverriden: 1
   m_StartSeed: 0
   m_ResetSeedOnPlay: 1
   m_ResourceVersion: 1
   m_PropertySheet:
     m_Float:
-      m_Array: []
+      m_Array:
+      - m_Value: 0
+        m_Name: Angle
+        m_Overridden: 1
+      - m_Value: 2
+        m_Name: Position_x
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
@@ -107,8 +113,8 @@ VFXRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1061232051
+  m_SortingLayer: 2
   m_SortingOrder: 0
 --- !u!1 &373507460635949261
 GameObject:
@@ -154,7 +160,7 @@ GameObject:
   - component: {fileID: 2979410990919350314}
   - component: {fileID: 4269673616275849167}
   - component: {fileID: 3078479984164580713}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: RangedAtk_Impact
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -185,8 +191,8 @@ VisualEffect:
   m_GameObject: {fileID: 955313919898187823}
   m_Enabled: 1
   m_Asset: {fileID: 8926484042661614526, guid: 459f8464173598d41a4c262eebf0d927, type: 3}
-  m_InitialEventName: OnPlay
-  m_InitialEventNameOverriden: 0
+  m_InitialEventName: 
+  m_InitialEventNameOverriden: 1
   m_StartSeed: 0
   m_ResetSeedOnPlay: 1
   m_ResourceVersion: 1
@@ -250,6 +256,6 @@ VFXRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1061232051
+  m_SortingLayer: 2
   m_SortingOrder: 0

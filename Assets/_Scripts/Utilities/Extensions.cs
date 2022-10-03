@@ -15,7 +15,8 @@ public static class Extensions
 
     public static Vector3 FlipX(this Vector3 vector)
     {
-        return new Vector3(-1f * vector.x, vector.y, vector.z);
+        Vector3 res = new Vector3(-1f * vector.x, vector.y, vector.z);
+        return res;
     }
 
     public static Vector3 FlipY(this Vector3 vector)

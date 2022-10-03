@@ -164,11 +164,11 @@ public class ScriptableAbility : ScriptableObject
         }
     }
 
-    public string GetCostText()
-    {
-        return null;
-        //return $"<color=#27A3FD>{mCost}</color> <color=#C06217>{eCost}</color>";
-    }
+    //public string GetCostText()
+    //{
+    //    return null;
+    //    //return $"<color=#27A3FD>{mCost}</color> <color=#C06217>{eCost}</color>";
+    //}
 
     public void SetCostText(TextMeshProUGUI costText_Energy, TextMeshProUGUI costText_Mana)
     {

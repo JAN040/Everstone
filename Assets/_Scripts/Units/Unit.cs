@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.VFX;
 
 /// <summary>
 /// This will share logic for any unit on the field. Could be friend or foe, controlled or not.
@@ -25,6 +26,7 @@ public class Unit : MonoBehaviour
     /// Controls the Dissolve material fade in the death anim.
     /// </summary>
     private float Fade = 1f;
+
 
     #region UI References
 
@@ -55,6 +57,12 @@ public class Unit : MonoBehaviour
     [Space]
     [SerializeField] Sprite BackHealth_Damage;
     [SerializeField] Sprite BackHealth_Heal;
+
+    [Space]
+    [SerializeField] GameObject   UnitEffects;
+    [SerializeField] VisualEffect RangedAtkMuzzle;
+    [SerializeField] VisualEffect RangedAtkImpact;
+
 
     #endregion UI References
 
@@ -291,6 +299,11 @@ public class Unit : MonoBehaviour
         if (this.IsAttacking && enemyUnitScript != null && !enemyUnitScript.IsDead)
         {
             var damage = new Damage(Stats.PhysicalDamage.GetValue(), Stats.ArtsDamage.GetValue());
+            
+            //when non-boss ranged units are in the first row, they melee atk for less dmg
+            if (this.IsRanged && UnitDataRef.Type != EnemyType.Boss)
+                damage.Amount /= 2;
+
             enemyUnitScript.TakeDamage(damage, true);
 
             //stop attacking
@@ -331,6 +344,13 @@ public class Unit : MonoBehaviour
         Image_HealthBar.fillAmount     = Stats.GetHpNormalized();
         Image_BackHealthBar.fillAmount = Stats.GetHpNormalized();
         Image_EnergyBar.fillAmount     = Stats.GetEnergyNormalized();
+
+        //set visual effect related objects
+        if (unitData.Faction == Faction.Enemies)
+        {
+            UnitEffects.GetComponent<MoveWithParent>().Offset = UnitEffects.GetComponent<MoveWithParent>().Offset.FlipX();
+            RangedAtkMuzzle.SetFloat("Position_x", - RangedAtkMuzzle.GetFloat("Position_x"));
+        }
 
         if (unitData == HeroRef)    //hero unit has a separate UI element for energy
             Image_EnergyBar.gameObject.SetActive(false);
@@ -424,14 +444,19 @@ public class Unit : MonoBehaviour
         damageList.ForEach(x => this.TakeDamage(x, false));
     }
 
-    public void TakeDamage(Damage damage, bool canEvade)
+    /// <summary>
+    /// Handles taking damage
+    /// </summary>
+    /// <returns>True on hit, false on dodge</returns>
+    public bool TakeDamage(Damage damage, bool canEvade)
     {
         //evasion check
         if (canEvade && Helper.DiceRoll(this.Stats.DodgeChance.GetValue()))
         {
             Debug.Log($"Dodged. DodgeChance: {this.Stats.DodgeChance.GetValue()}");
             CreateStatusIndicator("Dodged!", Color.white);
-            return;
+            
+            return false;
         }
 
         float dmgAmount = 0;
@@ -460,8 +485,23 @@ public class Unit : MonoBehaviour
         }
 
         CreateStatusIndicator(dmgAmount.Round().ToString(), damage.GetIndicatorColor());
-
         ReduceHPByAmount(dmgAmount);
+
+        return true;
+    }
+
+    /// <summary>
+    /// A TakeDamage wrapper that handles the on-hit animation as well
+    /// </summary>
+    /// <param name="damage"></param>
+    /// <param name="canEvade"></param>
+    public void TakeRangedDamage(Damage damage, bool canEvade)
+    {
+        //only animate if the attack wasnt dodged
+        if (TakeDamage(damage, canEvade))
+        {
+            this.RangedAtkImpact.Play();
+        }
     }
 
     private void CreateStatusIndicator(string text, Color color)
@@ -611,10 +651,61 @@ public class Unit : MonoBehaviour
         //if we have a valid target
         if (IsValidTarget(CurrentTargetOpponent))
         {
-            this.IsAttacking = true;
-            this.AttackType = this.IsRanged ? AttackType.Ranged : AttackType.Melee;
-            this.Stats.Energy = 0;
+
+            //units in the first row should do a melee basic attack
+            if (UnitGridRef.IsInFirstRow(this.UnitDataRef))
+            {
+                this.IsAttacking = true;
+                this.AttackType = AttackType.Melee;
+                this.Stats.Energy = 0;
+            }
+            else if (!UnitGridRef.IsInFirstRow(this.UnitDataRef) && this.IsRanged)
+            {
+                this.IsAttacking = true;
+                this.AttackType = AttackType.Ranged;
+                this.Stats.Energy = 0;
+                StartCoroutine(RangedAttackRoutine());
+            }
         }
+    }
+
+    private IEnumerator RangedAttackRoutine()
+    {
+        //set muzzle angle
+        var dir = CurrentTargetOpponent.Prefab.transform.position - UnitDataRef.Prefab.transform.position;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        var damage = new Damage(Stats.PhysicalDamage.GetValue(), Stats.ArtsDamage.GetValue());
+        
+        RangedAtkMuzzle.SetFloat("Angle", angle);
+        //play the muzzle flash animation
+        RangedAtkMuzzle.Play();
+
+        //add recoil force
+        RigidBody.AddForce(dir.normalized * -1 * BasicAttackForce * 3);
+
+
+        yield return new WaitForSeconds(0.2f);
+
+        //add some force to the enemy as well
+        CurrentTargetOpponent.GetUnit()?.RigidBody?.AddForce(dir.normalized * BasicAttackForce * 3);
+
+        //handle taking damage & playing the onHit animation
+        if (IsValidTarget(CurrentTargetOpponent))
+            CurrentTargetOpponent.GetUnit().TakeRangedDamage(damage, true);
+
+        yield return new WaitForSeconds(0.1f);
+
+        //stabilise and return to position
+        RemoveVelocity();
+        this.IsAttacking = false;
+
+        yield return new WaitForSeconds(0.1f);
+        CurrentTargetOpponent?.GetUnit()?.RemoveVelocity();
+    }
+
+    private void OnRangedAttackHit(Damage damage)
+    {
+        throw new NotImplementedException();
     }
 
     private void StopAttacking(bool stabilise = false)
@@ -627,6 +718,9 @@ public class Unit : MonoBehaviour
 
     private void RemoveVelocity()
     {
+        if (RigidBody == null)
+            return;
+
         RigidBody.velocity = Vector2.zero;
         RigidBody.angularVelocity = 0;
     }
@@ -653,7 +747,7 @@ public class Unit : MonoBehaviour
         return opponentTarget != null &&
                opponentTarget.Prefab != null &&
                !opponentTarget.Prefab.GetComponent<Unit>().IsDead &&
-               (!IsRanged && UnitGridRef.IsInFirstRow(opponentTarget));
+               (IsRanged || UnitGridRef.IsInFirstRow(opponentTarget));
     }
 
     /// <summary>
