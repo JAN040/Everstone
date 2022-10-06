@@ -258,7 +258,7 @@ public class UnitStatusBar : MonoBehaviour
 
         var unit = UnitRef.Prefab.GetComponent<Unit>();
 
-        Health_Text.text = $"{unit.Stats.HealthPoints.Round()}/{unit.Stats.MaxHP.GetValue().Round()}";
+        Health_Text.text = $"{unit.Stats.HealthPoints.RoundHP()}/{unit.Stats.MaxHP.GetValue().RoundHP()}";
         MaxHealth = unit.Stats.MaxHP.GetValue();
 
         Attack_Text.text = unit.Stats.ArtsDamage.GetValue() > 0 ?

@@ -66,6 +66,8 @@ public class SkillLevel
         get { return _level; }
         set
         {
+            int prevValue = _level;
+
             if (value <= _level)
                 return;
 
@@ -82,7 +84,7 @@ public class SkillLevel
 
             ExpToNextLevel = GetRequiredExpToNextLevel(_level);
 
-            OnLevelChanged?.Invoke(this, EventArgs.Empty);
+            OnLevelChanged?.Invoke(prevValue, _level, this);
         }
     }
     public int Experience { get; set; }
@@ -96,8 +98,11 @@ public class SkillLevel
 
     #endregion PROPERTIES
 
-    public event EventHandler OnExperienceChanged;
-    public event EventHandler OnLevelChanged;
+    /// <summary>
+    /// Invoked when the skill levels up.
+    /// Parameters: oldLevel, newLevel
+    /// </summary>
+    public event Action<int, int, SkillLevel> OnLevelChanged;
 
     /// <param name="type">Which skill this level system is for</param>
     /// <param name="type">Which stats this level system will modify</param>
@@ -145,9 +150,6 @@ public class SkillLevel
             //updating the level also updates ExpToNextLevel
             LevelUp();
         }
-
-        //TODO: consume event to notify UI about the level up
-        OnExperienceChanged?.Invoke(this, EventArgs.Empty);
     }
 
     protected void LevelUp()
@@ -239,6 +241,42 @@ public class SkillLevel
             Math.Clamp(maxPets, 1, 8);
             this._statsReference.MaxPets = maxPets;
         }
+    }
+
+    public static Icon SkillToIcon(Skill skill)
+    {
+        switch (skill)
+        {
+            case Skill.Strength:
+                return Icon.Attack_Phys;
+                
+            case Skill.Arts:
+                return Icon.Attack_Arts;
+
+            case Skill.Agility:
+                return Icon.Speed;
+
+            case Skill.Constitution:
+                return Icon.Health;
+
+            //TODO: need these icons
+            case Skill.Lockpicking:
+                return Icon.Everstone;
+
+            case Skill.Taming:
+                return Icon.Everstone;
+
+            case Skill.Trading:
+                return Icon.Everstone;
+
+            case Skill.Equipment_Skill:
+                return Icon.Everstone;
+
+            default:
+                break;
+        }
+
+        return Icon.Everstone;
     }
 }
 

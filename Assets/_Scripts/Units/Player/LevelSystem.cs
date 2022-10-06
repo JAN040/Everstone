@@ -31,6 +31,7 @@ public class LevelSystem
         {
             throw new NullReferenceException("Cant instantiate LevelSystem without valid skills & stats references");
         }
+
         Skills = skills;
         Stats = stats;
     }

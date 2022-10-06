@@ -31,9 +31,11 @@ public class AdventureManager : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI GameSpeedButtonText;
 
-
     [Space]
     [SerializeField] TextMeshProUGUI TimerText;
+
+    [Space]
+    [SerializeField] TextMeshProUGUI Logger_Text;
 
     #endregion UI References
 
@@ -236,6 +238,10 @@ public class AdventureManager : MonoBehaviour
 
     private void InitStage(bool isFirstTime, bool initAllies)
     {
+        //reset logger & timer
+        Logger_Text.text = "";
+        Timer = 0;
+
         //get encounter type
         EncounterType encounter = CurrentLocation.GetNextEncounter();
 
@@ -313,7 +319,8 @@ public class AdventureManager : MonoBehaviour
         PlayerHero = GameManager.Instance.PlayerManager.PlayerHero;
     }
 
-    private void InitPlayerAbilities()
+
+    private void InitPlayerAbilities() 
     {
         var pManager = GameManager.Instance.PlayerManager;
 
@@ -433,7 +440,7 @@ public class AdventureManager : MonoBehaviour
         if (unitScript == null)
             return;
 
-        unitScript.Initialize(unit.BaseStats, unit, UnitGrid, PlayerHero);
+        unitScript.Initialize(unit.BaseStats, unit, UnitGrid, this, PlayerHero);
         unitScript.OnSetTarget += SetTarget;
         unitScript.OnUnitDeath += HandleUnitDeath;
 
@@ -667,4 +674,18 @@ public class AdventureManager : MonoBehaviour
 
 
     #endregion Ability Toggle Methods
+
+
+    public void LogInfo(string text)
+    {
+        Logger_Text.text += $"[{TimerText.text}]: {text}{Environment.NewLine}";
+    }
+
+    public void AddPlayerXp(int amount, Skill skill)
+    {
+        var skillObj = PlayerHero.LevelSystem.Skills[skill.ToString()];
+        PlayerHero.LevelSystem.AddExperienceToSkill(amount, skill);
+
+        LogInfo($"+ {amount} {ResourceSystem.GetIconTag(SkillLevel.SkillToIcon(skill))} XP ({skillObj.Experience}/{skillObj.ExpToNextLevel})");
+    }
 }

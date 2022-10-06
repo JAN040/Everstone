@@ -80,6 +80,7 @@ public class Unit : MonoBehaviour
     private List<ScriptableStatusEffect> ActiveEffects = new List<ScriptableStatusEffect>();
 
     private UnitGrid UnitGridRef;
+    private AdventureManager ManagerRef;
 
     private ScriptableHero HeroRef;
 
@@ -213,6 +214,12 @@ public class Unit : MonoBehaviour
         Stats.OnHealthPointsChanged -= OnUnitHPChanged;
         Stats.OnEnergyChanged       -= OnUnitEnergyChanged;
 
+        if (UnitDataRef == HeroRef)
+            foreach (var skill in HeroRef.LevelSystem.Skills.Values)
+            {
+                skill.OnLevelChanged -= LevelChanged;
+            }
+
         RemoveAllStatusEffects();
     }
 
@@ -300,11 +307,18 @@ public class Unit : MonoBehaviour
         {
             var damage = new Damage(Stats.PhysicalDamage.GetValue(), Stats.ArtsDamage.GetValue());
             
-            //when non-boss ranged units are in the first row, they melee atk for less dmg
-            if (this.IsRanged && UnitDataRef.Type != EnemyType.Boss)
+            //when non-boss physical dmg ranged units are in the first row, they melee atk for less dmg
+            if (this.IsRanged && damage.Type == DamageType.Physical && UnitDataRef.Type != EnemyType.Boss)
                 damage.Amount /= 2;
 
             enemyUnitScript.TakeDamage(damage, true);
+
+            
+            //Handle xp gain
+            if (IsPlayerHero())
+            {
+                OnDamageDealtAddXp(enemyUnitScript.UnitDataRef, damage);
+            }
 
             //stop attacking
             this.StopAttacking();
@@ -325,13 +339,14 @@ public class Unit : MonoBehaviour
     //public event Action<ScriptableUnitBase, Stat> OnStatChanged;
 
 
-    public void Initialize(CharacterStats stats, ScriptableUnitBase unitData, UnitGrid grid, ScriptableHero hero)
+    public void Initialize(CharacterStats stats, ScriptableUnitBase unitData, UnitGrid grid, AdventureManager manager, ScriptableHero hero)
     {
         //these stats are unitData.BaseStats modified by stage level, unit type and class
         SetStats(stats);
         SetUnitData(unitData);
 
         UnitGridRef = grid;
+        ManagerRef = manager;
         HeroRef = hero;
 
         //no-one is targeted at the beginning
@@ -352,8 +367,23 @@ public class Unit : MonoBehaviour
             RangedAtkMuzzle.SetFloat("Position_x", - RangedAtkMuzzle.GetFloat("Position_x"));
         }
 
-        if (unitData == HeroRef)    //hero unit has a separate UI element for energy
+        if (unitData == HeroRef)    
+        {
+            //hero unit has a separate UI element for energy
             Image_EnergyBar.gameObject.SetActive(false);
+
+            foreach (var skill in HeroRef.LevelSystem.Skills.Values)
+            {
+                skill.OnLevelChanged += LevelChanged;
+            }
+        }
+
+    }
+
+    private void LevelChanged(int prevLevel, int newLevel, SkillLevel skill)
+    {
+        CreateStatusIndicator($"{skill} lvl {prevLevel} => {newLevel}", Color.white);
+        ManagerRef.LogInfo($"{skill} leveled up from {prevLevel} to {newLevel}! ({skill.Experience}/{skill.ExpToNextLevel})");
     }
 
     private void SetUnitData(ScriptableUnitBase unitData)
@@ -432,16 +462,21 @@ public class Unit : MonoBehaviour
     /// <summary>
     /// If i ever need to inflict more than one damage type at once
     /// </summary>
-    public void TakeDamage(List<Damage> damageList, bool canEvade)
+    public bool TakeDamage(List<Damage> damageList, bool canEvade)
     {
         if (canEvade && Helper.DiceRoll(this.Stats.DodgeChance.GetValue()))
         {
-            Debug.Log($"Dodged. DodgeChance: {this.Stats.DodgeChance.GetValue()}");
-            CreateStatusIndicator("Dodged!", Color.white);
-            return;
+            float dmgSum = 0;
+            damageList.ForEach(x => dmgSum += x.Amount);
+
+            OnDodge(dmgSum);
+            
+            return false;
         }
 
         damageList.ForEach(x => this.TakeDamage(x, false));
+
+        return true;
     }
 
     /// <summary>
@@ -453,14 +488,28 @@ public class Unit : MonoBehaviour
         //evasion check
         if (canEvade && Helper.DiceRoll(this.Stats.DodgeChance.GetValue()))
         {
-            Debug.Log($"Dodged. DodgeChance: {this.Stats.DodgeChance.GetValue()}");
-            CreateStatusIndicator("Dodged!", Color.white);
-            
+            OnDodge(damage.Amount);
+
             return false;
         }
 
-        float dmgAmount = 0;
+        float dmgAmount = GetDamageAmountAfterResistances(damage);
 
+        CreateStatusIndicator(dmgAmount.Round().ToString(), damage.GetIndicatorColor());
+        ReduceHPByAmount(dmgAmount);
+
+        //Handle xp gain
+        if (IsPlayerHero() && dmgAmount > 0)
+        {
+            ManagerRef.AddPlayerXp(dmgAmount.RoundHP(), Skill.Constitution);
+        }
+
+        return true;
+    }
+
+    public float GetDamageAmountAfterResistances(Damage damage)
+    {
+        float dmgAmount = 0;
         switch (damage.Type)
         {
             case DamageType.Physical:
@@ -484,10 +533,7 @@ public class Unit : MonoBehaviour
                 break;
         }
 
-        CreateStatusIndicator(dmgAmount.Round().ToString(), damage.GetIndicatorColor());
-        ReduceHPByAmount(dmgAmount);
-
-        return true;
+        return dmgAmount;
     }
 
     /// <summary>
@@ -495,12 +541,36 @@ public class Unit : MonoBehaviour
     /// </summary>
     /// <param name="damage"></param>
     /// <param name="canEvade"></param>
-    public void TakeRangedDamage(Damage damage, bool canEvade)
+    /// <returns>True on hit, false otherwise</returns>
+    public bool TakeRangedDamage(Damage damage, bool canEvade)
     {
         //only animate if the attack wasnt dodged
         if (TakeDamage(damage, canEvade))
         {
+            float intensityFactor = Mathf.Pow(2, RangedAtkMuzzle.GetFloat("ColorIntensity"));
+
+            RangedAtkImpact.SetVector4("Color", damage.GetIndicatorColor() * intensityFactor);
             this.RangedAtkImpact.Play();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private void OnDodge(float dodgedDamageAmount)
+    {
+        ManagerRef.LogInfo($"Dodged. (Chance: {this.Stats.DodgeChance.GetValue()*100:0.0}%)");
+        CreateStatusIndicator("Dodged!", Color.white);
+        
+        //Handle xp gain
+        if (IsPlayerHero())
+        {
+            float xpAmount = dodgedDamageAmount;
+
+            //perfect dodge awards 3x more xp
+            xpAmount *= this.Stats.DodgeChance.GetValue() >= 1f ? 3 : 1;
+            ManagerRef.AddPlayerXp(xpAmount.RoundHP(), Skill.Agility);
         }
     }
 
@@ -652,14 +722,16 @@ public class Unit : MonoBehaviour
         if (IsValidTarget(CurrentTargetOpponent))
         {
 
-            //units in the first row should do a melee basic attack
-            if (UnitGridRef.IsInFirstRow(this.UnitDataRef))
+            //melee attack conditions
+            if (UnitGridRef.IsInFirstRow(this.UnitDataRef) &&
+                UnitGridRef.IsInFirstRow(this.CurrentTargetOpponent))
             {
                 this.IsAttacking = true;
                 this.AttackType = AttackType.Melee;
                 this.Stats.Energy = 0;
             }
-            else if (!UnitGridRef.IsInFirstRow(this.UnitDataRef) && this.IsRanged)
+            //ranged attack conditions
+            else if (this.IsRanged)
             {
                 this.IsAttacking = true;
                 this.AttackType = AttackType.Ranged;
@@ -675,8 +747,10 @@ public class Unit : MonoBehaviour
         var dir = CurrentTargetOpponent.Prefab.transform.position - UnitDataRef.Prefab.transform.position;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         var damage = new Damage(Stats.PhysicalDamage.GetValue(), Stats.ArtsDamage.GetValue());
+        float intensityFactor = Mathf.Pow(2, RangedAtkMuzzle.GetFloat("ColorIntensity"));
         
         RangedAtkMuzzle.SetFloat("Angle", angle);
+        RangedAtkMuzzle.SetVector4("Color", damage.GetIndicatorColor() * intensityFactor);
         //play the muzzle flash animation
         RangedAtkMuzzle.Play();
 
@@ -689,9 +763,16 @@ public class Unit : MonoBehaviour
         //add some force to the enemy as well
         CurrentTargetOpponent.GetUnit()?.RigidBody?.AddForce(dir.normalized * BasicAttackForce * 3);
 
+        bool isHit = false;
         //handle taking damage & playing the onHit animation
         if (IsValidTarget(CurrentTargetOpponent))
-            CurrentTargetOpponent.GetUnit().TakeRangedDamage(damage, true);
+            isHit = CurrentTargetOpponent.GetUnit().TakeRangedDamage(damage, true);
+
+        //Handle xp gain
+        if (IsPlayerHero() && isHit)
+        {
+            OnDamageDealtAddXp(CurrentTargetOpponent, damage);
+        }
 
         yield return new WaitForSeconds(0.1f);
 
@@ -703,9 +784,15 @@ public class Unit : MonoBehaviour
         CurrentTargetOpponent?.GetUnit()?.RemoveVelocity();
     }
 
-    private void OnRangedAttackHit(Damage damage)
+    public void OnDamageDealtAddXp(ScriptableUnitBase unit, Damage damage)
     {
-        throw new NotImplementedException();
+        if (unit == null || damage == null)
+            return;
+
+        float xpAmount = unit.GetUnit().GetDamageAmountAfterResistances(damage);
+        Skill skill = damage.Type == DamageType.Physical ? Skill.Strength : Skill.Arts;
+
+        ManagerRef.AddPlayerXp(xpAmount.RoundHP(), skill);
     }
 
     private void StopAttacking(bool stabilise = false)
@@ -849,5 +936,10 @@ public class Unit : MonoBehaviour
         ActiveEffects.Remove(effect);
 
         //TODO: remove modifiers
+    }
+
+    private bool IsPlayerHero()
+    {
+        return this.UnitDataRef == HeroRef;
     }
 }

@@ -56,6 +56,9 @@ VisualEffect:
       - m_Value: 2
         m_Name: Position_x
         m_Overridden: 1
+      - m_Value: 3
+        m_Name: ColorIntensity
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
@@ -198,7 +201,10 @@ VisualEffect:
   m_ResourceVersion: 1
   m_PropertySheet:
     m_Float:
-      m_Array: []
+      m_Array:
+      - m_Value: 3
+        m_Name: ColorIntensity
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:

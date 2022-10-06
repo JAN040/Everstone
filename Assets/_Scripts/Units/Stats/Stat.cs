@@ -29,7 +29,15 @@ public class Stat
     public StatType Type { get => type; private set => type = value; }
     public bool CanBeNegative { get => canBeNegative; private set => canBeNegative = value; }
     public StatGrowthParameters GrowthParameters { get => growthParameters; private set => growthParameters = value; }
-
+    public float BaseValue
+    {
+        get => baseValue;
+        set
+        {
+            baseValue = value;
+            OnStatChanged?.Invoke(this);
+        }
+    }
 
     public event Action<Stat> OnStatChanged;
 
@@ -60,16 +68,6 @@ public class Stat
     //    return this.baseValue;
     //}
 
-    /// <summary>
-    /// Meant for modifying base stats on level up
-    /// </summary>
-    /// <returns></returns>
-    public void SetBaseValue(float newBaseValue)
-    {
-        this.baseValue = newBaseValue;
-
-        OnStatChanged?.Invoke(this);
-    }
 
     /// <summary>
     /// Get the value of the stat with flat and percent modifiers
@@ -77,7 +75,7 @@ public class Stat
     /// </summary>
     public float GetValue()
     {
-        float value = baseValue;
+        float value = BaseValue;
         (float flatModifiers, float percentModifiers) = GetModifierValues();
 
         //step 1: add flat bonus
@@ -104,10 +102,10 @@ public class Stat
 
         while (growByLevels > 0)
         {
-            float bonus = baseValue * 0.01f * GetGrowthFixAmount();
-            baseValue += bonus;
+            float bonus = BaseValue * 0.01f * GetGrowthFixAmount();
+            BaseValue += bonus;
             growthLevel += 1f;
-            Debug.Log($"Grew stat {Type} by '{bonus}' to '{baseValue}' (growthLevel {growthLevel})");
+            Debug.Log($"Grew stat {Type} by '{bonus}' to '{BaseValue}' (growthLevel {growthLevel})");
 
             growByLevels--;
         }
@@ -118,11 +116,11 @@ public class Stat
     /// </summary>
     public void GrowHalf()
     {
-        float bonus = baseValue * 0.01f * GetGrowthFixAmount();
+        float bonus = BaseValue * 0.01f * GetGrowthFixAmount();
         bonus /= 2;
-        baseValue += bonus;
+        BaseValue += bonus;
         growthLevel += 0.5f;
-        Debug.Log($"Grew stat {Type} by '{bonus}' to '{baseValue}' (growthLevel {growthLevel})");
+        Debug.Log($"Grew stat {Type} by '{bonus}' to '{BaseValue}' (growthLevel {growthLevel})");
     }
 
     private float GetGrowthFixAmount()

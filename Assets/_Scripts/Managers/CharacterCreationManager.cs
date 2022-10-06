@@ -391,12 +391,10 @@ public class CharacterCreationManager : MonoBehaviour
 
         hero.Name = heroName.text;
 
-        Dictionary<string, SkillLevel> skills = GenerateSkillSystem(stats);
-
         //hero instantiation
         GameManager.Instance.PlayerManager.SetHero(hero);
         GameManager.Instance.PlayerManager.PlayerHero.MenuSprite = GetSelectedCharacterPortrait();
-        GameManager.Instance.PlayerManager.PlayerHero.SetLevelSystem(new LevelSystem(skills, stats));
+        GameManager.Instance.PlayerManager.PlayerHero.SetLevelSystem(new LevelSystem(GenerateSkillSystem(stats), stats));
 
         //player abilities setup
         GameManager.Instance.PlayerManager.SetAbilities(
@@ -437,37 +435,39 @@ public class CharacterCreationManager : MonoBehaviour
             {
                 Skill.Constitution.ToString(),
                 new SkillLevel(Skill.Constitution, stats, PointsAmount_Constitution,
-                    0, PointsAmount_Constitution/10f)
+                    proficiency:PointsAmount_Constitution/10f)
             },
             {
                 Skill.Strength.ToString(),
                 new SkillLevel(Skill.Strength, stats, PointsAmount_Strength,
-                    0, PointsAmount_Strength/10f)
+                    proficiency:PointsAmount_Strength/10f)
             },
             {
                 Skill.Agility.ToString(),
                 new SkillLevel(Skill.Agility, stats, PointsAmount_Agility,
-                    0, PointsAmount_Agility/10f)
+                    proficiency:PointsAmount_Agility/10f)
             },
             {
                 Skill.Arts.ToString(),
                 new SkillLevel(Skill.Arts, stats, PointsAmount_Arts,
-                    0, PointsAmount_Arts/10f)
+                    proficiency:PointsAmount_Arts/10f)
             },
+
+            //Misc. skills
             {
                 Skill.Lockpicking.ToString(),
                 new SkillLevel(Skill.Lockpicking, stats, points_Lockpicking,
-                    0, points_Lockpicking/10f)
+                    proficiency:points_Lockpicking/10f)
             },
             {
                 Skill.Taming.ToString(),
                 new SkillLevel(Skill.Taming, stats, points_Taming,
-                    0, points_Taming/10f)
+                    proficiency:points_Taming/10f)
             },
             {
                 Skill.Trading.ToString(),
                 new SkillLevel(Skill.Trading, stats, points_Trading,
-                    0, points_Trading/10f)
+                    proficiency:points_Trading/10f)
             },
 
             //weapon skills

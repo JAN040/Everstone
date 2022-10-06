@@ -81,7 +81,7 @@ public class SceneManagementSystem : Singleton<SceneManagementSystem>
     {
         IsSwitchingLocation = true;
 
-        Debug.Log($"Loading scene: {sc}, ID: {(int)sc}");
+        //Debug.Log($"Loading scene: {sc}, ID: {(int)sc}");
 
         //play transition "Start" animation
         transition.SetTrigger("Start");
