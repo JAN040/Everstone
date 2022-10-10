@@ -560,7 +560,7 @@ public class Unit : MonoBehaviour
 
     private void OnDodge(float dodgedDamageAmount)
     {
-        ManagerRef.LogInfo($"Dodged. (Chance: {this.Stats.DodgeChance.GetValue()*100:0.0}%)");
+        ManagerRef.LogInfo($"{UnitDataRef.Faction} Unit {UnitDataRef.Name} Dodged. (Chance: {this.Stats.DodgeChance.GetValue()*100:0.0}%)");
         CreateStatusIndicator("Dodged!", Color.white);
         
         //Handle xp gain
@@ -593,12 +593,14 @@ public class Unit : MonoBehaviour
         CreateStatusIndicator(totalHeal.Round().ToString(), Color.green);
 
         Stats.HealthPoints += totalHeal;
+        ManagerRef.LogInfo($"{UnitDataRef.Faction} Unit {UnitDataRef.Name} healed for {totalHeal.RoundHP()}.");
     }
 
     public virtual void ReduceHPByAmount(float amount)
     {
         Stats.HealthPoints -= amount;
         Debug.Log($"{UnitDataRef.Faction} Unit {UnitDataRef.Name} took {amount} damage (now has {Stats.HealthPoints} HP)");
+        ManagerRef.LogInfo($"{UnitDataRef.Faction} Unit {UnitDataRef.Name} took {amount.RoundHP()} damage.");
     }
 
     /// <summary>

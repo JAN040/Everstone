@@ -393,6 +393,7 @@ public class CharacterCreationManager : MonoBehaviour
 
         //hero instantiation
         GameManager.Instance.PlayerManager.SetHero(hero);
+        GameManager.Instance.PlayerManager.SetInventory(new InventorySystem(10));
         GameManager.Instance.PlayerManager.PlayerHero.MenuSprite = GetSelectedCharacterPortrait();
         GameManager.Instance.PlayerManager.PlayerHero.SetLevelSystem(new LevelSystem(GenerateSkillSystem(stats), stats));
 
@@ -423,11 +424,11 @@ public class CharacterCreationManager : MonoBehaviour
         int points_Taming      = PointAllocationData.GetTotalPoints(Skill.Taming,       allocationData);
         int points_Trading     = PointAllocationData.GetTotalPoints(Skill.Trading,      allocationData);
 
-        int points_Dagger = PointAllocationData.GetTotalWeaponPoints(WeaponType.Dagger, allocationData);
-        int points_Sword  = PointAllocationData.GetTotalWeaponPoints(WeaponType.Sword,  allocationData);
-        int points_Axe    = PointAllocationData.GetTotalWeaponPoints(WeaponType.Axe,    allocationData);
-        int points_Shield = PointAllocationData.GetTotalWeaponPoints(WeaponType.Shield, allocationData);
-        int points_Staff  = PointAllocationData.GetTotalWeaponPoints(WeaponType.Staff,  allocationData);
+        //int points_Dagger = PointAllocationData.GetTotalWeaponPoints(WeaponType.Dagger, allocationData);
+        //int points_Sword  = PointAllocationData.GetTotalWeaponPoints(WeaponType.Sword,  allocationData);
+        //int points_Axe    = PointAllocationData.GetTotalWeaponPoints(WeaponType.Axe,    allocationData);
+        //int points_Shield = PointAllocationData.GetTotalWeaponPoints(WeaponType.Shield, allocationData);
+        //int points_Staff  = PointAllocationData.GetTotalWeaponPoints(WeaponType.Staff,  allocationData);
 
 
         return new Dictionary<string, SkillLevel>()

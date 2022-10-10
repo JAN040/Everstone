@@ -21,17 +21,6 @@ public class PointAllocationData
         return total;
     }
 
-    public static int GetTotalWeaponPoints(WeaponType weaponType, List<PointAllocationData> dataList)
-    {
-        var total = 0;
-        foreach (var data in dataList)
-        {
-            total += data.GetWeaponProficiency(weaponType);
-        }
-
-        return total;
-    } 
-
     #endregion STATIC
 
 
@@ -49,16 +38,16 @@ public class PointAllocationData
         new BaseSkillPointAllocation(Skill.Trading,      0),
     };
 
-    [SerializeField]
-    private WeaponProficiencyAllocation[] WeaponProficiencies = new WeaponProficiencyAllocation[]
-    {
-        //non editable in character creation scene
-        new WeaponProficiencyAllocation(WeaponType.Dagger, 0),
-        new WeaponProficiencyAllocation(WeaponType.Sword,  0),
-        new WeaponProficiencyAllocation(WeaponType.Axe,    0),
-        new WeaponProficiencyAllocation(WeaponType.Shield, 0),
-        new WeaponProficiencyAllocation(WeaponType.Staff,  0),
-    };
+    //[SerializeField]
+    //private WeaponProficiencyAllocation[] WeaponProficiencies = new WeaponProficiencyAllocation[]
+    //{
+    //    //non editable in character creation scene
+    //    new WeaponProficiencyAllocation(WeaponType.Dagger, 0),
+    //    new WeaponProficiencyAllocation(WeaponType.Sword,  0),
+    //    new WeaponProficiencyAllocation(WeaponType.Axe,    0),
+    //    new WeaponProficiencyAllocation(WeaponType.Shield, 0),
+    //    new WeaponProficiencyAllocation(WeaponType.Staff,  0),
+    //};
 
     /// <summary>
     /// Returns the base skill point allocation or zero, if no BaseSkillPointAllocation entry 
@@ -67,16 +56,6 @@ public class PointAllocationData
     public int GetBaseSkillPoints(Skill skill)
     {
         var allocation = BaseSkillPointAllocations.FirstOrDefault(x => x.skill == skill);
-        return allocation == null ? 0 : allocation.points;
-    }
-
-    /// <summary>
-    /// Returns the base weapon proficiency allocation or zero, if no WeaponProficiencyAllocation entry 
-    ///     exists for the specified WeaponType parameter
-    /// </summary>
-    public int GetWeaponProficiency(WeaponType weaponType)
-{
-        var allocation = WeaponProficiencies.FirstOrDefault(x => x.weaponType == weaponType);
         return allocation == null ? 0 : allocation.points;
     }
 
@@ -89,19 +68,6 @@ public class PointAllocationData
         public BaseSkillPointAllocation(Skill skill, int points)
         {
             this.skill = skill;
-            this.points = points;
-        }
-    }
-
-    [Serializable]
-    private class WeaponProficiencyAllocation
-    {
-        public WeaponType weaponType;
-        public int points;
-
-        public WeaponProficiencyAllocation(WeaponType weaponType, int points)
-        {
-            this.weaponType = weaponType;
             this.points = points;
         }
     }

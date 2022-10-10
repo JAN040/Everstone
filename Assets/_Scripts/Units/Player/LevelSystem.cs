@@ -41,10 +41,9 @@ public class LevelSystem
         Skills[skill.ToString()].AddExperience(amount);
     }
 
-    public void AddExperienceToWeaponSkill(int amount, WeaponType weaponType)
-    {
-        Skills[weaponType.ToString()].AddExperience(amount);
-    }
-
+    //public void AddExperienceToWeaponSkill(int amount, WeaponType weaponType)
+    //{
+    //    Skills[weaponType.ToString()].AddExperience(amount);
+    //}
 }
 

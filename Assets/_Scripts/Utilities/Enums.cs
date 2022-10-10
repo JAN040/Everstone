@@ -115,7 +115,7 @@ public enum Skill
     Trading,
 
     //skills only active when a specific type of equipment is equipped
-    //  further divided by WeaponType enum
+    //  further divided by EquipmentType enum
     Equipment_Skill,
 }
 
@@ -127,20 +127,46 @@ public enum Skill
 [Serializable]
 public enum ItemType
 {
-    Weapon,
-    Potion,
+    Equipment,  //view stats, equippable in equipment UI
+    Potion,     //usable
+    Loot,       //sell price viewable
+    Rune,       //view stats, equippable in runes UI
+}
+
+public enum ItemRarity
+{
+    Common,
+    Uncommon,
+    Rare,
+    Epic,
+    Legendary
 }
 
 [Serializable]
-public enum WeaponType
+public enum EquipmentType
 {
     None,
+
+    //weapons
     Sword,
     Dagger,
     Axe,
     Staff,
     Shield,
-} 
+
+    //armors
+    Helmet,
+    Shoulder,
+    Chestplate,
+    Pants,
+    Boots,
+
+    //trinkets
+    Necklace,
+    Cape,
+    Gloves,
+    Ring,
+}
 
 #endregion ITEMS
 

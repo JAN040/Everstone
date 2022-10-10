@@ -9,7 +9,7 @@ public class SceneManagementSystem : Singleton<SceneManagementSystem>
 
     public Animator transition;
     
-    public float transitionDuration = 1f;
+    public float transitionDuration = 0.25f;
 
     //true while transitioning; prevents the user from spamming the transition button
     //  and starting multiple transition coroutines
@@ -110,4 +110,5 @@ public enum Scenes
     Adventure = 3,
     HeroSelect = 4,
     AdventureSelect = 5,
+    Residence = 6,
 }
