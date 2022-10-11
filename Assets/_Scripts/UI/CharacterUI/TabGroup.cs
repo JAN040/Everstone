@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,26 +18,33 @@ public class TabGroup : MonoBehaviour
     public float tabButtonIdleWidth;
     public float tabButtonSelectedWidthIncrease;
 
+
+    /// <summary>
+    /// Fires when a tab is selected. Param: index of the selected tab
+    /// </summary>
+    public event Action<TabGroupButton> OnTabSelected;
+
+
     public void Start()
     {
-        ResetTabs();
-
         foreach (var tab in TabButtons)
         {
+            tab.Init(this);
             tab.TabGroup = this;
         }
 
-        OnTabSelected(TabButtons[0]);
+        ResetTabs();
+        TabSelected(TabButtons[0]);
     }
 
-    public void OnTabSelected(TabGroupButton button)
+    public void TabSelected(TabGroupButton selectedButton)
     {
-        SelectedTab = button;
+        SelectedTab = selectedButton;
         ResetTabs();
-        button.BackgroundImage.sprite = tabButtonSelectedImage;
-        button.RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, tabButtonIdleWidth + tabButtonSelectedWidthIncrease);
+        selectedButton.BackgroundImage.sprite = tabButtonSelectedImage;
+        selectedButton.RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, tabButtonIdleWidth + tabButtonSelectedWidthIncrease);
 
-        int tabIndex = button.transform.GetSiblingIndex();
+        int tabIndex = selectedButton.transform.GetSiblingIndex();
         for (int i = 0; i < ObjectsToSwap.Count; i++)
         {
             if (i == tabIndex)
@@ -44,6 +52,8 @@ public class TabGroup : MonoBehaviour
             else
                 ObjectsToSwap[i].SetActive(false);
         }
+
+        OnTabSelected?.Invoke(selectedButton);
     }
 
     //for hover animations... unneeded for now

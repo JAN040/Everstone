@@ -12,10 +12,10 @@ public class TabGroupButton : MonoBehaviour, IPointerClickHandler
     public RectTransform RectTransform;
 
 
-
-    // Start is called before the first frame update
-    void Start()
+    public void Init(TabGroup tabGroup)
     {
+        TabGroup = tabGroup;
+
         BackgroundImage = transform.Find("BG").GetComponent<Image>();
         RectTransform = this.GetComponent<RectTransform>();
         RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 100f);
@@ -29,7 +29,7 @@ public class TabGroupButton : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        TabGroup.OnTabSelected(this);
+        TabGroup.TabSelected(this);
     }
 
 

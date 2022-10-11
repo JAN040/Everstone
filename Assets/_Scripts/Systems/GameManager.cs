@@ -10,10 +10,20 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private int currency;
     [SerializeField] private Difficulty gameDifficulty;
 
+    private PlayerManager playerManager;
     /// <summary>
     /// Reference to the PlayerManager script
     /// </summary>
-    public PlayerManager PlayerManager { get; private set; }
+    public PlayerManager PlayerManager {
+        get 
+        {
+            if (playerManager == null)
+                playerManager = new PlayerManager();
+
+            return playerManager; 
+        }
+        private set => playerManager = value; 
+    }
 
     /// <summary>
     /// Reference to the UnitData script
@@ -36,6 +46,8 @@ public class GameManager : Singleton<GameManager>
 
     public bool IsHardcore { get; private set; }
 
+    public int InitialCampStorageSpace = 70;
+
 
     #region Player prefs
 
@@ -55,7 +67,7 @@ public class GameManager : Singleton<GameManager>
     {
         PlayerManager = new PlayerManager();
         UnitData = new UnitData();
-    } 
+    }
 
     #endregion UNITY METHODS
 

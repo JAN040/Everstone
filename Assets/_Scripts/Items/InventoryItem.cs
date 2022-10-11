@@ -3,11 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
+[Serializable]
 public class InventoryItem
 {
     public ItemDataBase itemData;
+    public GameObject Prefab;
+
     public int stackSize = 0;
+
+
+    public event Action OnStackSizeChanged;
+
 
     public InventoryItem(ItemDataBase itemData)
     {
@@ -18,11 +24,13 @@ public class InventoryItem
     public void AddToStack(int amount = 1)
     {
         stackSize += amount;
+        OnStackSizeChanged?.Invoke();
     }
 
     public void RemoveFromStack(int amount = 1)
     {
         stackSize -= amount;
+        OnStackSizeChanged?.Invoke();
     }
 }
 

@@ -23,6 +23,9 @@ public class ResourceSystem : Singleton<ResourceSystem> {
 
     private List<ScriptableNpcUnit> CommonEnemies { get; set; }
 
+    public List<ItemDataBase> Items_Other { get; private set; }
+    public List<ItemDataEquipment> Items_Equipment { get; private set; }
+
 
     /// <summary>
     /// To add icons: slice up sprite sheet -> right click-> create -> textmeshpro -> sprite asset -> 
@@ -79,6 +82,10 @@ public class ResourceSystem : Singleton<ResourceSystem> {
         }
 
         CommonEnemies = Resources.LoadAll<ScriptableNpcUnit>("Enemies/_Common").ToList();
+
+        //load items
+        Items_Equipment = Resources.LoadAll<ItemDataEquipment>("Items/Equipment").ToList();
+        Items_Other     = Resources.LoadAll<ItemDataBase>("Items/Other").ToList();
     }
 
     public ScriptableHero GetHero(string t) => Instantiate(_HeroesDict[t]);

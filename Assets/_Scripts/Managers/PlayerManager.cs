@@ -14,7 +14,7 @@ public class PlayerManager
     public List<ScriptableAbility> SpecialAbilities { get; private set; } = new List<ScriptableAbility>();
 
     public InventorySystem Inventory;
-
+    public InventorySystem Storage;
 
     #endregion VARIABLES
 
@@ -32,9 +32,10 @@ public class PlayerManager
         SpecialAbilities.AddRange(specialAbilities);
     }
 
-    public void SetInventory(InventorySystem inventory)
+    public void SetInventory(InventorySystem inventory, InventorySystem storage)
     {
         Inventory = inventory;
+        Storage = storage;
     }
 
     #endregion METHODS

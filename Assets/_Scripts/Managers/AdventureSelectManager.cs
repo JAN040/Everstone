@@ -47,7 +47,6 @@ public class AdventureSelectManager : MonoBehaviour
         foreach (var location in locations)
         {
             var currentPrefab = Instantiate(LocationPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-            var a = currentPrefab.transform.localScale;
             
             currentPrefab.GetComponent<AdventureButton>()?.SetScriptableLocation(location, this);
             currentPrefab.transform.SetParent(LocationScrollviewContent.transform, true);

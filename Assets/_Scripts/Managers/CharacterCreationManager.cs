@@ -393,7 +393,17 @@ public class CharacterCreationManager : MonoBehaviour
 
         //hero instantiation
         GameManager.Instance.PlayerManager.SetHero(hero);
-        GameManager.Instance.PlayerManager.SetInventory(new InventorySystem(10));
+        
+        //inventory setup
+        GameManager.Instance.PlayerManager.SetInventory(
+            new InventorySystem(10),
+            new InventorySystem(GameManager.Instance.InitialCampStorageSpace)
+        );
+        //test items
+        GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[0]));
+        GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[1]));
+        GameManager.Instance.PlayerManager.Storage.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Other[0]));
+
         GameManager.Instance.PlayerManager.PlayerHero.MenuSprite = GetSelectedCharacterPortrait();
         GameManager.Instance.PlayerManager.PlayerHero.SetLevelSystem(new LevelSystem(GenerateSkillSystem(stats), stats));
 

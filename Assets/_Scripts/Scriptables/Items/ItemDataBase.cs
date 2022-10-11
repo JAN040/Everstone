@@ -20,8 +20,5 @@ public class ItemDataBase : ScriptableObject
     public int MaxStackSize = 1;   //if MaxStackSize > 1 the item is stackable
     public ItemType   ItemType = ItemType.Loot;
     public ItemRarity Rarity;
-
-    [Space]
-    public GameObject Prefab;
 }
 
