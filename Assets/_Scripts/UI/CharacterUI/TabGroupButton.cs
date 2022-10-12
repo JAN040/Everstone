@@ -5,10 +5,10 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 
-public class TabGroupButton : MonoBehaviour, IPointerClickHandler
+public class TabGroupButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public TabGroup TabGroup;
-    public Image BackgroundImage;
+    public Image HoverOverlayImage;
     public RectTransform RectTransform;
 
 
@@ -16,7 +16,11 @@ public class TabGroupButton : MonoBehaviour, IPointerClickHandler
     {
         TabGroup = tabGroup;
 
-        BackgroundImage = transform.Find("BG").GetComponent<Image>();
+        if (HoverOverlayImage == null)
+            HoverOverlayImage = transform.Find("HoverOvelay").GetComponent<Image>();
+        if (HoverOverlayImage != null)
+            HoverOverlayImage.gameObject.SetActive(false);
+        
         RectTransform = this.GetComponent<RectTransform>();
         RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 100f);
     }
@@ -34,13 +38,15 @@ public class TabGroupButton : MonoBehaviour, IPointerClickHandler
 
 
     //for hover animations... unneeded for now
-    //public void OnPointerEnter(PointerEventData eventData)
-    //{
-    //    TabGroup.OnTabEnter(this);
-    //}
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (HoverOverlayImage != null)
+            HoverOverlayImage.gameObject.SetActive(true);
+    }
 
-    //public void OnPointerExit(PointerEventData eventData)
-    //{
-    //    TabGroup.OnTabExit(this);
-    //}
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (HoverOverlayImage != null)
+            HoverOverlayImage.gameObject.SetActive(false);
+    }
 }

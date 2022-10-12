@@ -16,7 +16,7 @@ public class TabGroup : MonoBehaviour
     public Sprite tabButtonIdleImage;
     public Sprite tabButtonSelectedImage;
     public float tabButtonIdleWidth;
-    public float tabButtonSelectedWidthIncrease;
+    public float tabButtonSelectedSizeIncrease;
 
 
     /// <summary>
@@ -41,8 +41,9 @@ public class TabGroup : MonoBehaviour
     {
         SelectedTab = selectedButton;
         ResetTabs();
-        selectedButton.BackgroundImage.sprite = tabButtonSelectedImage;
-        selectedButton.RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, tabButtonIdleWidth + tabButtonSelectedWidthIncrease);
+        selectedButton.HoverOverlayImage.sprite = tabButtonSelectedImage;
+        selectedButton.RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, tabButtonIdleWidth + tabButtonSelectedSizeIncrease);
+        selectedButton.RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,   tabButtonIdleWidth + tabButtonSelectedSizeIncrease);
 
         int tabIndex = selectedButton.transform.GetSiblingIndex();
         for (int i = 0; i < ObjectsToSwap.Count; i++)
@@ -75,8 +76,9 @@ public class TabGroup : MonoBehaviour
             if (button == SelectedTab)
                 continue;
 
-            button.BackgroundImage.sprite = tabButtonIdleImage;
+            button.HoverOverlayImage.sprite = tabButtonIdleImage;
             button.RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, tabButtonIdleWidth);
+            button.RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,   tabButtonIdleWidth);
         }
     }
 }

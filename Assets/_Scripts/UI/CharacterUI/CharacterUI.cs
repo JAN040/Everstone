@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,7 +16,8 @@ public class CharacterUI : MonoBehaviour
     [Header("UI References")]
     [SerializeField] ItemGrid ItemGrid_Inventory;
     [SerializeField] ItemGrid ItemGrid_Storage;
-    [SerializeField] Canvas ParentCanvas;
+    public Canvas ParentCanvas;
+    public GameObject DraggedItemContainer;
 
     [Space]
     [Header("Tabs")]
@@ -26,8 +28,9 @@ public class CharacterUI : MonoBehaviour
     #endregion UI References
 
 
-    //[Space]
-    //[Header("Variables")]
+    [Space]
+    [Header("Variables")]
+    public ItemUI CurrentlyDraggedItem;
 
 
     #endregion VARIABLES
@@ -51,11 +54,13 @@ public class CharacterUI : MonoBehaviour
             //test items
             GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[0]));
             GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[1]));
-            GameManager.Instance.PlayerManager.Storage.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Other[0]));
+            //GameManager.Instance.PlayerManager.Storage.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Other[0]));
+            for (int i = 0; i < GameManager.Instance.PlayerManager.Storage.InventorySize; i++)
+                GameManager.Instance.PlayerManager.Storage.InventoryItems[i] = new InventoryItem(ResourceSystem.Instance.Items_Other[UnityEngine.Random.Range(0, ResourceSystem.Instance.Items_Other.Count)]);
         }
 
-        ItemGrid_Inventory.Initialize(GameManager.Instance.PlayerManager.Inventory, ParentCanvas);
-        ItemGrid_Storage  .Initialize(GameManager.Instance.PlayerManager.Storage,   ParentCanvas);
+        ItemGrid_Inventory.Initialize(GameManager.Instance.PlayerManager.Inventory, this);
+        ItemGrid_Storage  .Initialize(GameManager.Instance.PlayerManager.Storage,   this);
     }
 
     private void OnDestroy()
@@ -84,6 +89,7 @@ public class CharacterUI : MonoBehaviour
             ItemGrid_Storage.RefreshInventory();
         }
     }
+
 
 
     #endregion METHODS

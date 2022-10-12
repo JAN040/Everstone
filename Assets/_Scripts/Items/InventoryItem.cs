@@ -6,10 +6,10 @@ using UnityEngine;
 [Serializable]
 public class InventoryItem
 {
-    public ItemDataBase itemData;
+    public ItemDataBase ItemData;
     public GameObject Prefab;
 
-    public int stackSize = 0;
+    public int StackSize = 0;
 
 
     public event Action OnStackSizeChanged;
@@ -17,19 +17,19 @@ public class InventoryItem
 
     public InventoryItem(ItemDataBase itemData)
     {
-        this.itemData = itemData;
+        this.ItemData = itemData;
         AddToStack();
     }
 
     public void AddToStack(int amount = 1)
     {
-        stackSize += amount;
+        StackSize += amount;
         OnStackSizeChanged?.Invoke();
     }
 
     public void RemoveFromStack(int amount = 1)
     {
-        stackSize -= amount;
+        StackSize -= amount;
         OnStackSizeChanged?.Invoke();
     }
 }

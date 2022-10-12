@@ -127,6 +127,7 @@ public enum Skill
 [Serializable]
 public enum ItemType
 {
+    None,       //for itemSlot; it means any item can be inserted into the slot
     Equipment,  //view stats, equippable in equipment UI
     Potion,     //usable
     Loot,       //sell price viewable
@@ -139,7 +140,8 @@ public enum ItemRarity
     Uncommon,
     Rare,
     Epic,
-    Legendary
+    Legendary,
+    None,
 }
 
 [Serializable]
@@ -250,4 +252,13 @@ public enum AttackType
     Melee,
     Ranged,
     Special
+}
+
+public enum ItemMoveResult
+{
+    NoChange,
+    Moved,
+    Swapped,
+    StackedAll,
+    StackedWithRemainder
 }

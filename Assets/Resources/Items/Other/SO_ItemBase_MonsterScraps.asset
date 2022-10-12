@@ -19,7 +19,6 @@ MonoBehaviour:
   MenuIcon: {fileID: 21300000, guid: aaafd2b5fcd37494291e5dc76f0af6ec, type: 3}
   BuyPrice: 3
   CanBeSold: 1
-  MaxStackSize: 99
+  MaxStackSize: 5
   ItemType: 2
   Rarity: 0
-  Prefab: {fileID: 0}

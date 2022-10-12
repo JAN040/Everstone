@@ -15,9 +15,9 @@ public class ItemGrid : MonoBehaviour
 
     [Header("UI References")]
 
-    [SerializeField] GridLayoutGroup itemContainerGrid;
-    [SerializeField] GameObject itemContainerPrefab;
-    [SerializeField] GameObject itemPrefab;
+    [SerializeField] GridLayoutGroup ItemSlotGrid;
+    [SerializeField] GameObject ItemSlotPrefab;
+    [SerializeField] GameObject ItemPrefab;
 
     private List<GameObject> ItemContainerList;
 
@@ -28,7 +28,7 @@ public class ItemGrid : MonoBehaviour
     [Header("Variables")]
 
     [SerializeField] InventorySystem ItemSource;
-    private Canvas ParentCanvas; //need this for ItemUI
+    private CharacterUI CharaUIRef; //need this for ItemUI
 
 
     #endregion VARIABLES
@@ -40,9 +40,9 @@ public class ItemGrid : MonoBehaviour
     }
 
 
-    public void Initialize(InventorySystem itemSource, Canvas canvas)
+    public void Initialize(InventorySystem itemSource, CharacterUI charaUi)
     {
-        ParentCanvas = canvas;
+        CharaUIRef = charaUi;
         ItemSource = itemSource;
         ItemSource.OnInventoryChanged += RefreshInventory;
         ItemContainerList = new List<GameObject>();
@@ -50,20 +50,23 @@ public class ItemGrid : MonoBehaviour
         //spawn item containers and items where appropriate
         for (int i = 0; i < ItemSource.InventorySize; i++)
         {
-            var currContainerPrefab = InstantiatePrefab(itemContainerPrefab, itemContainerGrid.transform);
+            var currSlotPrefab = InstantiatePrefab(ItemSlotPrefab, ItemSlotGrid.transform);
+            var currSlotScript = currSlotPrefab.GetComponent<ItemSlotUI>();
+            
+            currSlotScript.Init(itemSource, CharaUIRef);
 
             if (ItemSource.InventoryItems[i] != null)
             {
-                var currItemPrefab = InstantiatePrefab(itemPrefab, currContainerPrefab.transform);
+                var currItemPrefab = InstantiatePrefab(ItemPrefab, currSlotScript.ItemContainer.transform);
                 currItemPrefab.GetComponent<ItemUI>().Init(
-                    ParentCanvas,
+                    CharaUIRef,
                     ItemSource.InventoryItems[i],
-                    currContainerPrefab.GetComponent<ItemSlotUI>()
+                    currSlotPrefab.GetComponent<ItemSlotUI>()
                 );
             }
 
 
-            ItemContainerList.Add(currContainerPrefab);
+            ItemContainerList.Add(currSlotPrefab);
         }
     }
 

@@ -366,7 +366,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2558232094706227216}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -409,7 +409,7 @@ MonoBehaviour:
   m_ChildAlignment: 1
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 120, y: 120}
+  m_CellSize: {x: 150, y: 150}
   m_Spacing: {x: 10, y: 10}
   m_Constraint: 0
   m_ConstraintCount: 2
@@ -503,9 +503,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bea106090e637849ba7cf3a76740b29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemContainerGrid: {fileID: 2558232094706227218}
-  itemContainerPrefab: {fileID: 1663005112090227507, guid: 9cdcbd663dda7a94f8bdc363a9f6e9d2, type: 3}
-  itemPrefab: {fileID: 1663005112090227507, guid: c5e8859ada194ab4bbba99ecbba7b24a, type: 3}
+  ItemSlotGrid: {fileID: 2558232094706227218}
+  ItemSlotPrefab: {fileID: 1663005112090227507, guid: 9cdcbd663dda7a94f8bdc363a9f6e9d2, type: 3}
+  ItemPrefab: {fileID: 1663005112090227507, guid: c5e8859ada194ab4bbba99ecbba7b24a, type: 3}
+  ItemSource:
+    InventoryItems: []
 --- !u!1 &2558232095242761521
 GameObject:
   m_ObjectHideFlags: 0
@@ -544,7 +546,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -4, y: -4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2558232095242761485
 CanvasRenderer:
