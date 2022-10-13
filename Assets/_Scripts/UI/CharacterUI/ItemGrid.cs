@@ -65,7 +65,6 @@ public class ItemGrid : MonoBehaviour
                 );
             }
 
-
             ItemContainerList.Add(currSlotPrefab);
         }
     }
