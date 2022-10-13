@@ -47,6 +47,43 @@ public class ResourceSystem : Singleton<ResourceSystem> {
     };
 
 
+    #region STATIC METHODS
+
+
+    public static string GetIconTag(Icon icon) => $"<sprite name=\"{TMP_IconDict[icon]}\">";
+    public static Color GetRarityColor(ItemRarity rarity)
+    {
+        switch (rarity)
+        {
+            case ItemRarity.Common:
+                return Color.white;
+
+            case ItemRarity.Uncommon:
+                return new Color(50 / 205f, 255 / 255f, 50 / 255f); //lime green
+                //return Color.green;
+
+            case ItemRarity.Rare:
+                return new Color(0/255f, 150/255f, 255/255f); //light blue
+
+            case ItemRarity.Epic:
+                return new Color(191/255f, 64/255f, 191/255f); //light purple
+
+            case ItemRarity.Legendary:
+                return Color.red;
+
+            case ItemRarity.Quest:
+                return Color.yellow;
+
+            case ItemRarity.None:
+            default:
+                return Color.gray;
+        }
+    }
+
+
+    #endregion STATIC METHODS
+
+
     private void Start()
     {
         AssembleResources();
@@ -88,6 +125,7 @@ public class ResourceSystem : Singleton<ResourceSystem> {
         Items_Other     = Resources.LoadAll<ItemDataBase>("Items/Other").ToList();
     }
 
+  
     public ScriptableHero GetHero(string t) => Instantiate(_HeroesDict[t]);
     public List<string> GetHeroClasses() => _HeroesDict.Keys.OrderBy(x => x).ToList();
     //public ScriptableHero GetRandomHero() => Instantiate(Heroes[Random.Range(0, Heroes.Count)]);
@@ -140,6 +178,4 @@ public class ResourceSystem : Singleton<ResourceSystem> {
     {
         return Instantiate(StatusEffects.FirstOrDefault(x => x.Effect == effect));
     }
-
-    public static string GetIconTag(Icon icon) => $"<sprite name=\"{TMP_IconDict[icon]}\">";
 }   

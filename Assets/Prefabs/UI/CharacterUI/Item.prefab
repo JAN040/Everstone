@@ -64,6 +64,7 @@ MonoBehaviour:
   Icon: {fileID: 8477216936285643935}
   StackSizeText: {fileID: 2909567515756609651}
   RarityBorder: {fileID: 2104644727973673323}
+  InfoBoxPrefab: {fileID: 8377522264260309042, guid: 3769170cb9c5d1c4989a86d31ce0d3a6, type: 3}
   BorderSprite_None: {fileID: 21300000, guid: 9cd1fe586dd5bf94b83e11d4e2801357, type: 3}
   BorderSprite_Common: {fileID: 21300000, guid: 6c39ec4ab56557f4f88b2a70df26d20c, type: 3}
   BorderSprite_Uncommon: {fileID: 21300000, guid: 6696e0cec8641d64983d1e4a8ecb2aae, type: 3}

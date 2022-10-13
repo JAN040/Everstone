@@ -142,6 +142,7 @@ public enum ItemRarity
     Epic,
     Legendary,
     None,
+    Quest,
 }
 
 [Serializable]

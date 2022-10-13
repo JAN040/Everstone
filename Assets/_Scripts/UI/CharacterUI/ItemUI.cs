@@ -18,6 +18,8 @@ public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEn
     [SerializeField] Image Icon;
     [SerializeField] TextMeshProUGUI StackSizeText;
     [SerializeField] Image RarityBorder;
+    [SerializeField] GameObject InfoBoxPrefab;
+
 
     [Space]
     [Header("Rarity Border Sprites")]
@@ -148,6 +150,10 @@ public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEn
     public void ButtonPressed()
     {
         Debug.Log($"Clicked item {ItemRef.ItemData.DisplayName}");
+        var obj = Instantiate(InfoBoxPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        obj.GetComponent<ItemInfoBox>().Init(ItemRef);
+        //obj.transform.SetParent(parentTransform, true);
+        //obj.transform.localScale = new Vector3(1, 1, 1);
     }
 
 
