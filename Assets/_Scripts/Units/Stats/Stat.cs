@@ -241,10 +241,6 @@ public enum StatType
     /// </summary>
     Proficiency,
     /// <summary>
-    /// Stats of this type are further divided by WeaponType enum
-    /// </summary>
-    WeaponProficiency,
-    /// <summary>
     /// Percent modifies heal amount when healed
     /// </summary>
     HealEfficiency,

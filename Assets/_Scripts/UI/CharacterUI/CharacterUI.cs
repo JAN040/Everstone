@@ -24,6 +24,19 @@ public class CharacterUI : MonoBehaviour
     [SerializeField] TabGroup TabGroup;
     [SerializeField] TabGroupButton InventoryTabButton;
 
+    [Space]
+    [Header("Equipment Tab")]
+    [SerializeField] ItemSlotUI Helmet;
+    [SerializeField] ItemSlotUI Shoulder;
+    [SerializeField] ItemSlotUI Chestplate;
+    [SerializeField] ItemSlotUI Pants;
+    [SerializeField] ItemSlotUI Boots;
+    [SerializeField] ItemSlotUI Necklace;
+    [SerializeField] ItemSlotUI Cape;
+    [SerializeField] ItemSlotUI Gloves;
+    [SerializeField] ItemSlotUI Ring1;
+    [SerializeField] ItemSlotUI Ring2;
+
 
     #endregion UI References
 
@@ -56,11 +69,10 @@ public class CharacterUI : MonoBehaviour
             GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[1]));
             //GameManager.Instance.PlayerManager.Storage.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Other[0]));
             for (int i = 0; i < GameManager.Instance.PlayerManager.Storage.InventorySize; i++)
-                GameManager.Instance.PlayerManager.Storage.InventoryItems[i] = new InventoryItem(ResourceSystem.Instance.Items_Other[UnityEngine.Random.Range(0, ResourceSystem.Instance.Items_Other.Count)]);
+                GameManager.Instance.PlayerManager.Storage.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Other[UnityEngine.Random.Range(0, ResourceSystem.Instance.Items_Other.Count)]));
         }
 
-        ItemGrid_Inventory.Initialize(GameManager.Instance.PlayerManager.Inventory, this);
-        ItemGrid_Storage  .Initialize(GameManager.Instance.PlayerManager.Storage,   this);
+        InitTab_Inventory();
     }
 
     private void OnDestroy()
@@ -90,6 +102,29 @@ public class CharacterUI : MonoBehaviour
         }
     }
 
+
+    private void InitTab_Equipment()
+    {
+        //assign the equipment system to the equipment slots
+
+        //currSlotScript.Init(itemSource, CharaUIRef);
+
+        //if (ItemSource.InventoryItems[i] != null)
+        //{
+        //    var currItemPrefab = InstantiatePrefab(ItemPrefab, currSlotScript.ItemContainer.transform);
+        //    currItemPrefab.GetComponent<ItemUI>().Init(
+        //        CharaUIRef,
+        //        ItemSource.InventoryItems[i],
+        //        currSlotPrefab.GetComponent<ItemSlotUI>()
+        //    );
+        //}
+    }
+
+    private void InitTab_Inventory()
+    {
+        ItemGrid_Inventory.Initialize(GameManager.Instance.PlayerManager.Inventory, this);
+        ItemGrid_Storage  .Initialize(GameManager.Instance.PlayerManager.Storage, this);
+    }
 
 
     #endregion METHODS

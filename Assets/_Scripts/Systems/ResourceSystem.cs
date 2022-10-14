@@ -33,17 +33,36 @@ public class ResourceSystem : Singleton<ResourceSystem> {
     /// </summary>
     private static Dictionary<Icon, string> TMP_IconDict = new Dictionary<Icon, string>()
     {
-        { Icon.Everstone,    "everstone" },
-        { Icon.Infinity,     "infinity"  },
+        { Icon.Everstone,    "everstone"    },
+        { Icon.Infinity,     "infinity"     },
 
-        { Icon.Attack_Phys, "attack_phys" },
-        { Icon.Attack_Arts, "attack_arts" },
-        { Icon.Defense,     "defense"     },
-        { Icon.Arts_Resist, "resist"      },
-        { Icon.Speed,       "speed"       },
-        { Icon.Health,      "health"      },
-        { Icon.Stamina,     "energy"      },
-        { Icon.Mana,        "mana"        }
+        { Icon.Attack_Phys, "attack_phys"   },
+        { Icon.Attack_Arts, "attack_arts"   },
+        { Icon.Defense,     "defense"       },
+        { Icon.Arts_Resist, "resist"        },
+        { Icon.Speed,       "speed"         },
+        { Icon.Health,      "health"        },
+        { Icon.Stamina,     "energy"        },
+        { Icon.Energy_Regen,"energy_regen"  },
+        { Icon.Health_Regen,"health_regen"  },
+        { Icon.Mana_Regen,  "mana_regen"    },
+        { Icon.Strength,    "strength"      },
+        { Icon.Block_Chance,"block_chance"  },
+        { Icon.Dodge,       "dodge"         },
+        { Icon.Agility,     "agility"       },
+        { Icon.Cooldown,    "cooldown"      },
+        { Icon.Taming,      "taming"        },
+        { Icon.Lockpicking, "lockpicking"   },
+        { Icon.Trading,     "trading"       },
+        { Icon.Electricity, "electricity"   },
+        { Icon.Accuracy,    "accuracy"      },
+        { Icon.Capacity,    "capacity"      },
+        { Icon.Poison,      "poison"        },
+        { Icon.Luck,        "luck"          },
+        { Icon.Coin_Copper, "coin_copper"   },
+        { Icon.Coin_Silver, "coin_silver"   },
+        { Icon.Coin_Gold,   "coin_gold"     },
+        { Icon.Fire,        "fire"          },
     };
 
 

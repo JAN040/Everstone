@@ -46,6 +46,7 @@ public class ItemGrid : MonoBehaviour
         ItemSource = itemSource;
         ItemSource.OnInventoryChanged += RefreshInventory;
         ItemContainerList = new List<GameObject>();
+        List<InventoryItem> itemList = ItemSource.GetItems();
 
         //spawn item containers and items where appropriate
         for (int i = 0; i < ItemSource.InventorySize; i++)
@@ -55,14 +56,16 @@ public class ItemGrid : MonoBehaviour
             
             currSlotScript.Init(itemSource, CharaUIRef);
 
-            if (ItemSource.InventoryItems[i] != null)
+            if (itemList[i] != null)
             {
                 var currItemPrefab = InstantiatePrefab(ItemPrefab, currSlotScript.ItemContainer.transform);
                 currItemPrefab.GetComponent<ItemUI>().Init(
                     CharaUIRef,
-                    ItemSource.InventoryItems[i],
+                    itemList[i],
                     currSlotPrefab.GetComponent<ItemSlotUI>()
                 );
+
+                itemList[i].Prefab = currItemPrefab;
             }
 
             ItemContainerList.Add(currSlotPrefab);

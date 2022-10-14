@@ -141,11 +141,6 @@ public class ItemSlotUI : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPo
             default:
                 break;
         }
-        
-
-        //for debug
-        var a = prevSlot.InventoryRef.InventoryItems;
-        var b = targetSlot.InventoryRef.InventoryItems;
     }
 
     public ItemUI GetSlottedItem()

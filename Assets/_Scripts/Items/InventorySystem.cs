@@ -7,8 +7,8 @@ using System;
 [Serializable]
 public class InventorySystem
 {
-    public List<InventoryItem> InventoryItems;
-    private Dictionary<ItemDataBase, InventoryItem> ItemDict;
+    private List<InventoryItem> InventoryItems;
+    //private Dictionary<ItemDataBase, InventoryItem> ItemDict;
 
     /// <summary>
     /// Max amount of items the inventory can hold
@@ -100,6 +100,11 @@ public class InventorySystem
         return null;
     }
 
+    public List<InventoryItem> GetItems()
+    {
+        return InventoryItems;
+    }
+
     /// <summary>
     /// Moves item at itemIndex position to targetIndex position. Handles any necessary swapping & stacking
     ///  and notifies the caller what it did through ItemMoveResult enum.
@@ -177,7 +182,4 @@ public class InventorySystem
 
         OnInventoryChanged?.Invoke();
     }
-
-    
-
 }

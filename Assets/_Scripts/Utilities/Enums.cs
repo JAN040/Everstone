@@ -171,6 +171,7 @@ public enum EquipmentType
     Ring,
 }
 
+
 #endregion ITEMS
 
 
@@ -185,7 +186,27 @@ public enum Icon
     Speed,
     Health,
     Stamina,
-    Mana
+    Mana,
+    Energy_Regen,
+    Mana_Regen,
+    Health_Regen,
+    Strength,
+    Agility,
+    Taming,
+    Lockpicking,
+    Trading,
+    Block_Chance,
+    Dodge,
+    Cooldown,
+    Accuracy,
+    Capacity,
+    Luck,
+    Coin_Copper,
+    Coin_Silver,
+    Coin_Gold,
+    Poison,
+    Electricity,
+    Fire,
 }
 
 public enum UserLayers

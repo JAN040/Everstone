@@ -353,7 +353,6 @@ public class CharacterStats
             case StatType.BlockChance:
             case StatType.WeaponAccuracy:
             case StatType.Proficiency:
-            case StatType.WeaponProficiency:
             default:
                 Debug.LogError($"GetStatFromStatType: Unexpected stat type {type}");
                 return null;
