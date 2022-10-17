@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -26,8 +27,13 @@ public class ItemSlotUI : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPo
     public CharacterUI CharacterUIRef;
     public InventorySystem InventoryRef;
 
-    [SerializeField] List<ItemType> AcceptedItemTypes;
-    [SerializeField] List<EquipmentType> AcceptedEquipmentTypes;  //further filter when AcceptedItemTypes includes ItemType.Equipment
+    public List<ItemType> AcceptedItemTypes; //none means all items are accepted
+    
+    //further filter when AcceptedItemTypes includes ItemType.Equipment
+    public List<EquipmentType> AcceptedEquipmentTypes;
+
+    //which of the 12 equip slots this slot represents (None means its not an equip slot) 
+    [SerializeField] EquipmentSlot EquipmentSlot = EquipmentSlot.None;
 
 
     #endregion VARIABLES
@@ -50,9 +56,18 @@ public class ItemSlotUI : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPo
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        //show hover effect when hovering over a slot with a dragged item (dont show for the items current home slot)
-        if (CharacterUIRef?.CurrentlyDraggedItem != null && CharacterUIRef?.CurrentlyDraggedItem?.SlotRef != this)
+        if (CharacterUIRef?.CurrentlyDraggedItem == null)
+            return;
+
+        bool showEff = true;
+
+        showEff &= CharacterUIRef.CurrentlyDraggedItem.SlotRef != this;
+        showEff &= CanSlotItem(CharacterUIRef.CurrentlyDraggedItem, true);
+
+        if (showEff)
+        {
             HoverImage.gameObject.SetActive(true);
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -72,12 +87,44 @@ public class ItemSlotUI : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPo
     {
         InventoryRef = inventory;
         CharacterUIRef = characterUI;
+
+        if (!(inventory is EquipmentSystem))
+        {
+            AcceptedItemTypes = new List<ItemType>() { ItemType.None };
+            AcceptedEquipmentTypes = new List<EquipmentType>() { EquipmentType.None };
+        }
+    }
+
+    private bool CanSlotItem(ItemUI item, bool checkSwap)
+    {
+        if (item == null)
+            return true;
+
+        bool canSlot = true;
+        var equipData = item.ItemRef.ItemData as ItemDataEquipment;
+
+        //ItemType.None means all items are accepted
+        canSlot &= AcceptedItemTypes.Contains(ItemType.None) || AcceptedItemTypes.Contains(item.ItemRef.ItemData.ItemType);
+
+        if (equipData != null) //when item is equipment
+            canSlot &= AcceptedItemTypes.Contains(ItemType.None)
+                       ||
+                       AcceptedEquipmentTypes.Contains(equipData.EquipmentType);
+
+        //check if a swap is possible
+        if (checkSwap)
+            canSlot &= item.SlotRef.CanSlotItem(this.GetSlottedItem(), false);
+
+        return canSlot;
     }
 
     /// <returns>int index indicating where in the item grid this slot is located</returns>
     public int GetSlotPosition()
     {
-        return this.gameObject.transform.GetSiblingIndex();
+        return EquipmentSlot != EquipmentSlot.None ? 
+            (int)EquipmentSlot
+            :
+            this.gameObject.transform.GetSiblingIndex();
     }
 
     public void OnDrop(PointerEventData eventData)
@@ -90,11 +137,16 @@ public class ItemSlotUI : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPo
         if (droppedObj != null && droppedObj.GetComponent<ItemUI>() != null)
         {
             var droppedItemScript = droppedObj.GetComponent<ItemUI>();
+
+            if (!CanSlotItem(droppedItemScript, true))
+            {
+                Debug.Log("Item drop of incorrect type detected");
+                return;
+            }
+
             Debug.Log("Item drop detected");
 
             HandleInventoryTransaction(droppedItemScript.SlotRef, this, droppedItemScript);
-
-            
         }
     }
 
@@ -111,7 +163,7 @@ public class ItemSlotUI : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPo
             targetSlot.GetSlotPosition()
         );
 
-        //handle changes to prefabs (basedo n the operation that was done in the inventory)
+        //handle changes to prefabs (based on the operation that was done in the inventory)
         switch (operation)
         {
             case ItemMoveResult.Moved:

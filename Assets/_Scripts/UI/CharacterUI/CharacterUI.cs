@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +19,7 @@ public class CharacterUI : MonoBehaviour
     [SerializeField] ItemGrid ItemGrid_Storage;
     public Canvas ParentCanvas;
     public GameObject DraggedItemContainer;
+    [SerializeField] GameObject ItemPrefab;
 
     [Space]
     [Header("Tabs")]
@@ -25,17 +27,46 @@ public class CharacterUI : MonoBehaviour
     [SerializeField] TabGroupButton InventoryTabButton;
 
     [Space]
-    [Header("Equipment Tab")]
-    [SerializeField] ItemSlotUI Helmet;
-    [SerializeField] ItemSlotUI Shoulder;
-    [SerializeField] ItemSlotUI Chestplate;
-    [SerializeField] ItemSlotUI Pants;
-    [SerializeField] ItemSlotUI Boots;
-    [SerializeField] ItemSlotUI Necklace;
-    [SerializeField] ItemSlotUI Cape;
-    [SerializeField] ItemSlotUI Gloves;
-    [SerializeField] ItemSlotUI Ring1;
-    [SerializeField] ItemSlotUI Ring2;
+    [Header("Equipment/Stats Tab")]
+    [Header("Equipment slots")]
+    public ItemSlotUI Helmet;
+    public ItemSlotUI Shoulder;
+    public ItemSlotUI Chestplate;
+    public ItemSlotUI Pants;
+    public ItemSlotUI Boots;
+
+    public ItemSlotUI Necklace;
+    public ItemSlotUI Cape;
+    public ItemSlotUI Gloves;
+    public ItemSlotUI Ring1;
+    public ItemSlotUI Ring2;
+
+    public ItemSlotUI RightArm;
+    public ItemSlotUI LeftArm;
+
+    [Header("Stats references")]
+    [SerializeField] Image           Image_PlayerIcon;
+    [SerializeField] TextMeshProUGUI Text_HeroName;
+    [SerializeField] TextMeshProUGUI Text_HeroClass;
+    [SerializeField] TextMeshProUGUI Text_HeroBackground;
+
+    //[SerializeField] TextMeshProUGUI Text_PhysDmg;
+    //[SerializeField] TextMeshProUGUI Text_ArtsDmg;
+    //[SerializeField] TextMeshProUGUI Text_Armor;
+    //[SerializeField] TextMeshProUGUI Text_Resist;
+    //[SerializeField] TextMeshProUGUI Text_Speed;
+    //[SerializeField] TextMeshProUGUI Text_Dodge;
+
+    //[SerializeField] TextMeshProUGUI Text_MaxHp;
+    //[SerializeField] TextMeshProUGUI Text_MaxEnergy;
+    //[SerializeField] TextMeshProUGUI Text_MaxMana;
+    //[SerializeField] TextMeshProUGUI Text_HealEff;
+    //[SerializeField] TextMeshProUGUI Text_EnergyRegen;
+    //[SerializeField] TextMeshProUGUI Text_ManaRegen;
+
+    //[SerializeField] TextMeshProUGUI Text_Cooldown;
+    //[SerializeField] TextMeshProUGUI Text_BlockChance;
+
 
 
     #endregion UI References
@@ -44,7 +75,7 @@ public class CharacterUI : MonoBehaviour
     [Space]
     [Header("Variables")]
     public ItemUI CurrentlyDraggedItem;
-
+    public List<ItemSlotUI> EquipmentSlots;
 
     #endregion VARIABLES
 
@@ -62,16 +93,37 @@ public class CharacterUI : MonoBehaviour
         {
             GameManager.Instance?.PlayerManager.SetInventory(
                 new InventorySystem(40),
-                new InventorySystem(GameManager.Instance.InitialCampStorageSpace));
+                new InventorySystem(GameManager.Instance.InitialCampStorageSpace),
+                new EquipmentSystem());
 
             //test items
-            GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[0]));
+            GameManager.Instance.PlayerManager.Equipment.EquipItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[0]));
             GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[1]));
+            GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[2]));
+            
             //GameManager.Instance.PlayerManager.Storage.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Other[0]));
             for (int i = 0; i < GameManager.Instance.PlayerManager.Storage.InventorySize; i++)
                 GameManager.Instance.PlayerManager.Storage.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Other[UnityEngine.Random.Range(0, ResourceSystem.Instance.Items_Other.Count)]));
+        
         }
 
+        EquipmentSlots = new List<ItemSlotUI>()
+        {
+            Helmet,
+            Shoulder,
+            Chestplate,
+            Pants,
+            Boots,
+            Necklace,
+            Cape,
+            Gloves,
+            Ring1,
+            Ring2,
+            RightArm,
+            LeftArm
+        };
+
+        InitTab_Equipment();
         InitTab_Inventory();
     }
 
@@ -102,22 +154,33 @@ public class CharacterUI : MonoBehaviour
         }
     }
 
-
+    //assign the equipment system to the equipment slots
     private void InitTab_Equipment()
     {
-        //assign the equipment system to the equipment slots
+        var equipment = GameManager.Instance.PlayerManager.Equipment;
 
-        //currSlotScript.Init(itemSource, CharaUIRef);
+        for (int i = 0; i < EquipmentSlots.Count; i++)
+        {
+            EquipmentSlots[i].Init(equipment, this);
 
-        //if (ItemSource.InventoryItems[i] != null)
-        //{
-        //    var currItemPrefab = InstantiatePrefab(ItemPrefab, currSlotScript.ItemContainer.transform);
-        //    currItemPrefab.GetComponent<ItemUI>().Init(
-        //        CharaUIRef,
-        //        ItemSource.InventoryItems[i],
-        //        currSlotPrefab.GetComponent<ItemSlotUI>()
-        //    );
-        //}
+            if (equipment.EquipmentItems[i] != null)
+            {
+                var currItemPrefab = InstantiatePrefab(ItemPrefab, EquipmentSlots[i].ItemContainer.transform);
+                currItemPrefab.GetComponent<ItemUI>().Init(
+                    this,
+                    equipment.EquipmentItems[i],
+                    EquipmentSlots[i]
+                );
+            }
+        }
+
+        //stat section
+        var hero = GameManager.Instance.PlayerManager.PlayerHero;
+
+        Image_PlayerIcon.sprite  = hero.MenuSprite;
+        Text_HeroName.text       = hero.Name;
+        Text_HeroClass.text      = hero.ClassName;
+        Text_HeroBackground.text = hero.Background;
     }
 
     private void InitTab_Inventory()
@@ -126,6 +189,16 @@ public class CharacterUI : MonoBehaviour
         ItemGrid_Storage  .Initialize(GameManager.Instance.PlayerManager.Storage, this);
     }
 
+
+    private GameObject InstantiatePrefab(GameObject prefab, Transform parentTransform)
+    {
+        var obj = Instantiate(prefab, new Vector3(0, 0, 0), Quaternion.identity);
+        obj.transform.SetParent(parentTransform, true);
+        obj.transform.localScale = Vector3.one;
+        obj.transform.localPosition = Vector3.zero;
+
+        return obj;
+    }
 
     #endregion METHODS
 }

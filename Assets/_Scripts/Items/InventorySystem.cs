@@ -7,7 +7,7 @@ using System;
 [Serializable]
 public class InventorySystem
 {
-    private List<InventoryItem> InventoryItems;
+    protected List<InventoryItem> InventoryItems;
     //private Dictionary<ItemDataBase, InventoryItem> ItemDict;
 
     /// <summary>
@@ -139,9 +139,16 @@ public class InventorySystem
 
         bool hasSwapped = invItemTarget != null;
 
-        //else swap items
-        targetInventory.InventoryItems[targetIndex] = invItem;
-        InventoryItems[itemIndex] = invItemTarget;
+        //swap items
+        if (targetInventory is EquipmentSystem)
+            (targetInventory as EquipmentSystem).EquipItem(invItem, targetIndex);
+        else
+            targetInventory.InventoryItems[targetIndex] = invItem;
+
+        if (this is EquipmentSystem)
+            (this as EquipmentSystem).EquipItem(invItemTarget, itemIndex);
+        else
+            InventoryItems[itemIndex] = invItemTarget;
 
         OnInventoryChanged?.Invoke();
 

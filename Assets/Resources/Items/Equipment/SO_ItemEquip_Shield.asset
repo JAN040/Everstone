@@ -19,9 +19,8 @@ MonoBehaviour:
   BuyPrice: 10
   CanBeSold: 1
   MaxStackSize: 1
-  ItemType: 0
+  ItemType: 1
   Rarity: 0
-  Prefab: {fileID: 0}
   EquipmentType: 5
   StatModifiers:
   - _type: 0

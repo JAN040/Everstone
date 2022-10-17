@@ -12,7 +12,7 @@ public class ItemDataEquipment : ItemDataBase
     //Further divide the item in case ItemType == ItemType.Equipment
     public EquipmentType EquipmentType = EquipmentType.None;
 
-    public StatModifier[] StatModifiers;
+    public List<StatModifier> StatModifiers;
 
     public ItemDataEquipment()
     {

@@ -390,19 +390,27 @@ public class CharacterCreationManager : MonoBehaviour
         var stats = hero.BaseStats;
 
         hero.Name = heroName.text;
+        hero.Background = GetSelectedBackground().backgroundName;
 
         //hero instantiation
         GameManager.Instance.PlayerManager.SetHero(hero);
-        
+
         //inventory setup
         GameManager.Instance.PlayerManager.SetInventory(
             new InventorySystem(10),
-            new InventorySystem(GameManager.Instance.InitialCampStorageSpace)
+            new InventorySystem(GameManager.Instance.InitialCampStorageSpace),
+            new EquipmentSystem()
         );
+
         //test items
-        GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[0]));
-        GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[1]));
-        GameManager.Instance.PlayerManager.Storage.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Other[0]));
+        GameManager.Instance.PlayerManager.Equipment.EquipItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[0]));
+        GameManager.Instance.PlayerManager.Equipment.EquipItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[1]));
+        GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[2]));
+        GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[3]));
+        GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[4]));
+        for (int i = 0; i < GameManager.Instance.PlayerManager.Storage.InventorySize; i++)
+            GameManager.Instance.PlayerManager.Storage.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Other[UnityEngine.Random.Range(0, ResourceSystem.Instance.Items_Other.Count)]));
+
 
         GameManager.Instance.PlayerManager.PlayerHero.MenuSprite = GetSelectedCharacterPortrait();
         GameManager.Instance.PlayerManager.PlayerHero.SetLevelSystem(new LevelSystem(GenerateSkillSystem(stats), stats));

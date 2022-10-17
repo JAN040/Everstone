@@ -1,7 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 [System.Serializable]
 public class EquipmentSystem : InventorySystem
@@ -9,52 +12,81 @@ public class EquipmentSystem : InventorySystem
     #region VARIABLES
 
     //hardcoded equipment slots cause fuck it
-    private InventoryItem EquipmentSlot_Helmet; 
-    private InventoryItem EquipmentSlot_Shoulder; 
-    private InventoryItem EquipmentSlot_Chestplate; 
-    private InventoryItem EquipmentSlot_Pants; 
-    private InventoryItem EquipmentSlot_Boots; 
+    private InventoryItem EquipmentSlot_Helmet {
+        get { return InventoryItems[(int)EquipmentSlot.Helmet]; }
+        set { InventoryItems[(int)EquipmentSlot.Helmet] = value; }
+    }
+    private InventoryItem EquipmentSlot_Shoulder {
+        get { return InventoryItems[(int)EquipmentSlot.Shoulder]; }
+        set { InventoryItems[(int)EquipmentSlot.Shoulder] = value; }
+    }
+    private InventoryItem EquipmentSlot_Chestplate {
+        get { return InventoryItems[(int)EquipmentSlot.Chestplate]; }
+        set { InventoryItems[(int)EquipmentSlot.Chestplate] = value; }
+    }
+    private InventoryItem EquipmentSlot_Pants {
+        get { return InventoryItems[(int)EquipmentSlot.Pants]; }
+        set { InventoryItems[(int)EquipmentSlot.Pants] = value; }
+    }
+    private InventoryItem EquipmentSlot_Boots {
+        get { return InventoryItems[(int)EquipmentSlot.Boots]; }
+        set { InventoryItems[(int)EquipmentSlot.Boots] = value; }
+    }
 
-    private InventoryItem EquipmentSlot_Necklace; 
-    private InventoryItem EquipmentSlot_Cape; 
-    private InventoryItem EquipmentSlot_Gloves; 
-    private InventoryItem EquipmentSlot_Ring1; 
-    private InventoryItem EquipmentSlot_Ring2;
+    private InventoryItem EquipmentSlot_Necklace {
+        get { return InventoryItems[(int)EquipmentSlot.Necklace]; }
+        set { InventoryItems[(int)EquipmentSlot.Necklace] = value; }
+    }
+    private InventoryItem EquipmentSlot_Cape {
+        get { return InventoryItems[(int)EquipmentSlot.Cape]; }
+        set { InventoryItems[(int)EquipmentSlot.Cape] = value; }
+    }
+    private InventoryItem EquipmentSlot_Gloves {
+        get { return InventoryItems[(int)EquipmentSlot.Gloves]; }
+        set { InventoryItems[(int)EquipmentSlot.Gloves] = value; }
+    }
+    private InventoryItem EquipmentSlot_Ring1 {
+        get { return InventoryItems[(int)EquipmentSlot.Ring1]; }
+        set { InventoryItems[(int)EquipmentSlot.Ring1] = value; }
+    }
+    private InventoryItem EquipmentSlot_Ring2 {
+        get { return InventoryItems[(int)EquipmentSlot.Ring2]; }
+        set { InventoryItems[(int)EquipmentSlot.Ring2] = value; }
+    }
 
-    private InventoryItem EquipmentSlot_RightArm;
-    private InventoryItem EquipmentSlot_LeftArm; 
+    private InventoryItem EquipmentSlot_RightArm {
+        get { return InventoryItems[(int)EquipmentSlot.RightArm]; }
+        set { InventoryItems[(int)EquipmentSlot.RightArm] = value; }
+    }
+    private InventoryItem EquipmentSlot_LeftArm {
+        get { return InventoryItems[(int)EquipmentSlot.LeftArm]; }
+        set { InventoryItems[(int)EquipmentSlot.LeftArm] = value; }
+    }
 
+    public List<InventoryItem> EquipmentItems 
+    { 
+        get 
+        {
+            return new List<InventoryItem>()
+            {
+                EquipmentSlot_Helmet,
+                EquipmentSlot_Shoulder,
+                EquipmentSlot_Chestplate,
+                EquipmentSlot_Pants,
+                EquipmentSlot_Boots,
 
-    public Dictionary<EquipmentSlot, List<EquipmentType>> AcceptedEquipmentTypes = new Dictionary<EquipmentSlot, List<EquipmentType>>()
-    {
-        { EquipmentSlot.Helmet,     new List<EquipmentType>(){ EquipmentType.Helmet }       },
-        { EquipmentSlot.Shoulder,   new List<EquipmentType>(){ EquipmentType.Shoulder }     },
-        { EquipmentSlot.Chestplate, new List<EquipmentType>(){ EquipmentType.Chestplate }   },
-        { EquipmentSlot.Pants,      new List<EquipmentType>(){ EquipmentType.Pants }        },
-        { EquipmentSlot.Boots,      new List<EquipmentType>(){ EquipmentType.Boots }        },
+                EquipmentSlot_Necklace,
+                EquipmentSlot_Cape,
+                EquipmentSlot_Gloves,
+                EquipmentSlot_Ring1,
+                EquipmentSlot_Ring2,
 
-        { EquipmentSlot.Necklace,   new List<EquipmentType>(){ EquipmentType.Necklace }     },
-        { EquipmentSlot.Cape,       new List<EquipmentType>(){ EquipmentType.Cape }         },
-        { EquipmentSlot.Gloves,     new List<EquipmentType>(){ EquipmentType.Gloves }       },
-        { EquipmentSlot.Ring1,      new List<EquipmentType>(){ EquipmentType.Ring }         },
-        { EquipmentSlot.Ring2,      new List<EquipmentType>(){ EquipmentType.Ring }         },
+                EquipmentSlot_RightArm,
+                EquipmentSlot_LeftArm
+            };
+        } 
+    }
 
-        { EquipmentSlot.LeftArm,    new List<EquipmentType>(){
-                                        EquipmentType.Sword, 
-                                        EquipmentType.Axe, 
-                                        EquipmentType.Staff,
-                                        EquipmentType.Dagger,
-                                        EquipmentType.Shield,
-                                    }
-        },
-        { EquipmentSlot.RightArm,   new List<EquipmentType>(){
-                                        EquipmentType.Sword,
-                                        EquipmentType.Axe,
-                                        EquipmentType.Staff,
-                                        EquipmentType.Dagger,
-                                    }
-        },
-    };
 
     #endregion VARIABLES
 
@@ -75,12 +107,13 @@ public class EquipmentSystem : InventorySystem
     }
 
 
-    #endregion UNITY METHODS
 
 
-    public EquipmentSystem() : base(12)
+#endregion UNITY METHODS
+
+
+    public EquipmentSystem() : base((int)Enum.GetValues(typeof(EquipmentSlot)).Cast<EquipmentSlot>().Max() + 1)
     {
-
     }
 
 
@@ -90,104 +123,104 @@ public class EquipmentSystem : InventorySystem
     /// <summary>
     /// Equips the item to the appropriate slot
     /// </summary>
-    /// <returns>The previously equipped item, to enable the caller to make a swap. Or the param item on failure</returns>
-    public InventoryItem EquipItem(InventoryItem item)
+    /// <param name="slot">
+    /// What slot to equip the item to (-1 decides the slot based on equip type)
+    /// </param>
+    /// <returns>A tuple of the unequipped item and the slot where the switch was made (relevant when no slot is provided)</returns>
+    public (InventoryItem, int) EquipItem(InventoryItem item, int slot = -1)
     {
-        if (item.ItemData.ItemType != ItemType.Equipment)
-            return item;
+        if (item == null)
+        {
+            if (slot != -1)
+            {
+                return (UnequipItem(slot), slot);
+            }
+            else
+                return (null, slot);
+        }
 
         ItemDataEquipment itemData = item.ItemData as ItemDataEquipment;
-        if (itemData == null)
-            return item;
+        if (item.ItemData.ItemType != ItemType.Equipment || itemData == null)
+            return (item, slot);
 
-        InventoryItem unequippedItem = null;
+        if (slot == -1)
+            slot = GetDefaultEquipSlotIndexFromEquipType(itemData.EquipmentType);
 
-        switch (itemData.EquipmentType)
+        //swap equipments
+        InventoryItem unequippedItem = InventoryItems[slot];
+        InventoryItems[slot] = item;
+
+        HandleModifiersOnEquipmentChange(unequippedItem, item);
+
+        return (unequippedItem, slot);
+    }
+
+    public InventoryItem UnequipItem(int targetIndex)
+    {
+        InventoryItem res = InventoryItems[targetIndex];
+        HandleModifiersOnEquipmentChange(res, null);
+        InventoryItems[targetIndex] = null;
+
+        return res;
+    }
+
+    private int GetDefaultEquipSlotIndexFromEquipType(EquipmentType equipType)
+    {
+        switch (equipType)
         {
             case EquipmentType.Sword:
             case EquipmentType.Dagger:
             case EquipmentType.Axe:
             case EquipmentType.Staff:
             case EquipmentType.Shield:
-                if (itemData.EquipmentType == EquipmentType.Shield ||
+                if (equipType == EquipmentType.Shield ||
                     EquipmentSlot_LeftArm == null && EquipmentSlot_RightArm != null)
-                {   //equip to left arm
-                    unequippedItem = EquipmentSlot_LeftArm;
-                    EquipmentSlot_LeftArm = item;
-                }
+                    return (int)EquipmentSlot.LeftArm;
                 else
-                {   //equip to right arm
-                    unequippedItem = EquipmentSlot_RightArm;
-                    EquipmentSlot_RightArm = item;
-                }
-                break;
-
-            case EquipmentType.Helmet:
-                unequippedItem = EquipmentSlot_Helmet;
-                EquipmentSlot_Helmet = item;
-                break;
-
-            case EquipmentType.Shoulder:
-                unequippedItem = EquipmentSlot_Shoulder;
-                EquipmentSlot_Shoulder = item;
-                break;
-
-            case EquipmentType.Chestplate:
-                unequippedItem = EquipmentSlot_Chestplate;
-                EquipmentSlot_Chestplate = item;
-                break;
-
-            case EquipmentType.Pants:
-                unequippedItem = EquipmentSlot_Pants;
-                EquipmentSlot_Pants = item;
-                break;
-
-            case EquipmentType.Boots:
-                unequippedItem = EquipmentSlot_Boots;
-                EquipmentSlot_Boots = item;
-                break;
-
-            case EquipmentType.Necklace:
-                unequippedItem = EquipmentSlot_Necklace;
-                EquipmentSlot_Necklace = item;
-                break;
-
-            case EquipmentType.Cape:
-                unequippedItem = EquipmentSlot_Cape;
-                EquipmentSlot_Cape = item;
-                break;
-
-            case EquipmentType.Gloves:
-                unequippedItem = EquipmentSlot_Gloves;
-                EquipmentSlot_Gloves = item;
-                break;
+                    return (int)EquipmentSlot.RightArm;
 
             case EquipmentType.Ring:
-                if (EquipmentSlot_Ring2 == null)
-                {   //equip to ring2
-                    unequippedItem = EquipmentSlot_Ring2;
-                    EquipmentSlot_Ring2 = item;
-                }
-                else
-                {   //equip to ring1
-                    unequippedItem = EquipmentSlot_Ring1;
-                    EquipmentSlot_Ring1 = item;
-                }
-                break;
+                return EquipmentSlot_Ring2 == null && EquipmentSlot_Ring1 != null ?
+                    (int)EquipmentSlot.Ring2
+                    :
+                    (int)EquipmentSlot.Ring1;
+
+            case EquipmentType.Helmet:
+                return (int)EquipmentSlot.Helmet;
+
+            case EquipmentType.Shoulder:
+                return (int)EquipmentSlot.Shoulder;
+
+            case EquipmentType.Chestplate:
+                return (int)EquipmentSlot.Chestplate;
+
+            case EquipmentType.Pants:
+                return (int)EquipmentSlot.Pants;
+
+            case EquipmentType.Boots:
+                return (int)EquipmentSlot.Boots;
+
+            case EquipmentType.Necklace:
+                return (int)EquipmentSlot.Necklace;
+
+            case EquipmentType.Cape:
+                return (int)EquipmentSlot.Cape;
+
+            case EquipmentType.Gloves:
+                return (int)EquipmentSlot.Gloves;
 
             case EquipmentType.None:
             default:
-                return item;
+                return (int)EquipmentSlot.None;
         }
-
-        HandleModifiersOnEquipmentChange(unequippedItem, item);
-
-        return unequippedItem;
     }
 
     private void HandleModifiersOnEquipmentChange(InventoryItem unequippedItem, InventoryItem equippedItem)
     {
-        throw new NotImplementedException();
+        var heroStats = GameManager.Instance.PlayerManager.PlayerHero.BaseStats;
+
+        heroStats.RemoveModifiers((unequippedItem?.ItemData as ItemDataEquipment)?.StatModifiers);
+        heroStats.AddModifiers((equippedItem?.ItemData as ItemDataEquipment)?.StatModifiers);
     }
 
 

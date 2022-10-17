@@ -93,7 +93,7 @@ public class CharacterStats
     //[SerializeField] private Stat baseAccuracy;
     [SerializeField] private Stat maxMana;
     [SerializeField] private Stat manaRecovery;
-    //[SerializeField] private Stat blockChance;
+    [SerializeField] private Stat blockChance;
     [SerializeField] private Stat cooldownReduction;
 
     #endregion STAT FIELDS
@@ -142,9 +142,8 @@ public class CharacterStats
     /// Recovery of 1 means 1 mana recovered at the end of each encounter.
     /// </summary>
     public Stat ManaRecovery { get => manaRecovery; private set => manaRecovery = value; }
-    
-    //we get this chance from the weapon
-    //public Stat BlockChance { get => blockChance; private set => blockChance = value; }
+
+    public Stat BlockChance { get => blockChance; private set => blockChance = value; }
 
     /// <summary>
     /// Additional CDR from items/potions
@@ -161,7 +160,7 @@ public class CharacterStats
     public CharacterStats(float physicalDamage, float artsDamage, float maxHP, float defense, float artsResist,
                           float maxEnergy, float speed, float dodgeChance,
                           float maxMana = 0, float manaRecovery = 0, float energyRecovery = 1, float cooldownReduction = 0,
-                          float healEfficiency = 1)
+                          float healEfficiency = 1, float block = 0)
     {
         PhysicalDamage = new Stat(physicalDamage, StatType.PhysicalDamage, false);
         Armor = new Stat(defense, StatType.Armor, false);
@@ -182,12 +181,12 @@ public class CharacterStats
         ManaRecovery = new Stat(manaRecovery, StatType.ManaRecovery, true);
         MaxPets = 0;
         CooldownReduction = new Stat(cooldownReduction, StatType.CooldownReduction, true);
-        
-        //BlockChance = new Stat(blockChance, StatType.BlockChance, false);
+
+        BlockChance = new Stat(block, StatType.BlockChance, false);
         //BaseAccuracy = new Stat(baseAccuracy, StatType.WeaponAccuracy, false);
         //WeaponProficiencies = null;
         //SetDefaultWeaponProficiencies(0f, 0f);
-        
+
         SetStatEvents();
     }
 
@@ -211,7 +210,7 @@ public class CharacterStats
         DodgeChance.OnStatChanged       += StatChanged;
         HealEfficiency.OnStatChanged    += StatChanged;
 
-        //BlockChance.OnStatChanged += StatChanged;
+        BlockChance.OnStatChanged       += StatChanged;
     }
 
     //public void SetDefaultWeaponProficiencies(float baseDamageBonus, float baseAccuracyBonus)
@@ -230,15 +229,15 @@ public class CharacterStats
     /// <summary>
     /// A helper method to invoke OnEnergyChanged when MaxEnergy Stat gets changed
     /// </summary>
-    private void InvokeEmpty_EnergyChanged(Stat stat)
+    private void InvokeEmpty_EnergyChanged(Stat stat, bool isPositive)
     {
-        OnEnergyChanged.Invoke(0, 0);
+        OnEnergyChanged?.Invoke(0, 0);
     }
 
     /// <summary>
     /// A helper method to invoke OnEnergyChanged when MaxHp Stat gets changed
     /// </summary>
-    private void InvokeEmpty_HealthPointsChanged(Stat stat)
+    private void InvokeEmpty_HealthPointsChanged(Stat stat, bool isPositive)
     {
         OnHealthPointsChanged?.Invoke(0, 0);
     }
@@ -269,6 +268,9 @@ public class CharacterStats
 
     public bool AddModifiers(List<StatModifier> modifiers)
     {
+        if (modifiers == null || modifiers.Count == 0)
+            return false;
+
         bool res = true;
         
         foreach (var modifier in modifiers)
@@ -279,6 +281,9 @@ public class CharacterStats
 
     public bool RemoveModifiers(List<StatModifier> modifiers)
     {
+        if (modifiers == null || modifiers.Count == 0)
+            return false;
+
         bool res = true;
 
         foreach (var modifier in modifiers)
@@ -351,6 +356,8 @@ public class CharacterStats
                 return HealEfficiency;
 
             case StatType.BlockChance:
+                return BlockChance;
+
             case StatType.WeaponAccuracy:
             case StatType.Proficiency:
             default:
@@ -359,7 +366,7 @@ public class CharacterStats
         }
     }
 
-    private void StatChanged(Stat stat)
+    private void StatChanged(Stat stat, bool isPositive)
     {
         OnStatChanged?.Invoke(stat);
     }

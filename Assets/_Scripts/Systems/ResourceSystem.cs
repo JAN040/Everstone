@@ -19,6 +19,7 @@ public class ResourceSystem : Singleton<ResourceSystem> {
     private Dictionary<string, ScriptableBackground> _HeroBackgroundsDict;
 
     private List<ScriptableAdventureLocation> AdventureLocations { get; set; }
+
     private Dictionary<string, ScriptableAdventureLocation> _AdventureLocationsDict;
 
     private List<ScriptableNpcUnit> CommonEnemies { get; set; }
@@ -45,6 +46,7 @@ public class ResourceSystem : Singleton<ResourceSystem> {
         { Icon.Stamina,     "energy"        },
         { Icon.Energy_Regen,"energy_regen"  },
         { Icon.Health_Regen,"health_regen"  },
+        { Icon.Mana,        "mana"          },
         { Icon.Mana_Regen,  "mana_regen"    },
         { Icon.Strength,    "strength"      },
         { Icon.Block_Chance,"block_chance"  },
@@ -68,6 +70,45 @@ public class ResourceSystem : Singleton<ResourceSystem> {
 
     #region STATIC METHODS
 
+    public static string StatIconTag(StatType statType)
+    {
+        switch (statType)
+        {
+            case StatType.PhysicalDamage:
+                return GetIconTag(Icon.Attack_Phys);
+            case StatType.Armor:
+                return GetIconTag(Icon.Defense);
+            case StatType.ArtsDamage:
+                return GetIconTag(Icon.Attack_Arts);
+            case StatType.ArtsResist:
+                return GetIconTag(Icon.Arts_Resist);
+            case StatType.MaxHP:
+                return GetIconTag(Icon.Health);
+            case StatType.MaxEnergy:
+                return GetIconTag(Icon.Stamina);
+            case StatType.EnergyRecovery:
+                return GetIconTag(Icon.Energy_Regen);
+            case StatType.MaxMana:
+                return GetIconTag(Icon.Mana);
+            case StatType.ManaRecovery:
+                return GetIconTag(Icon.Mana_Regen);
+            case StatType.CooldownReduction:
+                return GetIconTag(Icon.Cooldown);
+            case StatType.Speed:
+                return GetIconTag(Icon.Speed);
+            case StatType.DodgeChance:
+                return GetIconTag(Icon.Dodge);
+            case StatType.HealEfficiency:
+                return GetIconTag(Icon.Health_Regen);
+            case StatType.BlockChance:
+                return GetIconTag(Icon.Block_Chance);
+            
+            case StatType.WeaponAccuracy:
+            case StatType.Proficiency:
+            default:
+                return "";
+        }
+    }
 
     public static string GetIconTag(Icon icon) => $"<sprite name=\"{TMP_IconDict[icon]}\">";
     public static Color GetRarityColor(ItemRarity rarity)

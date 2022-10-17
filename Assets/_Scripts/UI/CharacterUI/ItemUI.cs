@@ -214,6 +214,8 @@ public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEn
     public void MoveToSlotPosition()
     {
         this.GetComponent<RectTransform>().position = SlotRef.GetComponent<RectTransform>().position;
+        this.GetComponent<RectTransform>().localPosition = Vector3.zero;
+        this.GetComponent<RectTransform>().localScale = Vector3.one;
     }
 
     #endregion METHODS

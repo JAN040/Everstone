@@ -10,20 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 68a4d297ca894d74f8261e9687a50119, type: 3}
-  m_Name: SO_ItemEquip_Sword
+  m_Name: SO_ItemEquip_Ring1 1
   m_EditorClassIdentifier: 
-  Id: Equip_Sword
-  DisplayName: Rusty Sword
-  Description: The blade with which you started this adventure. It ain't much, but
-    its an honest weapon.
-  MenuIcon: {fileID: 21300000, guid: 30c3473b99a93ab48a29a89a1b7cced2, type: 3}
-  BuyPrice: 20
+  Id: Equip_Ring1
+  DisplayName: Golden Ring
+  Description: A golden ring. Expensive
+  MenuIcon: {fileID: 21300000, guid: 072378cf758baf14b9f99c0aec27c55d, type: 3}
+  BuyPrice: 1000
   CanBeSold: 1
   MaxStackSize: 1
   ItemType: 1
-  Rarity: 0
-  EquipmentType: 1
+  Rarity: 2
+  EquipmentType: 14
   StatModifiers:
-  - _type: 0
-    _value: 2
+  - _type: 1
+    _value: 0.03
     _modifyingStatType: 0

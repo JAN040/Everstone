@@ -34,12 +34,20 @@ public class Stat
         get => baseValue;
         set
         {
+            bool isPositive = baseValue < value; 
+
             baseValue = value;
-            OnStatChanged?.Invoke(this);
+            
+            OnStatChanged?.Invoke(this, isPositive);
         }
     }
 
-    public event Action<Stat> OnStatChanged;
+    /// <summary>
+    /// Fires when Stat gets changed. Carries params:
+    /// -Stat: Stat that was changed
+    /// -bool: True if the change was positive, false if negative
+    /// </summary>
+    public event Action<Stat, bool> OnStatChanged;
 
     #endregion
 
@@ -154,7 +162,7 @@ public class Stat
         
         Debug.Log($"Added {modifier.Type} modifier of '{modifier.Value}' to Stat '{modifier.ModifyingStatType}'. Prev. val: '{oldValue}', New val: '{GetValue()}");
 
-        OnStatChanged?.Invoke(this);
+        OnStatChanged?.Invoke(this, modifier.IsPositive());
 
         return true;
     }
@@ -177,7 +185,7 @@ public class Stat
 
         Debug.Log($"Removed {modifier.Type} modifier of '{modifier.Value}' to Stat '{modifier.ModifyingStatType}'. Prev. val: '{oldValue}', New val: '{GetValue()}");
         
-        OnStatChanged?.Invoke(this);
+        OnStatChanged?.Invoke(this, !modifier.IsPositive()); //removing a positive modifier is bad
 
         return true;
     }

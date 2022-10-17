@@ -21,6 +21,12 @@ public class StatModifier
         ModifyingStatType = modifyingStatType;
         this.Type = type;
     }
+
+    /// <returns>True if the change made to the stat with this modifier is considered positive, false otherwise</returns>
+    public bool IsPositive()
+    {
+        return this.Value > 0;
+    }
 }
 
 

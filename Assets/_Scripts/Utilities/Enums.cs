@@ -284,3 +284,23 @@ public enum ItemMoveResult
     StackedAll,
     StackedWithRemainder
 }
+
+public enum EquipmentSlot
+{
+    None = -1,
+
+    Helmet,
+    Shoulder,
+    Chestplate,
+    Pants,
+    Boots,
+
+    Necklace,
+    Cape,
+    Gloves,
+    Ring1,
+    Ring2,
+
+    RightArm,
+    LeftArm,
+}
