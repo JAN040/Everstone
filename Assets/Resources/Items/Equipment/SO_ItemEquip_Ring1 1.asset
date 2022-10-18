@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: Equip_Ring1
   DisplayName: Golden Ring
-  Description: A golden ring. Expensive
+  Description: A golden ring. Quite Expensive.
   MenuIcon: {fileID: 21300000, guid: 072378cf758baf14b9f99c0aec27c55d, type: 3}
   BuyPrice: 1000
   CanBeSold: 1
@@ -23,6 +23,12 @@ MonoBehaviour:
   Rarity: 2
   EquipmentType: 14
   StatModifiers:
+  - _type: 0
+    _value: 2
+    _modifyingStatType: 0
   - _type: 1
     _value: 0.03
     _modifyingStatType: 0
+  - _type: 0
+    _value: 5
+    _modifyingStatType: 2

@@ -27,7 +27,7 @@ public class ItemGrid : MonoBehaviour
     [Space]
     [Header("Variables")]
 
-    [SerializeField] InventorySystem ItemSource;
+    public InventorySystem ItemSource;
     private CharacterUI CharaUIRef; //need this for ItemUI
 
 
@@ -93,9 +93,13 @@ public class ItemGrid : MonoBehaviour
         }
     }
 
-    public void RefreshInventory()
+    public void RefreshInventory(InventorySystem inventory)
     {
-
+        inventory.Refresh();
     }
    
+    public ItemSlotUI GetSlotAtIndex(int index)
+    {
+        return ItemContainerList[index].GetComponent<ItemSlotUI>();
+    }
 }

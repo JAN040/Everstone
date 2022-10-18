@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UIElements;
 
 /// <summary>
 /// Used in CharacterUI/Equipment&Stats tab for the stats to update automatically
@@ -33,6 +34,7 @@ public class HeroStatText : MonoBehaviour
     private Stat StatRef;
     private bool IsAnimating;
     private float Timer = 0f;
+    private Color baseColor;
 
 
     #endregion VARIABLES
@@ -49,8 +51,17 @@ public class HeroStatText : MonoBehaviour
         TextField = GetComponent<TextMeshProUGUI>();
         StatRef = GameManager.Instance.PlayerManager.PlayerHero.BaseStats.GetStatFromStatType(StatType);
         StatRef.OnStatChanged += StatChanged;
+        baseColor = TextField.color;
 
         SetText();
+    }
+
+    
+    private void OnEnable()
+    {
+        if (TextField != null)
+            TextField.color = baseColor;
+        IsAnimating = false;
     }
 
 
@@ -81,17 +92,17 @@ public class HeroStatText : MonoBehaviour
 
         Debug.Log($"Started animating for stat {StatRef.Type}");
 
-        Color prevColor = textComponent.color;
+        
         textComponent.color = isChangePositive ? Color.green : Color.red;
 
-        while (textComponent.color != prevColor)
+        while (textComponent.color != baseColor)
         {
-            textComponent.color = Color.Lerp(textComponent.color, prevColor, Time.deltaTime / TextHighlightSpeed);
+            textComponent.color = Color.Lerp(textComponent.color, baseColor, Time.deltaTime / TextHighlightSpeed);
             Timer += Time.deltaTime;
 
             if (Timer > 2f)
             {
-                textComponent.color = prevColor;
+                textComponent.color = baseColor;
                 break;
             }
 

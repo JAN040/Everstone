@@ -218,5 +218,13 @@ public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEn
         this.GetComponent<RectTransform>().localScale = Vector3.one;
     }
 
+    public void SlotInto(ItemSlotUI slot)
+    {
+        SlotRef = slot;
+        MakeChildOf(slot.ItemContainer.transform);
+        MoveToSlotPosition();
+    }
+
+
     #endregion METHODS
 }

@@ -20,5 +20,22 @@ public class ItemDataBase : ScriptableObject
     public int MaxStackSize = 1;   //if MaxStackSize > 1 the item is stackable
     public ItemType   ItemType = ItemType.Loot;
     public ItemRarity Rarity;
+
+
+    public ItemDataBase Clone()
+    {
+        ItemDataBase clone = CreateInstance<ItemDataBase>();
+        clone.Id = Id;
+        clone.DisplayName = DisplayName;
+        clone.Description = Description;
+        clone.MenuIcon = MenuIcon;
+        clone.BuyPrice = BuyPrice;
+        clone.CanBeSold = CanBeSold; 
+        clone.MaxStackSize = MaxStackSize;
+        clone.ItemType = ItemType;
+        clone.Rarity = Rarity;
+
+        return clone;
+    }
 }
 

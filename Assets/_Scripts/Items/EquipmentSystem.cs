@@ -164,7 +164,7 @@ public class EquipmentSystem : InventorySystem
         return res;
     }
 
-    private int GetDefaultEquipSlotIndexFromEquipType(EquipmentType equipType)
+    public int GetDefaultEquipSlotIndexFromEquipType(EquipmentType equipType)
     {
         switch (equipType)
         {
@@ -221,6 +221,20 @@ public class EquipmentSystem : InventorySystem
 
         heroStats.RemoveModifiers((unequippedItem?.ItemData as ItemDataEquipment)?.StatModifiers);
         heroStats.AddModifiers((equippedItem?.ItemData as ItemDataEquipment)?.StatModifiers);
+    }
+
+    public bool IsEquipped(InventoryItem itemRef)
+    {
+        if (InventoryItems == null)
+            return false;
+
+        foreach (var item in InventoryItems)
+        {
+            if (item == itemRef)
+                return true;
+        }
+
+        return false;
     }
 
 

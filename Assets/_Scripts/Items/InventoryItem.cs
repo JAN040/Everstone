@@ -9,7 +9,16 @@ public class InventoryItem
     public ItemDataBase ItemData;
     public GameObject Prefab;
 
-    public int StackSize = 0;
+    private int stackSize = 1;
+    public int StackSize
+    {
+        get => stackSize;
+        set
+        {
+            stackSize = value;
+            OnStackSizeChanged?.Invoke();
+        }
+    }
 
 
     public event Action OnStackSizeChanged;
@@ -18,7 +27,6 @@ public class InventoryItem
     public InventoryItem(ItemDataBase itemData)
     {
         this.ItemData = itemData;
-        AddToStack();
     }
 
     public void AddToStack(int amount = 1)
@@ -31,6 +39,19 @@ public class InventoryItem
     {
         StackSize -= amount;
         OnStackSizeChanged?.Invoke();
+    }
+
+    public InventoryItem Clone()
+    {
+        InventoryItem clone = new InventoryItem(this.ItemData.Clone());
+
+        if (Prefab != null)
+            clone.Prefab = UnityEngine.Object.Instantiate(Prefab);
+        
+        clone.StackSize = StackSize;
+        //clone.OnStackSizeChanged = OnStackSizeChanged;
+
+        return clone;
     }
 }
 

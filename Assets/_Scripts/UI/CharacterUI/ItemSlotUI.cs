@@ -33,7 +33,7 @@ public class ItemSlotUI : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPo
     public List<EquipmentType> AcceptedEquipmentTypes;
 
     //which of the 12 equip slots this slot represents (None means its not an equip slot) 
-    [SerializeField] EquipmentSlot EquipmentSlot = EquipmentSlot.None;
+    public EquipmentSlot EquipmentSlot = EquipmentSlot.None;
 
 
     #endregion VARIABLES
@@ -146,38 +146,42 @@ public class ItemSlotUI : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPo
 
             Debug.Log("Item drop detected");
 
-            HandleInventoryTransaction(droppedItemScript.SlotRef, this, droppedItemScript);
+            HandleInventoryTransaction(droppedItemScript);
         }
     }
 
-    private void HandleInventoryTransaction(ItemSlotUI prevSlot, ItemSlotUI targetSlot, ItemUI item)
+    //params: dropped item and its previous slot
+    private void HandleInventoryTransaction(ItemUI droppedItem)
     {
+        ItemSlotUI prevSlot = droppedItem.GetComponent<ItemUI>().SlotRef;
+
         //if the item was dropped to the same inventory slot, no changes need to be made
-        if (prevSlot == targetSlot)
+        if (prevSlot == this)
             return;
+
+        int prevSlotPosition = prevSlot.GetSlotPosition();
+        int thisSlotPosition = this.GetSlotPosition();
 
         //else notify inventory to make the appropriate movement
         var operation = prevSlot.InventoryRef.MoveItemToTarget(
-            prevSlot.GetSlotPosition(),
-            targetSlot.InventoryRef,
-            targetSlot.GetSlotPosition()
+            prevSlotPosition,
+            this.InventoryRef,
+            thisSlotPosition
         );
 
         //handle changes to prefabs (based on the operation that was done in the inventory)
         switch (operation)
         {
             case ItemMoveResult.Moved:
-                item.SlotRef = this;
+                droppedItem.SlotRef = this;
                 break;
 
             case ItemMoveResult.Swapped:
                 //need to reparent the item at targetSlot to prevSlot
                 var currentlySlottedItem = this.GetSlottedItem();
-                currentlySlottedItem.SlotRef = prevSlot;
-                currentlySlottedItem.MakeChildOf(prevSlot.ItemContainer.transform);
-                currentlySlottedItem.MoveToSlotPosition();
+                currentlySlottedItem.SlotInto(prevSlot);
 
-                item.SlotRef = this;
+                droppedItem.SlotRef = this;
                 //done in ItemUI when OnDragDrop happens
                 //droppedObj.transform.SetParent(this.transform, true);
                 //droppedObj.GetComponent<RectTransform>().position = this.GetComponent<RectTransform>().position;
@@ -185,7 +189,10 @@ public class ItemSlotUI : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPo
 
             case ItemMoveResult.StackedAll:
                 //everything from the stack was consumed & InventoryItem was destroyed, we have to also destroy the prefab
-                Destroy(item.gameObject);
+                Destroy(droppedItem.gameObject);
+                var a = this.GetSlottedItem();
+                var b = prevSlot.InventoryRef;
+                var c = this.InventoryRef;
                 break;
 
             case ItemMoveResult.StackedWithRemainder:   //the only changes are inventory-side

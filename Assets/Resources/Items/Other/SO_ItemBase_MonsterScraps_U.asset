@@ -20,6 +20,5 @@ MonoBehaviour:
   BuyPrice: 25
   CanBeSold: 1
   MaxStackSize: 99
-  ItemType: 2
+  ItemType: 3
   Rarity: 1
-  Prefab: {fileID: 0}

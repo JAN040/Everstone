@@ -16,7 +16,7 @@ public class InventorySystem
     public int InventorySize { get { return InventoryItems.Capacity; } }
 
 
-    public event Action OnInventoryChanged;
+    public event Action<InventorySystem> OnInventoryChanged;
 
    
     public InventorySystem(int size)
@@ -40,7 +40,7 @@ public class InventorySystem
         if (existingItemStack != null && existingItemStack.ItemData.MaxStackSize > existingItemStack.StackSize)
         {
             existingItemStack.AddToStack(newItem.StackSize);
-            OnInventoryChanged?.Invoke();
+            OnInventoryChanged?.Invoke(this);
 
             return true;
         }
@@ -52,7 +52,18 @@ public class InventorySystem
             return false;
 
         InventoryItems[emptySpace] = newItem;
-        OnInventoryChanged?.Invoke();
+        OnInventoryChanged?.Invoke(this);
+
+        return true;
+    }
+
+    public bool PlaceItemAtSlot(InventoryItem item, int slotIndex)
+    {
+        if (InventoryItems[slotIndex] != null || slotIndex >= InventorySize)
+            return false;
+
+        InventoryItems[slotIndex] = item;
+        OnInventoryChanged?.Invoke(this);
 
         return true;
     }
@@ -89,7 +100,7 @@ public class InventorySystem
         for (int i = 0; i < amount; i++)
             InventoryItems.Add(null);
 
-        OnInventoryChanged?.Invoke();
+        OnInventoryChanged?.Invoke(this);
     }
 
     public InventoryItem GetItemAt(int index)
@@ -150,7 +161,7 @@ public class InventorySystem
         else
             InventoryItems[itemIndex] = invItemTarget;
 
-        OnInventoryChanged?.Invoke();
+        OnInventoryChanged?.Invoke(this);
 
         return hasSwapped ? ItemMoveResult.Swapped : ItemMoveResult.Moved;
     }
@@ -175,7 +186,7 @@ public class InventorySystem
         }
         else
         {
-            OnInventoryChanged?.Invoke();
+            OnInventoryChanged?.Invoke(this);
             return ItemMoveResult.StackedWithRemainder;
         }
     }
@@ -187,6 +198,36 @@ public class InventorySystem
 
         InventoryItems[itemIndex] = null;
 
-        OnInventoryChanged?.Invoke();
+        OnInventoryChanged?.Invoke(this);
+    }
+
+    public int FirstFreeSlotIndex()
+    {
+        if (InventoryItems == null)
+            return -1;
+
+        for (int i = 0; i < InventoryItems.Count; i++)
+        {
+            if (InventoryItems[i] == null)
+                return i;
+        }
+
+        return -1;
+    }
+
+    public void Refresh()
+    {
+        for (int i= 0; i < InventoryItems.Count; i++)
+        {
+            var item = InventoryItems[i];
+            if (item == null)
+                continue;
+
+            if (item.StackSize <= 0)
+            {
+                UnityEngine.Object.Destroy(item.Prefab.gameObject);
+                InventoryItems[i] = null;
+            }
+        }
     }
 }

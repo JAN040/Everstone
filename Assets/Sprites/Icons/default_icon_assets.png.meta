@@ -132,9 +132,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 86
-        y: 4642
+        y: 4628
         width: 492
-        height: 226
+        height: 252
       alignment: 9
       pivot: {x: 0, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -152,9 +152,9 @@ TextureImporter:
       name: everstone
       rect:
         serializedVersion: 2
-        x: 747
+        x: 730
         y: 4578
-        width: 251
+        width: 276
         height: 331
       alignment: 9
       pivot: {x: 0, y: 0.1}
@@ -218,7 +218,7 @@ TextureImporter:
         x: 1261
         y: 3942
         width: 464
-        height: 461
+        height: 455
       alignment: 9
       pivot: {x: 0, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -239,7 +239,7 @@ TextureImporter:
         x: 1867
         y: 3925
         width: 463
-        height: 465
+        height: 458
       alignment: 9
       pivot: {x: 0, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -260,7 +260,7 @@ TextureImporter:
         x: 1246
         y: 3330
         width: 442
-        height: 500
+        height: 466
       alignment: 9
       pivot: {x: 0, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -341,10 +341,10 @@ TextureImporter:
       name: energy_regen
       rect:
         serializedVersion: 2
-        x: 62
-        y: 2729
-        width: 497
-        height: 486
+        x: 72
+        y: 2734
+        width: 475
+        height: 475
       alignment: 9
       pivot: {x: 0, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -362,10 +362,10 @@ TextureImporter:
       name: health_regen
       rect:
         serializedVersion: 2
-        x: 610
-        y: 2719
-        width: 505
-        height: 502
+        x: 620
+        y: 2734
+        width: 475
+        height: 474
       alignment: 9
       pivot: {x: 0, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -383,10 +383,10 @@ TextureImporter:
       name: mana_regen
       rect:
         serializedVersion: 2
-        x: 1201
-        y: 2716
-        width: 505
-        height: 502
+        x: 1215
+        y: 2734
+        width: 475
+        height: 474
       alignment: 9
       pivot: {x: 0, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -446,8 +446,8 @@ TextureImporter:
       name: dodge
       rect:
         serializedVersion: 2
-        x: 603
-        y: 2078
+        x: 645
+        y: 2077
         width: 491
         height: 482
       alignment: 9
@@ -488,10 +488,10 @@ TextureImporter:
       name: cooldown
       rect:
         serializedVersion: 2
-        x: 1852
-        y: 2058
-        width: 506
-        height: 508
+        x: 1858
+        y: 2075
+        width: 493
+        height: 483
       alignment: 9
       pivot: {x: 0, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -509,10 +509,10 @@ TextureImporter:
       name: lockpicking
       rect:
         serializedVersion: 2
-        x: 50
-        y: 1433
-        width: 487
-        height: 479
+        x: 64
+        y: 1468
+        width: 458
+        height: 438
       alignment: 9
       pivot: {x: 0, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -551,10 +551,10 @@ TextureImporter:
       name: taming
       rect:
         serializedVersion: 2
-        x: 1229
-        y: 1442
-        width: 502
-        height: 502
+        x: 1237
+        y: 1444
+        width: 490
+        height: 488
       alignment: 9
       pivot: {x: 0, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -593,10 +593,10 @@ TextureImporter:
       name: poison
       rect:
         serializedVersion: 2
-        x: 84
-        y: 792
-        width: 421
-        height: 449
+        x: 98
+        y: 796
+        width: 407
+        height: 445
       alignment: 9
       pivot: {x: 0, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -637,8 +637,8 @@ TextureImporter:
         serializedVersion: 2
         x: 1219
         y: 797
-        width: 477
-        height: 476
+        width: 455
+        height: 462
       alignment: 9
       pivot: {x: 0, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -656,10 +656,10 @@ TextureImporter:
       name: luck
       rect:
         serializedVersion: 2
-        x: 1812
-        y: 785
-        width: 507
-        height: 476
+        x: 1814
+        y: 791
+        width: 497
+        height: 461
       alignment: 9
       pivot: {x: 0, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -740,10 +740,10 @@ TextureImporter:
       name: fire
       rect:
         serializedVersion: 2
-        x: 1862
+        x: 1873
         y: 105
-        width: 457
-        height: 451
+        width: 426
+        height: 431
       alignment: 9
       pivot: {x: 0, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}

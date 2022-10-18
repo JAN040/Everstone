@@ -149,8 +149,8 @@ public class CharacterUI : MonoBehaviour
     {
         if (tabIndex == InventoryTabButton) //inventory tab
         {
-            ItemGrid_Inventory.RefreshInventory();
-            ItemGrid_Storage.RefreshInventory();
+            ItemGrid_Inventory.ItemSource.Refresh();
+            ItemGrid_Storage.ItemSource.Refresh();
         }
     }
 
@@ -171,6 +171,8 @@ public class CharacterUI : MonoBehaviour
                     equipment.EquipmentItems[i],
                     EquipmentSlots[i]
                 );
+
+                equipment.EquipmentItems[i].Prefab = currItemPrefab;
             }
         }
 
@@ -198,6 +200,20 @@ public class CharacterUI : MonoBehaviour
         obj.transform.localPosition = Vector3.zero;
 
         return obj;
+    }
+
+    public ItemSlotUI GetFirstFreeSlotOfInventory(InventorySystem inventory)
+    {
+        int firstFreeIdx = inventory.FirstFreeSlotIndex();
+        if (firstFreeIdx == -1)
+            return null;
+
+        if (ItemGrid_Inventory.ItemSource == inventory)
+            return ItemGrid_Inventory.GetSlotAtIndex(firstFreeIdx);
+        else if (ItemGrid_Storage.ItemSource == inventory)
+            return ItemGrid_Storage.GetSlotAtIndex(firstFreeIdx);
+
+        return null;
     }
 
     #endregion METHODS

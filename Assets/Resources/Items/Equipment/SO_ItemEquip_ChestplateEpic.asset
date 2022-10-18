@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68a4d297ca894d74f8261e9687a50119, type: 3}
+  m_Name: SO_ItemEquip_ChestplateEpic
+  m_EditorClassIdentifier: 
+  Id: Equip_ChestplateEpic
+  DisplayName: Chaos mantle
+  Description: So cool.
+  MenuIcon: {fileID: 21300000, guid: d1ab32150abfbf24597e4df37732b4b9, type: 3}
+  BuyPrice: 50000
+  CanBeSold: 1
+  MaxStackSize: 1
+  ItemType: 1
+  Rarity: 3
+  EquipmentType: 8
+  StatModifiers:
+  - _type: 0
+    _value: 50
+    _modifyingStatType: 1
+  - _type: 1
+    _value: 0.05
+    _modifyingStatType: 1
+  - _type: 0
+    _value: 20
+    _modifyingStatType: 3

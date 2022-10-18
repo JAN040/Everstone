@@ -21,4 +21,23 @@ public class ItemDataEquipment : ItemDataBase
         CanBeSold = true;
         Id = "Equip_";
     }
+
+    public new ItemDataEquipment Clone()
+    {
+        ItemDataEquipment clone = CreateInstance<ItemDataEquipment>();
+        clone.Id = Id;
+        clone.DisplayName = DisplayName;
+        clone.Description = Description;
+        clone.MenuIcon = MenuIcon;
+        clone.BuyPrice = BuyPrice;
+        clone.CanBeSold = CanBeSold;
+        clone.MaxStackSize = MaxStackSize;
+        clone.ItemType = ItemType;
+        clone.Rarity = Rarity;
+
+        clone.EquipmentType = EquipmentType;
+        clone.StatModifiers = new List<StatModifier>(StatModifiers);
+        
+        return clone;
+    }
 }

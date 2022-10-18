@@ -20,5 +20,5 @@ MonoBehaviour:
   BuyPrice: 3
   CanBeSold: 1
   MaxStackSize: 5
-  ItemType: 2
+  ItemType: 3
   Rarity: 0
