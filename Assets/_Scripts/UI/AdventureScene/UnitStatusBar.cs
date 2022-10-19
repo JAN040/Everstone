@@ -127,41 +127,10 @@ public class UnitStatusBar : MonoBehaviour
         UpdateHpUI();
     }
 
-    private void UpdateHpUI()
+    private void OnDestroy()
     {
-        float fillFront = HealthBar_Image.fillAmount;
-        float fillBack = BackHealthBar_Image.fillAmount;
-        float hpFraction = Health / MaxHealth;
-
-        if (fillBack > hpFraction)
-        {
-            //unit took damage
-            BackHealthBar_Image.sprite = BackHealthBar_Damage_Image;
-            HealthBar_Image.fillAmount = hpFraction;
-
-            LerpTimer += Time.deltaTime;
-            float percentComplete = LerpTimer / ChipSpeed;
-            percentComplete = percentComplete * percentComplete;
-
-            //Debug.Log($"Animating damage taken for unit: {unitRef.Name}, percent complete: {percentComplete}");
-
-            BackHealthBar_Image.fillAmount = Mathf.Lerp(fillBack, hpFraction, percentComplete);
-        }
-        
-        if (fillFront < hpFraction)
-        {
-            //unit got healed
-            BackHealthBar_Image.sprite = BackHealthBar_Heal_Image;
-            BackHealthBar_Image.fillAmount = hpFraction;
-
-            LerpTimer += Time.deltaTime;
-            float percentComplete = LerpTimer / ChipSpeed;
-            percentComplete = percentComplete * percentComplete;
-
-            //Debug.Log($"Animating healing for unit: {unitRef.Name}, percent complete: {percentComplete}");
-
-            HealthBar_Image.fillAmount = Mathf.Lerp(fillFront, hpFraction, percentComplete);
-        }
+        if (UnitRef != null && UnitRef.GetUnit() != null)
+            UnitRef.GetUnit().Stats.OnStatChanged -= UnitStatChanged;
     }
 
     #endregion UNITY METHODS
@@ -205,6 +174,43 @@ public class UnitStatusBar : MonoBehaviour
             SetClassicSprites();
 
         #endregion Sprite swaps
+    }
+
+    private void UpdateHpUI()
+    {
+        float fillFront = HealthBar_Image.fillAmount;
+        float fillBack = BackHealthBar_Image.fillAmount;
+        float hpFraction = Health / MaxHealth;
+
+        if (fillBack > hpFraction)
+        {
+            //unit took damage
+            BackHealthBar_Image.sprite = BackHealthBar_Damage_Image;
+            HealthBar_Image.fillAmount = hpFraction;
+
+            LerpTimer += Time.deltaTime;
+            float percentComplete = LerpTimer / ChipSpeed;
+            percentComplete = percentComplete * percentComplete;
+
+            //Debug.Log($"Animating damage taken for unit: {unitRef.Name}, percent complete: {percentComplete}");
+
+            BackHealthBar_Image.fillAmount = Mathf.Lerp(fillBack, hpFraction, percentComplete);
+        }
+
+        if (fillFront < hpFraction)
+        {
+            //unit got healed
+            BackHealthBar_Image.sprite = BackHealthBar_Heal_Image;
+            BackHealthBar_Image.fillAmount = hpFraction;
+
+            LerpTimer += Time.deltaTime;
+            float percentComplete = LerpTimer / ChipSpeed;
+            percentComplete = percentComplete * percentComplete;
+
+            //Debug.Log($"Animating healing for unit: {unitRef.Name}, percent complete: {percentComplete}");
+
+            HealthBar_Image.fillAmount = Mathf.Lerp(fillFront, hpFraction, percentComplete);
+        }
     }
 
     /// <summary>

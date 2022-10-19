@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,14 +20,39 @@ public class PlayerManager
     public EquipmentSystem Equipment;
 
 
+    /// <summary>
+    /// Modifier for selling item types of type other then ItemType.Loot.
+    /// Max value of 1 (to prevent buying and selling same stuff for profit)
+    /// </summary>
+    public float SellPriceModifier
+    {
+        get => sellPriceModifier;
+        set
+        {
+            sellPriceModifier = value;
+            if (sellPriceModifier > 1f)
+                sellPriceModifier = 1f;
+        }
+    }
+    private float sellPriceModifier;
+
+    /// <summary>
+    /// Modifier for selling item types of type ItemType.Loot.
+    /// Can be greater than 1 since loot items cant be bought back from shop.
+    /// </summary>
+    public float SellPriceModifier_Loot { get; set; }
+
+
     #endregion VARIABLES
 
 
     #region METHODS
 
-    public void SetHero(ScriptableHero hero)
+    public void Init(ScriptableHero hero)
     {
         PlayerHero = hero;
+        SellPriceModifier = 0.75f;
+        SellPriceModifier_Loot = 0.75f;
     }
 
     public void SetAbilities(List<ScriptableAbility> classicAbilities, List<ScriptableAbility> specialAbilities)
@@ -44,6 +70,14 @@ public class PlayerManager
 
         if (equipment != null)
             Equipment = equipment;
+    }
+
+    public float GetSellPriceModifier(ItemType itemType)
+    {
+        return itemType == ItemType.Loot ?
+            SellPriceModifier_Loot
+            :
+            SellPriceModifier;
     }
 
     #endregion METHODS

@@ -49,7 +49,13 @@ public class HeroStatText : MonoBehaviour
         IsAnimating = false;
 
         TextField = GetComponent<TextMeshProUGUI>();
+        if (TextField == null)
+            return;
+
         StatRef = GameManager.Instance.PlayerManager.PlayerHero.BaseStats.GetStatFromStatType(StatType);
+        if (StatRef == null)
+            return;
+        
         StatRef.OnStatChanged += StatChanged;
         baseColor = TextField.color;
 
@@ -64,6 +70,11 @@ public class HeroStatText : MonoBehaviour
         IsAnimating = false;
     }
 
+    private void OnDestroy()
+    {
+        StatRef.OnStatChanged -= StatChanged;
+    }
+
 
     #endregion UNITY METHODS
 
@@ -73,7 +84,10 @@ public class HeroStatText : MonoBehaviour
 
     private void SetText()
     {
-        string icon = ResourceSystem.StatIconTag(StatType);
+        if (TextField == null)
+            return;
+
+        string icon = ResourceSystem.GetStatIconTag(StatType);
         TextField.text = $"{icon} {StatRef.GetValue().Round()}";
     }
     
@@ -81,7 +95,7 @@ public class HeroStatText : MonoBehaviour
     {
         SetText();
 
-        if (!IsAnimating && this.gameObject.activeInHierarchy)
+        if (!IsAnimating && this.gameObject != null && this.gameObject.activeInHierarchy)
             StartCoroutine(HighlightTextForSeconds(TextField, isChangePositive));
     }
 

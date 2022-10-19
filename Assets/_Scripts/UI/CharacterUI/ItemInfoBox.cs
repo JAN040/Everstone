@@ -102,7 +102,13 @@ public class ItemInfoBox : MonoBehaviour
 
         Text_Name.text   = itemData.DisplayName;
         Text_Rarity.text = $"Rarity: {GetRarityText()}";
-        Text_Value.text  = $"Value: {itemData.BuyPrice}\nTotal: {itemData.BuyPrice * itemRef.StackSize}({itemRef.StackSize})"; //TODO: format with coin icons
+
+        string buyPrice = GameManager.Instance.CurrencyToDisplayString(itemData.BuyPrice.Round());
+        float totalSell = itemData.BuyPrice *
+                          itemRef.StackSize *
+                          GameManager.Instance.PlayerManager.GetSellPriceModifier(itemData.ItemType);
+        string totalSellText = GameManager.Instance.CurrencyToDisplayString(totalSell.Round());
+        Text_Value.text  = $"{buyPrice}\n{totalSellText} ({itemRef.StackSize})";
 
         Text_Description.text = itemData.Description;
         Object_Description.SetActive(!string.IsNullOrEmpty(Text_Description.text));
@@ -120,7 +126,7 @@ public class ItemInfoBox : MonoBehaviour
                 foreach (var modifier in group) 
                 {
                     bool prfx = modifier.IsPositive();
-                    string icon = ResourceSystem.StatIconTag(modifier.ModifyingStatType);
+                    string icon = ResourceSystem.GetStatIconTag(modifier.ModifyingStatType);
                     bool perc = modifier.Type == ModifierType.Percent;
                     string val = perc ? (modifier.Value * 100).ToString("0.0") : modifier.Value.ToString("0");
 

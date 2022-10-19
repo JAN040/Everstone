@@ -44,6 +44,11 @@ public class CharacterUI : MonoBehaviour
     public ItemSlotUI RightArm;
     public ItemSlotUI LeftArm;
 
+    [Space]
+    [Header("Status Tab")]
+    [SerializeField] GameObject SkillLevelUIContainer;
+    [SerializeField] GameObject SkillLevelUIPrefab;
+
     [Header("Stats references")]
     [SerializeField] Image           Image_PlayerIcon;
     [SerializeField] TextMeshProUGUI Text_HeroName;
@@ -125,7 +130,10 @@ public class CharacterUI : MonoBehaviour
 
         InitTab_Equipment();
         InitTab_Inventory();
+        InitTab_Status();
     }
+
+   
 
     private void OnDestroy()
     {
@@ -200,6 +208,17 @@ public class CharacterUI : MonoBehaviour
         obj.transform.localPosition = Vector3.zero;
 
         return obj;
+    }
+
+    private void InitTab_Status()
+    {
+        LevelSystem levelSystem = GameManager.Instance.PlayerManager.PlayerHero.LevelSystem;
+
+        foreach (var skillLevel in levelSystem.Skills.Values)
+        {
+            var skillLevelPrefab = InstantiatePrefab(SkillLevelUIPrefab, SkillLevelUIContainer.transform);
+            skillLevelPrefab.GetComponent<SkillLevelUI>()?.Init(skillLevel);
+        }
     }
 
     public ItemSlotUI GetFirstFreeSlotOfInventory(InventorySystem inventory)

@@ -70,7 +70,8 @@ public class ResourceSystem : Singleton<ResourceSystem> {
 
     #region STATIC METHODS
 
-    public static string StatIconTag(StatType statType)
+
+    public static string GetStatIconTag(StatType statType)
     {
         switch (statType)
         {
@@ -110,7 +111,39 @@ public class ResourceSystem : Singleton<ResourceSystem> {
         }
     }
 
+    public static string GetSkillIconTag(Skill skill)
+    {
+        switch (skill)
+        {
+            case Skill.Strength:
+                return GetIconTag(Icon.Strength);
+
+            case Skill.Arts:
+                return GetIconTag(Icon.Attack_Arts);
+                
+            case Skill.Agility:
+                return GetIconTag(Icon.Agility);
+                
+            case Skill.Constitution:
+                return GetIconTag(Icon.Health);
+                
+            case Skill.Lockpicking:
+                return GetIconTag(Icon.Lockpicking);
+                
+            case Skill.Taming:
+                return GetIconTag(Icon.Taming);
+                
+            case Skill.Trading:
+                return GetIconTag(Icon.Trading);
+                
+            case Skill.Equipment_Skill:
+            default:
+                return "";
+        }
+    }
+
     public static string GetIconTag(Icon icon) => $"<sprite name=\"{TMP_IconDict[icon]}\">";
+
     public static Color GetRarityColor(ItemRarity rarity)
     {
         switch (rarity)

@@ -393,7 +393,7 @@ public class CharacterCreationManager : MonoBehaviour
         hero.Background = GetSelectedBackground().backgroundName;
 
         //hero instantiation
-        GameManager.Instance.PlayerManager.SetHero(hero);
+        GameManager.Instance.PlayerManager.Init(hero);
 
         //inventory setup
         GameManager.Instance.PlayerManager.SetInventory(

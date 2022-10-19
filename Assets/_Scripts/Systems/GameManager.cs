@@ -53,6 +53,8 @@ public class GameManager : Singleton<GameManager>
 
 
     public float BattleGameSpeed = 1f;
+    public int NumOfCopperForOneSilver = 10;
+    public int NumOfSilverForOneGold = 100;
 
 
     #endregion Player prefs
@@ -98,6 +100,23 @@ public class GameManager : Singleton<GameManager>
     public void LoadGame()
     {
         //GameData data = Deserialize(location);
+    }
+
+    public string CurrencyToDisplayString(int amount)
+    {
+        int copperAmnt = amount % NumOfCopperForOneSilver;
+        
+        //convert all u can to silver
+        int tempAmnt = amount / NumOfCopperForOneSilver;
+
+        int silverAmnt = tempAmnt % NumOfSilverForOneGold;
+        int goldAmnt = tempAmnt / NumOfSilverForOneGold;
+
+        string copperIcon = ResourceSystem.GetIconTag(Icon.Coin_Copper);
+        string silverIcon = ResourceSystem.GetIconTag(Icon.Coin_Silver);
+        string goldIcon   = ResourceSystem.GetIconTag(Icon.Coin_Gold);
+
+        return $"{(goldAmnt > 0 ? $"{goldIcon} {goldAmnt}  " : "")}{(silverAmnt > 0 ? $"{silverIcon} {silverAmnt}  " : "")}{copperIcon} {copperAmnt}";
     }
 
     #endregion METHODS
