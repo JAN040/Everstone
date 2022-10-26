@@ -67,6 +67,9 @@ public class EquipmentSystem : InventorySystem
     { 
         get 
         {
+            if (IsRuneSystem)
+                return new List<InventoryItem>(InventoryItems);
+
             return new List<InventoryItem>()
             {
                 EquipmentSlot_Helmet,
@@ -87,6 +90,7 @@ public class EquipmentSystem : InventorySystem
         } 
     }
 
+    public bool IsRuneSystem;
 
     #endregion VARIABLES
 
@@ -112,8 +116,9 @@ public class EquipmentSystem : InventorySystem
 #endregion UNITY METHODS
 
 
-    public EquipmentSystem() : base((int)Enum.GetValues(typeof(EquipmentSlot)).Cast<EquipmentSlot>().Max() + 1)
+    public EquipmentSystem(int capacity, bool isRuneSystem) : base(capacity)
     {
+        IsRuneSystem = isRuneSystem;
     }
 
 
@@ -147,8 +152,7 @@ public class EquipmentSystem : InventorySystem
             slot = GetDefaultEquipSlotIndexFromEquipType(itemData.EquipmentType);
 
         //swap equipments
-        InventoryItem unequippedItem = InventoryItems[slot];
-        InventoryItems[slot] = item;
+        InventoryItem unequippedItem = PlaceItemAtSlot(item, slot); ;
 
         HandleModifiersOnEquipmentChange(unequippedItem, item);
 
@@ -157,17 +161,22 @@ public class EquipmentSystem : InventorySystem
 
     public InventoryItem UnequipItem(int targetIndex)
     {
-        InventoryItem res = InventoryItems[targetIndex];
-        HandleModifiersOnEquipmentChange(res, null);
-        InventoryItems[targetIndex] = null;
+        InventoryItem unEquipped = PlaceItemAtSlot(null, targetIndex);
+        HandleModifiersOnEquipmentChange(unEquipped, null);
 
-        return res;
+        return unEquipped;
     }
 
     public int GetDefaultEquipSlotIndexFromEquipType(EquipmentType equipType)
     {
         switch (equipType)
         {
+            case EquipmentType.Rune:
+                int index = GetEmptySpaceIndex();
+                if (index == -1)
+                    index = 0;  //if all slots are taken equip to the first slot by default
+                return index;
+
             case EquipmentType.Sword:
             case EquipmentType.Dagger:
             case EquipmentType.Axe:

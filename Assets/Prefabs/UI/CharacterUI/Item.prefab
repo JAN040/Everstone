@@ -71,6 +71,12 @@ MonoBehaviour:
   BorderSprite_Rare: {fileID: 21300000, guid: 8f808217b55a00d47a98eec3988098b2, type: 3}
   BorderSprite_Epic: {fileID: 21300000, guid: e2d59fb6eeb2e634db0e244ebca32571, type: 3}
   BorderSprite_Legendary: {fileID: 21300000, guid: 0bcd60a14376e6a469386c1410e781b4, type: 3}
+  BorderSpriteRound_None: {fileID: 21300000, guid: c8976bfece76318478fa32594cf3d08b, type: 3}
+  BorderSpriteRound_Common: {fileID: 21300000, guid: c8976bfece76318478fa32594cf3d08b, type: 3}
+  BorderSpriteRound_Uncommon: {fileID: 21300000, guid: e76c8a059f21b3944ac5a210b6a37872, type: 3}
+  BorderSpriteRound_Rare: {fileID: 21300000, guid: 60a39180a238bbc4da6f07febb056f4f, type: 3}
+  BorderSpriteRound_Epic: {fileID: 21300000, guid: 6ede7b7ca1150cd4c88960832dbe1d64, type: 3}
+  BorderSpriteRound_Legendary: {fileID: 21300000, guid: 3953a249ebc84c14c83f1cce9ebfbc81, type: 3}
   canvasGroup: {fileID: 5115787039807498074}
   isBeingDragged: 0
   SlotRef: {fileID: 0}

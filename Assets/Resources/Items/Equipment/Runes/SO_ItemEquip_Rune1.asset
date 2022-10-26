@@ -10,25 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 68a4d297ca894d74f8261e9687a50119, type: 3}
-  m_Name: SO_ItemEquip_Ring1 1
+  m_Name: SO_ItemEquip_Rune1
   m_EditorClassIdentifier: 
-  Id: Equip_Ring1
-  DisplayName: Golden Ring
-  Description: A golden ring. Quite Expensive.
-  MenuIcon: {fileID: 21300000, guid: 072378cf758baf14b9f99c0aec27c55d, type: 3}
-  BuyPrice: 1000
+  Id: Equip_Rune1
+  DisplayName: Attack rune
+  Description: A runestone of unknown origin.
+  MenuIcon: {fileID: 21300000, guid: 753b2c7b9fafbe447804889cc30c12af, type: 3}
+  BuyPrice: 6000
   CanBeSold: 1
   MaxStackSize: 1
   ItemType: 1
-  Rarity: 2
-  EquipmentType: 14
+  Rarity: 1
+  EquipmentType: 15
   StatModifiers:
   - _type: 0
-    _value: 2
+    _value: 10
     _modifyingStatType: 0
   - _type: 1
-    _value: 0.03
+    _value: 0.1
     _modifyingStatType: 0
-  - _type: 0
-    _value: 5
-    _modifyingStatType: 2

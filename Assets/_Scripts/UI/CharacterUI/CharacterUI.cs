@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Data;
 
 public class CharacterUI : MonoBehaviour
 {
@@ -55,23 +56,12 @@ public class CharacterUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI Text_HeroClass;
     [SerializeField] TextMeshProUGUI Text_HeroBackground;
 
-    //[SerializeField] TextMeshProUGUI Text_PhysDmg;
-    //[SerializeField] TextMeshProUGUI Text_ArtsDmg;
-    //[SerializeField] TextMeshProUGUI Text_Armor;
-    //[SerializeField] TextMeshProUGUI Text_Resist;
-    //[SerializeField] TextMeshProUGUI Text_Speed;
-    //[SerializeField] TextMeshProUGUI Text_Dodge;
-
-    //[SerializeField] TextMeshProUGUI Text_MaxHp;
-    //[SerializeField] TextMeshProUGUI Text_MaxEnergy;
-    //[SerializeField] TextMeshProUGUI Text_MaxMana;
-    //[SerializeField] TextMeshProUGUI Text_HealEff;
-    //[SerializeField] TextMeshProUGUI Text_EnergyRegen;
-    //[SerializeField] TextMeshProUGUI Text_ManaRegen;
-
-    //[SerializeField] TextMeshProUGUI Text_Cooldown;
-    //[SerializeField] TextMeshProUGUI Text_BlockChance;
-
+ 
+    [Space]
+    [Header("Runes Tab")]
+    [Header("Rune slots")]
+    public List<ItemSlotUI> RuneSlotList;
+    [SerializeField] TextMeshProUGUI  Text_RuneEffects;
 
 
     #endregion UI References
@@ -99,7 +89,9 @@ public class CharacterUI : MonoBehaviour
             GameManager.Instance?.PlayerManager.SetInventory(
                 new InventorySystem(40),
                 new InventorySystem(GameManager.Instance.InitialCampStorageSpace),
-                new EquipmentSystem());
+                new EquipmentSystem((int)Enum.GetValues(typeof(EquipmentSlot)).Cast<EquipmentSlot>().Max() + 1, false),
+                new EquipmentSystem(6, true)
+            );
 
             //test items
             GameManager.Instance.PlayerManager.Equipment.EquipItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[0]));
@@ -131,6 +123,7 @@ public class CharacterUI : MonoBehaviour
         InitTab_Equipment();
         InitTab_Inventory();
         InitTab_Status();
+        InitTab_Runes();
     }
 
    
@@ -138,6 +131,8 @@ public class CharacterUI : MonoBehaviour
     private void OnDestroy()
     {
         TabGroup.OnTabSelected -= TabSelected;
+        if (GameManager.Instance?.PlayerManager?.Runes != null)
+            GameManager.Instance.PlayerManager.Runes.OnInventoryChanged -= UpdateRuneEffectsText;
     }
 
     // Update is called once per frame
@@ -199,6 +194,91 @@ public class CharacterUI : MonoBehaviour
         ItemGrid_Storage  .Initialize(GameManager.Instance.PlayerManager.Storage, this);
     }
 
+    private void InitTab_Runes()
+    {
+        var runes = GameManager.Instance.PlayerManager.Runes;
+
+        for (int i = 0; i < RuneSlotList.Count; i++)
+        {
+            RuneSlotList[i].Init(runes, this);
+
+            if (runes.EquipmentItems[i] != null)
+            {
+                var currItemPrefab = InstantiatePrefab(ItemPrefab, RuneSlotList[i].ItemContainer.transform);
+                currItemPrefab.GetComponent<ItemUI>().Init(
+                    this,
+                    runes.EquipmentItems[i],
+                    RuneSlotList[i]
+                );
+
+                runes.EquipmentItems[i].Prefab = currItemPrefab;
+            }
+        }
+
+        UpdateRuneEffectsText(runes);
+
+        GameManager.Instance.PlayerManager.Runes.OnInventoryChanged += UpdateRuneEffectsText;
+    }
+
+    private void UpdateRuneEffectsText(InventorySystem invSystem)
+    {
+        EquipmentSystem runeSys = invSystem as EquipmentSystem;
+        if (runeSys == null)
+            return;
+
+        Text_RuneEffects.text = string.Empty;
+        var modList = new List<StatModifier>();
+        
+        foreach (var rune in runeSys.EquipmentItems)
+        {
+            if (rune != null && (rune.ItemData as ItemDataEquipment) != null)
+            {
+                modList.AddRange((rune.ItemData as ItemDataEquipment).StatModifiers);
+            }
+        }
+
+        var groupedMods = modList.GroupBy(x => x.ModifyingStatType);
+        foreach (var group in groupedMods)
+        {
+            float percMod = 0f;
+            float flatMod = 0f;
+            StatType currentStatType = StatType.PhysicalDamage;
+
+            //join values of multiple modifiers of same type into one modifier then add the description of it to the text field
+            foreach (var modifier in group)
+            {
+                if (modifier.Type == ModifierType.Flat)
+                    flatMod += modifier.Value;
+                else if (modifier.Type == ModifierType.Percent)
+                    percMod += modifier.Value;
+                else
+                    continue;   //shouldnt happen unless new modifierTypes get added
+
+                currentStatType = modifier.ModifyingStatType;
+            }
+
+            if (flatMod != 0f)
+            {
+                Text_RuneEffects.text += GetModifierDescription(new StatModifier(flatMod, currentStatType, ModifierType.Flat)); 
+            }
+            if (percMod != 0f)
+            {
+                Text_RuneEffects.text += GetModifierDescription(new StatModifier(percMod, currentStatType, ModifierType.Percent));
+            }
+
+            Text_RuneEffects.text += Environment.NewLine;
+        }
+    }
+
+    private string GetModifierDescription(StatModifier modifier)
+    {
+        bool prfx = modifier.IsPositive();
+        string icon = ResourceSystem.GetStatIconTag(modifier.ModifyingStatType);
+        bool perc = modifier.Type == ModifierType.Percent;
+        string val = perc ? (modifier.Value * 100).ToString("0.0") : modifier.Value.ToString("0");
+
+        return $"{(prfx ? "+" : "-")}{val}{(perc ? "%" : "")} {icon}  ";
+    }
 
     private GameObject InstantiatePrefab(GameObject prefab, Transform parentTransform)
     {

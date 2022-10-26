@@ -17,6 +17,9 @@ public class StatModifier
 
     public StatModifier(float value, StatType modifyingStatType, ModifierType type = ModifierType.Flat)
     {
+        if (value == 0)
+            Debug.LogWarning($"Creating a modifier with a value of 0..! (stat {modifyingStatType})");
+
         this.Value = value;
         ModifyingStatType = modifyingStatType;
         this.Type = type;

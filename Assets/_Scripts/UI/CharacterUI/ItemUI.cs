@@ -30,6 +30,14 @@ public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEn
     [SerializeField] Sprite BorderSprite_Epic;
     [SerializeField] Sprite BorderSprite_Legendary;
 
+    //[Header("Round Rarity Border Sprites")]
+    //[SerializeField] Sprite BorderSpriteRound_None;
+    //[SerializeField] Sprite BorderSpriteRound_Common;
+    //[SerializeField] Sprite BorderSpriteRound_Uncommon;
+    //[SerializeField] Sprite BorderSpriteRound_Rare;
+    //[SerializeField] Sprite BorderSpriteRound_Epic;
+    //[SerializeField] Sprite BorderSpriteRound_Legendary;
+
 
     #endregion UI References
 
@@ -52,10 +60,12 @@ public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEn
 
             canvasGroup.blocksRaycasts = !value;
             CharacterUIRef.CurrentlyDraggedItem = value ? this : null;
-            RarityBorder.gameObject.SetActive(!value);
+            
+            RefreshBorder(isBeingDragged);
         }
     }
 
+    
 
     public ItemSlotUI SlotRef;
     public InventoryItem ItemRef { get; set; }
@@ -141,7 +151,7 @@ public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEn
         ItemRef.OnStackSizeChanged += UpdateStackSizeText;
 
         this.Icon.sprite = ItemRef.ItemData.MenuIcon;
-        RarityBorder.gameObject.SetActive(true);
+        RarityBorder.gameObject.SetActive(!IsEquippedRune());
 
         SetRarityBorder(ItemRef.ItemData.Rarity);
         UpdateStackSizeText();
@@ -223,6 +233,25 @@ public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEn
         SlotRef = slot;
         MakeChildOf(slot.ItemContainer.transform);
         MoveToSlotPosition();
+        RefreshBorder(IsBeingDragged);
+    }
+
+    /// <returns>True, if this item is a rune that is also equipped</returns>
+    private bool IsEquippedRune()
+    {
+        if (ItemRef == null || !ItemRef.IsRune())
+            return false;
+
+        if(GameManager.Instance.PlayerManager.Runes.IsEquipped(ItemRef))
+            return true;
+
+        return false;
+    }
+
+    public void RefreshBorder(bool isDragged)
+    {
+        bool isEquippedRune = IsEquippedRune(); //equipped runes shouldnt show a border
+        RarityBorder.gameObject.SetActive(!isDragged && !isEquippedRune);
     }
 
 

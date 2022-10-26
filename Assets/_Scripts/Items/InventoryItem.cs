@@ -53,5 +53,15 @@ public class InventoryItem
 
         return clone;
     }
+
+    /// <returns>True, if this inventory item represents an Equipment of type Rune</returns>
+    public bool IsRune()
+    {
+        var equipData = ItemData as ItemDataEquipment;
+        if (equipData == null)
+            return false;
+
+        return equipData.EquipmentType == EquipmentType.Rune;
+    }
 }
 

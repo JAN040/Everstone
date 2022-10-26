@@ -57,22 +57,28 @@ public class InventorySystem
         return true;
     }
 
-    public bool PlaceItemAtSlot(InventoryItem item, int slotIndex)
+    /// <summary>
+    /// Places item into the specified slot index. 
+    /// </summary>
+    /// <returns>What was previously at that spot (null if empty) or item on failure</returns>
+    public InventoryItem PlaceItemAtSlot(InventoryItem item, int slotIndex)
     {
-        if (InventoryItems[slotIndex] != null || slotIndex >= InventorySize)
-            return false;
+        if (slotIndex >= InventorySize)
+            return item;
+
+        var prevItem = InventoryItems[slotIndex];
 
         InventoryItems[slotIndex] = item;
         OnInventoryChanged?.Invoke(this);
 
-        return true;
+        return prevItem;
     }
 
     /// <summary>
     /// Finds an empty space and returns its index
     /// </summary>
     /// <returns>Index of the first empty space. Or -1 if all spaces are taken.</returns>
-    private int GetEmptySpaceIndex()
+    protected int GetEmptySpaceIndex()
     {
         for (int i = 0; i < InventoryItems.Count; i++)
         {
@@ -154,14 +160,17 @@ public class InventorySystem
         if (targetInventory is EquipmentSystem)
             (targetInventory as EquipmentSystem).EquipItem(invItem, targetIndex);
         else
-            targetInventory.InventoryItems[targetIndex] = invItem;
+            targetInventory.PlaceItemAtSlot(invItem, targetIndex);
 
         if (this is EquipmentSystem)
             (this as EquipmentSystem).EquipItem(invItemTarget, itemIndex);
         else
-            InventoryItems[itemIndex] = invItemTarget;
+            this.PlaceItemAtSlot(invItemTarget, itemIndex);
 
-        OnInventoryChanged?.Invoke(this);
+        //already called in EquipItem/PlaceItemAtSlot
+        //OnInventoryChanged?.Invoke(this);
+        //if (targetInventory != this)
+        //    targetInventory.OnInventoryChanged.Invoke(targetInventory);
 
         return hasSwapped ? ItemMoveResult.Swapped : ItemMoveResult.Moved;
     }

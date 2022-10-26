@@ -64,6 +64,16 @@ public class Stat
         //    GrowthParameters = new StatGrowthParameters();
     }
 
+    public string GetDisplayValue()
+    {
+        float value = GetValue();
+        bool showOneDecimal = Type.In(StatType.HealEfficiency,
+                                      StatType.EnergyRecovery,
+                                      StatType.ManaRecovery); 
+
+        return showOneDecimal ? $"{value:0.0}" : $"{value:0}";
+    }
+
 
     #region METHODS
 

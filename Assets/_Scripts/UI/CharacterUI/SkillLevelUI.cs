@@ -15,7 +15,8 @@ public class SkillLevelUI : MonoBehaviour
 
     [Header("UI References")]
     [SerializeField] TextMeshProUGUI Text_Icon;
-    [SerializeField] TextMeshProUGUI Text_NameAndLevel;
+    [SerializeField] TextMeshProUGUI Text_Name;
+    [SerializeField] TextMeshProUGUI Text_Level;
     [SerializeField] TextMeshProUGUI Text_Xp;
     [SerializeField] Image Image_XpBar;
 
@@ -60,11 +61,19 @@ public class SkillLevelUI : MonoBehaviour
             return;
 
         Text_Icon.text = ResourceSystem.GetSkillIconTag(SkillLevelRef.SkillType);
-        Text_NameAndLevel.text = $"{SkillLevelRef.GetSkillName()} Lvl {SkillLevelRef.Level}";
+        Text_Name.text = SkillLevelRef.GetSkillName();
+        Text_Level.text = $"Lvl {SkillLevelRef.Level}";
         Text_Xp.text = $"{SkillLevelRef.Experience} / {SkillLevelRef.ExpToNextLevel}";
         
         Image_XpBar.fillAmount = SkillLevelRef.GetExperienceNormalized();
     }
+
+
+    public void IconButtonClicked()
+    {
+        Debug.Log($"Clicked Skill Level {SkillLevelRef.GetSkillName()}");
+    }
+
 
     #endregion METHODS
 }

@@ -131,7 +131,6 @@ public enum ItemType
     Equipment,  //view stats, equippable in equipment UI
     Potion,     //usable
     Loot,       //sell price viewable
-    Rune,       //view stats, equippable in runes UI
 }
 
 public enum ItemRarity
@@ -169,6 +168,9 @@ public enum EquipmentType
     Cape,
     Gloves,
     Ring,
+
+    //Rune
+    Rune,
 }
 
 

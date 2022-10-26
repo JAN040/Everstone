@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e77735addac1b4d4e8b714106906b607, type: 3}
   m_Name: SO_ItemBase_MonsterScraps_L
   m_EditorClassIdentifier: 
-  Id: Item_MonsterScraps_E
+  Id: Item_MonsterScraps_L
   DisplayName: Monster Scraps
   Description: A bunch of monster leftovers. Can be sold at the merchant or in the
     guild.

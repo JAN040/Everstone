@@ -102,10 +102,6 @@ public class AdventureManager : MonoBehaviour
         set
         {
             selectedAlly = value;
-            //we always want to show heros stats instead of nothing when
-            //  the up-to-now selected unit dies
-            if (selectedAlly == null)
-                selectedAlly = PlayerHero;
             
             SetStatusBarUnit(selectedAlly, Faction.Allies);
         }
@@ -555,7 +551,14 @@ public class AdventureManager : MonoBehaviour
             AlliedUnitsList.Remove(unit);
 
             if (SelectedAlly == unit)
-                SelectedAlly = null;
+            {
+                //we always want to show heros stats instead of nothing when
+                //  the up-to-now selected unit dies (unless the hero died lol)
+                if (unit != PlayerHero)
+                    SelectedAlly = PlayerHero;
+                else
+                    SelectedAlly = null;
+            }
         }
         else
         {

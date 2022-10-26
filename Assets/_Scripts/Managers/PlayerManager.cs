@@ -18,6 +18,7 @@ public class PlayerManager
     public InventorySystem Inventory;
     public InventorySystem Storage;
     public EquipmentSystem Equipment;
+    public EquipmentSystem Runes;
 
 
     /// <summary>
@@ -61,7 +62,7 @@ public class PlayerManager
         SpecialAbilities.AddRange(specialAbilities);
     }
 
-    public void SetInventory(InventorySystem inventory, InventorySystem storage, EquipmentSystem equipment)
+    public void SetInventory(InventorySystem inventory, InventorySystem storage, EquipmentSystem equipment, EquipmentSystem runes)
     {
         Inventory = inventory;
 
@@ -70,6 +71,9 @@ public class PlayerManager
 
         if (equipment != null)
             Equipment = equipment;
+
+        if (runes != null)
+            Runes = runes;
     }
 
     public float GetSellPriceModifier(ItemType itemType)

@@ -84,22 +84,20 @@ public class UnitStatusBar : MonoBehaviour
         {
             if (unitRef != null && unitRef.GetUnit() != null)
             {
-                unitRef.GetUnit().Stats.OnHealthPointsChanged -= HealthPointsChanged;
-                unitRef.GetUnit().Stats.OnStatChanged -= UnitStatChanged;
-                unitRef.GetUnit().OnUnitStatusEffectAdded -= SpawnStatusEffectPanel;
+                RemoveUnitEvents(unitRef.GetUnit());
             }
 
             unitRef = value;
             if (value != null && value.GetUnit() != null)
             {
-                unitRef.GetUnit().Stats.OnHealthPointsChanged += HealthPointsChanged;
-                unitRef.GetUnit().Stats.OnStatChanged += UnitStatChanged;
-                unitRef.GetUnit().OnUnitStatusEffectAdded += SpawnStatusEffectPanel;
+                AddUnitEvents(unitRef.GetUnit());
             }
 
             SetUpUI();
         }
     }
+
+    
 
 
     #endregion VARIABLES
@@ -129,8 +127,12 @@ public class UnitStatusBar : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (UnitRef != null && UnitRef.GetUnit() != null)
-            UnitRef.GetUnit().Stats.OnStatChanged -= UnitStatChanged;
+        if (UnitRef != null)
+        {
+            var unit = UnitRef.GetUnit();
+            if (unit != null)
+                RemoveUnitEvents(unit);
+        }
     }
 
     #endregion UNITY METHODS
@@ -342,5 +344,19 @@ public class UnitStatusBar : MonoBehaviour
         spawnedPrefab.GetComponent<StatusEffectUI>()?.Initialize(effect);
 
         effect.Prefab = spawnedPrefab;
+    }
+
+    private void AddUnitEvents(Unit unit)
+    {
+        unit.Stats.OnHealthPointsChanged += HealthPointsChanged;
+        unit.Stats.OnStatChanged += UnitStatChanged;
+        unit.OnUnitStatusEffectAdded += SpawnStatusEffectPanel;
+    }
+
+    private void RemoveUnitEvents(Unit unit)
+    {
+        unit.Stats.OnHealthPointsChanged -= HealthPointsChanged;
+        unit.Stats.OnStatChanged -= UnitStatChanged;
+        unit.OnUnitStatusEffectAdded -= SpawnStatusEffectPanel;
     }
 }

@@ -15,7 +15,7 @@ public class HeroStatText : MonoBehaviour
     
     [Header("Parameters")]
 
-    [SerializeField] float TextHighlightSpeed = 1.5f;
+    [SerializeField] float TextHighlightSpeed = 1f;
 
 
     #region UI References
@@ -88,7 +88,7 @@ public class HeroStatText : MonoBehaviour
             return;
 
         string icon = ResourceSystem.GetStatIconTag(StatType);
-        TextField.text = $"{icon} {StatRef.GetValue().Round()}";
+        TextField.text = $"{icon} {StatRef.GetDisplayValue()}";
     }
     
     private void StatChanged(Stat stat, bool isChangePositive)

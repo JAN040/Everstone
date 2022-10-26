@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.Burst.Intrinsics;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
@@ -399,16 +400,20 @@ public class CharacterCreationManager : MonoBehaviour
         GameManager.Instance.PlayerManager.SetInventory(
             new InventorySystem(10),
             new InventorySystem(GameManager.Instance.InitialCampStorageSpace),
-            new EquipmentSystem()
+            new EquipmentSystem((int)Enum.GetValues(typeof(EquipmentSlot)).Cast<EquipmentSlot>().Max() + 1, false),
+            new EquipmentSystem(6, true)
         );
 
         //test items
         GameManager.Instance.PlayerManager.Equipment.EquipItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[0]));
         GameManager.Instance.PlayerManager.Equipment.EquipItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[2]));
+        GameManager.Instance.PlayerManager.Runes.EquipItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[4]));
+        GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[4]));
         GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[1]));
         GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[3]));
-        GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[4]));
         GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[5]));
+        GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[6]));
+        GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[7]));
         for (int i = 0; i < GameManager.Instance.PlayerManager.Storage.InventorySize; i++)
             GameManager.Instance.PlayerManager.Storage.PlaceItemAtSlot(new InventoryItem(ResourceSystem.Instance.Items_Other[UnityEngine.Random.Range(0, ResourceSystem.Instance.Items_Other.Count)]), i);
 

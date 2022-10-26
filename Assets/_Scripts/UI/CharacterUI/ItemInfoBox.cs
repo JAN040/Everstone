@@ -139,7 +139,10 @@ public class ItemInfoBox : MonoBehaviour
 
         //buttons
 
-        bool isEquipped = GameManager.Instance.PlayerManager.Equipment.IsEquipped(ItemRef);
+        bool isEquipped = ItemRef.IsRune() ? 
+            GameManager.Instance.PlayerManager.Runes.IsEquipped(ItemRef)
+            :
+            GameManager.Instance.PlayerManager.Equipment.IsEquipped(ItemRef);
         bool inventoryHasFreeSpace = GameManager.Instance.PlayerManager.Inventory.FirstFreeSlotIndex() != -1;
 
         //equip is available for equipment items which arent equipped
@@ -176,13 +179,20 @@ public class ItemInfoBox : MonoBehaviour
     {
         ItemSlotUI currSlot = ItemRef?.Prefab?.GetComponent<ItemUI>()?.SlotRef;
         ItemUI item = ItemRef?.Prefab?.GetComponent<ItemUI>();
+        bool isRune = ItemRef.IsRune();
+
         if (currSlot == null || item == null)
         {
             Debug.LogWarning("Tried equipping item, but couldnt fetch its slot reference.");
             return;
         }
 
-        EquipmentSystem equipSystem = GameManager.Instance.PlayerManager.Equipment;
+        EquipmentSystem equipSystem;
+        if (isRune)
+            equipSystem = GameManager.Instance.PlayerManager.Runes;
+        else
+            equipSystem = GameManager.Instance.PlayerManager.Equipment;
+
         int equipSlotId = equipSystem.GetDefaultEquipSlotIndexFromEquipType((ItemRef.ItemData as ItemDataEquipment).EquipmentType);
         InventoryItem unequippedItem = equipSystem.GetItemAt(equipSlotId);
 
@@ -194,7 +204,11 @@ public class ItemInfoBox : MonoBehaviour
         );
 
         //need to reparent the item from current slot to equipmentSlot
-        ItemSlotUI equipSlot = currSlot.CharacterUIRef.EquipmentSlots[equipSlotId];
+        ItemSlotUI equipSlot = isRune ? 
+            currSlot.CharacterUIRef.RuneSlotList[equipSlotId]
+            :
+            currSlot.CharacterUIRef.EquipmentSlots[equipSlotId];
+        
         item.SlotInto(equipSlot);
 
         //reparent the unequiped item (if any) to current inventory
@@ -212,13 +226,18 @@ public class ItemInfoBox : MonoBehaviour
     {
         ItemSlotUI equipSlot = ItemRef?.Prefab?.GetComponent<ItemUI>()?.SlotRef;
         ItemUI item = ItemRef?.Prefab?.GetComponent<ItemUI>();
+        bool isRune = ItemRef.IsRune();
+
         if (equipSlot == null || item == null)
         {
             Debug.LogWarning("Tried unequipping item, but couldnt fetch its slot reference.");
             return;
         }
 
-        GameManager.Instance.PlayerManager.Equipment.UnequipItem((int)equipSlot.EquipmentSlot);
+        if (isRune)
+            GameManager.Instance.PlayerManager.Runes.UnequipItem(equipSlot.GetSlotPosition());
+        else
+            GameManager.Instance.PlayerManager.Equipment.UnequipItem((int)equipSlot.EquipmentSlot);
 
         //need to reparent the item from the equipmentSlot to the first free inventory slot
         ItemSlotUI freeSlot = equipSlot.CharacterUIRef.GetFirstFreeSlotOfInventory(GameManager.Instance.PlayerManager.Inventory);
@@ -278,6 +297,8 @@ public class ItemInfoBox : MonoBehaviour
 
     #endregion Buttons
 
+
+   
 
     #endregion METHODS
 }
