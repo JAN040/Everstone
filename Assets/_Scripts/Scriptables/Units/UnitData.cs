@@ -13,73 +13,73 @@ public class UnitData
         {
             UnitClass.Marksman,
             new UnitClassData(UnitClass.Marksman, null,
-                StatScaling.High, StatScaling.Low, StatScaling.Low, 0, 
+                StatScaling.High, StatScaling.Low, StatScaling.Low, 0f, 
                 StatScaling.High, isRanged: true)
         },
         {
             UnitClass.Mage,
             new UnitClassData(UnitClass.Mage, new List<SpecialAbility>(){ SpecialAbility.SelfBuff, SpecialAbility.SelfHeal },
-                StatScaling.Low, StatScaling.Low, StatScaling.VeryLow, 50,
+                StatScaling.Low, StatScaling.Low, StatScaling.VeryLow, 0.5f,
                 StatScaling.High, DamageType.Arts, true)
         },
         {
             UnitClass.Artillery,
             new UnitClassData(UnitClass.Artillery, new List<SpecialAbility>(){ SpecialAbility.AoeAtk},
-                StatScaling.Low, StatScaling.VeryHigh, StatScaling.Normal, 0,
+                StatScaling.Low, StatScaling.VeryHigh, StatScaling.Normal, 0f,
                 StatScaling.High, isRanged: true)
         },
         {
             UnitClass.Controller,
             new UnitClassData(UnitClass.Controller, new List<SpecialAbility>(){ SpecialAbility.CC, SpecialAbility.OpponentTeamDebuff, SpecialAbility.TeamBuff},
-                StatScaling.Low, StatScaling.Normal, StatScaling.Normal, 15,
+                StatScaling.Low, StatScaling.Normal, StatScaling.Normal, 0.15f,
                 StatScaling.Low)
         },
         {
             UnitClass.Bruiser,
             new UnitClassData(UnitClass.Bruiser, new List<SpecialAbility>(){ SpecialAbility.SelfHeal},
-                StatScaling.Normal, StatScaling.Normal, StatScaling.Normal, 10,
+                StatScaling.Normal, StatScaling.Normal, StatScaling.Normal, 0.10f,
                 StatScaling.Normal)
         },
         {
             UnitClass.Battlemage,
             new UnitClassData(UnitClass.Battlemage, new List<SpecialAbility>(){ SpecialAbility.OpponentTeamDebuff},
-                StatScaling.Normal, StatScaling.Normal, StatScaling.Normal, 40,
+                StatScaling.Normal, StatScaling.Normal, StatScaling.Normal, 0.40f,
                 StatScaling.Normal, DamageType.Arts)
         },
         {
             UnitClass.Tank,
             new UnitClassData(UnitClass.Tank, null,
-                StatScaling.Low, StatScaling.High, StatScaling.High, 5,
+                StatScaling.Low, StatScaling.High, StatScaling.High, 0.05f,
                 StatScaling.High)
         },
         {
             UnitClass.Titan,
             new UnitClassData(UnitClass.Titan, new List<SpecialAbility>(){ SpecialAbility.CC},
-                StatScaling.VeryLow, StatScaling.VeryHigh, StatScaling.VeryHigh, 0,
+                StatScaling.VeryLow, StatScaling.VeryHigh, StatScaling.VeryHigh, 0f,
                 StatScaling.VeryHigh)
         },
         {
             UnitClass.Vanguard,
             new UnitClassData(UnitClass.Vanguard, null,
-                StatScaling.High, StatScaling.Normal, StatScaling.Low, 0,
+                StatScaling.High, StatScaling.Normal, StatScaling.Low, 0f,
                 StatScaling.Low)
         },
         {
             UnitClass.Assassin,
             new UnitClassData(UnitClass.Assassin, new List<SpecialAbility>(){ SpecialAbility.SelfBuff},
-                StatScaling.High, StatScaling.Low, StatScaling.Low, 0,
+                StatScaling.High, StatScaling.Low, StatScaling.Low, 0f,
                 StatScaling.High, isRanged: true, onlyUseSpecialSkills: true)
         },
         {
             UnitClass.Healer,
             new UnitClassData(UnitClass.Healer, new List<SpecialAbility>(){ SpecialAbility.TeamHeal},
-                StatScaling.Low, StatScaling.Low, StatScaling.VeryLow, 20,
+                StatScaling.Low, StatScaling.Low, StatScaling.VeryLow, 0.20f,
                 StatScaling.Low, isRanged: true, onlyUseSpecialSkills: true)
         },
         {
             UnitClass.Warrior,
             new UnitClassData(UnitClass.Warrior, null,
-                StatScaling.Normal, StatScaling.Normal, StatScaling.Normal, 0,
+                StatScaling.Normal, StatScaling.Normal, StatScaling.Normal, 0f,
                 StatScaling.Normal)
         },
     };

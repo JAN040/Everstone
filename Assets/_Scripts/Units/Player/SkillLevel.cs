@@ -126,6 +126,18 @@ public class SkillLevel
         Experience = Math.Clamp(experience, 0, ExpToNextLevel - 1);
     }
 
+
+    #region STATIC METHODS
+
+
+
+    #endregion STATIC METHODS
+
+
+
+    #region METHODS
+
+
     public virtual string GetSkillName()
     {
         return $"{SkillType}";
@@ -141,7 +153,7 @@ public class SkillLevel
 
         //proficiency modification
         amount += (int)(amount * Proficiency.GetValue());
-        
+
         Experience += amount;
 
         while (Experience >= ExpToNextLevel)
@@ -195,88 +207,195 @@ public class SkillLevel
             case Skill.Strength:
                 this._statsReference.PhysicalDamage.Grow();
                 break;
+
             case Skill.Arts:
                 this._statsReference.ArtsDamage.Grow();
 
                 this._statsReference.MaxMana.GrowHalf();
                 this._statsReference.ManaRecovery.GrowHalf();
                 break;
+
             case Skill.Agility:
                 this._statsReference.Speed.Grow();
                 this._statsReference.DodgeChance.Grow();
 
                 this._statsReference.EnergyRecovery.GrowHalf();
                 break;
+
             case Skill.Constitution:
                 this._statsReference.MaxHP.Grow();
                 this._statsReference.MaxEnergy.Grow();
 
-                this._statsReference.EnergyRecovery.GrowHalf();
                 this._statsReference.MaxMana.GrowHalf();
                 this._statsReference.ManaRecovery.GrowHalf();
                 break;
+
             case Skill.Lockpicking:
+                LevelUp_Lockpicking();
                 break;
+
             case Skill.Taming:
                 LevelUp_Taming();
                 break;
+
             case Skill.Trading:
+                LevelUp_Trading();
                 break;
+
             //All equipment proficiencies are handled in child class
             case Skill.Equipment_Skill:
                 Debug.LogError("Tried to modify Equipment_Skill type on SkillLevel object!");
                 break;
+
             default:
                 Debug.LogError("Tried to modify stats, but the skillType is unknown!");
                 break;
         }
     }
 
-    private void LevelUp_Taming()
+    private void LevelUp_Lockpicking()
     {
-        //every 10 Taming levels +1 MaxPets count up to 8
-        if (Level % 10 == 0)
-        {
-            int maxPets = (int)_statsReference.MaxPets + 1;
-            Math.Clamp(maxPets, 1, 8);
-            this._statsReference.MaxPets = maxPets;
-        }
+        throw new NotImplementedException();
     }
 
-    public static Icon SkillToIcon(Skill skill)
+    private void LevelUp_Trading()
     {
-        switch (skill)
+        var playerMng = GameManager.Instance.PlayerManager;
+
+        playerMng.SellPriceModifier += playerMng.SellPriceModPerLevelIncrease;
+        playerMng.SellPriceModifier_Loot += playerMng.SellPriceModPerLevelIncrease;
+    }
+
+    private void LevelUp_Taming()
+    {
+        var playerMng = GameManager.Instance.PlayerManager;
+
+        //every MoreMaxPetsEveryNLevels Taming levels +1 MaxPets count up to 5
+        if (Level % playerMng.MoreMaxPetsPerNLevels == 0)
+        {
+            playerMng.MaxPets++;
+        }
+
+        playerMng.PetXpBonus += playerMng.PetXpBonusPerLevel;
+    }
+
+    public string GetSkillDescription()
+    {
+        switch (this.SkillType)
         {
             case Skill.Strength:
-                return Icon.Attack_Phys;
-                
+                return $"Improves: {Stat.GetDisplayName(StatType.PhysicalDamage)}\n\nGain XP by: Dealing {Stat.GetDisplayName(StatType.PhysicalDamage)}.";
+
             case Skill.Arts:
-                return Icon.Attack_Arts;
+                return $"Improves: {Stat.GetDisplayName(StatType.ArtsDamage)}\n\nAlso affects: {Stat.GetDisplayName(StatType.MaxMana)}, {Stat.GetDisplayName(StatType.ManaRecovery)}\n\nGain XP by: Dealing {Stat.GetDisplayName(StatType.ArtsDamage)}.";
 
             case Skill.Agility:
-                return Icon.Speed;
+                return $"Improves: {Stat.GetDisplayName(StatType.Speed)}, {Stat.GetDisplayName(StatType.DodgeChance)}\n\nAlso affects: {Stat.GetDisplayName(StatType.EnergyRecovery)}\n\nGain XP by: Dodging, especially with perfect dodges.";
 
             case Skill.Constitution:
-                return Icon.Health;
+                return $"Improves: {Stat.GetDisplayName(StatType.MaxHP)}, {Stat.GetDisplayName(StatType.MaxEnergy)}\n\nAlso affects: {Stat.GetDisplayName(StatType.MaxMana)}, {Stat.GetDisplayName(StatType.ManaRecovery)}\n\nGain XP by: Taking damage.";
 
-            //TODO: need these icons
             case Skill.Lockpicking:
-                return Icon.Everstone;
+                return $"Makes the lockpicking minigame easier.\n\nGain XP by: Successfully completing the lockpicking minigame.";
 
             case Skill.Taming:
-                return Icon.Everstone;
+                return $"Improves: The rate of pet experience gain.\nAlso affects: Max amount of pets you can take into battle.\n\nGain XP by: Having pets deal damage.";
 
             case Skill.Trading:
-                return Icon.Everstone;
+                return $"Improves: For how much you can sell items and loot to the shop.\n\nGain XP by: Selling items.";
 
             case Skill.Equipment_Skill:
-                return Icon.Everstone;
-
             default:
                 break;
         }
 
-        return Icon.Everstone;
+        return string.Empty;
     }
+
+    public string GetSkillDifferencesPerLevel()
+    {
+        string res = "Current / Next lvl.\n";
+        
+        var plrMng = GameManager.Instance.PlayerManager;
+        
+        var stat_physDmg    = _statsReference.GetStatFromStatType(StatType.PhysicalDamage);
+        var stat_artDmg     = _statsReference.GetStatFromStatType(StatType.ArtsDamage);
+        var stat_maxMana    = _statsReference.GetStatFromStatType(StatType.MaxMana);
+        var stat_maxHp      = _statsReference.GetStatFromStatType(StatType.MaxHP);
+        var stat_maxEnergy  = _statsReference.GetStatFromStatType(StatType.MaxEnergy);
+        var stat_manaRec    = _statsReference.GetStatFromStatType(StatType.ManaRecovery);
+        var stat_energyRec  = _statsReference.GetStatFromStatType(StatType.EnergyRecovery);
+        var stat_speed      = _statsReference.GetStatFromStatType(StatType.Speed);
+        var stat_dodge      = _statsReference.GetStatFromStatType(StatType.DodgeChance);
+
+        switch (SkillType)
+        {
+            case Skill.Strength:
+                res += Environment.NewLine;
+                res += stat_physDmg.GetLevelDiffDisplayValue(false);
+                break;
+
+            case Skill.Arts:
+                res += Environment.NewLine;
+                res += stat_artDmg.GetLevelDiffDisplayValue(false);
+                res += Environment.NewLine;
+                res += stat_maxMana.GetLevelDiffDisplayValue(true);
+                res += Environment.NewLine;
+                res += stat_manaRec.GetLevelDiffDisplayValue(true);
+                break;
+
+            case Skill.Agility:
+                res += Environment.NewLine;
+                res += stat_speed.GetLevelDiffDisplayValue(false);
+                res += Environment.NewLine;
+                res += stat_dodge.GetLevelDiffDisplayValue(false);
+                res += Environment.NewLine;
+                res += stat_energyRec.GetLevelDiffDisplayValue(true);
+                break;
+
+            case Skill.Constitution:
+                res += Environment.NewLine;
+                res += stat_maxHp.GetLevelDiffDisplayValue(false);
+                res += Environment.NewLine;
+                res += stat_maxEnergy.GetLevelDiffDisplayValue(false);
+                res += Environment.NewLine;
+                res += stat_maxMana.GetLevelDiffDisplayValue(true);
+                res += Environment.NewLine;
+                res += stat_manaRec.GetLevelDiffDisplayValue(true);
+                break;
+
+            case Skill.Lockpicking:
+                res = $"Minigame difficulty is decided based on chest rarity and game difficulty.\nThe greater the difference between your Lockpicking level and the chest difficulty level, the more/less time you will have to solve the minigame.";
+                break;
+
+            case Skill.Taming:
+                res += Environment.NewLine;
+                res += $"Pet xp bonus: {plrMng.PetXpBonus * 100f}% / {(plrMng.PetXpBonus + plrMng.PetXpBonusPerLevel) * 100f}%";
+                res += Environment.NewLine;
+                res += $"Max pets: {plrMng.MaxPets} / {((this.Level + 1) % plrMng.MoreMaxPetsPerNLevels == 0 ? plrMng.MaxPets + 1 : plrMng.MaxPets)}";
+                break;
+
+            case Skill.Trading:
+                float nextLvlSellMod = plrMng.SellPriceModifier + plrMng.SellPriceModPerLevelIncrease;
+                if (nextLvlSellMod > 0.99f)
+                    nextLvlSellMod = 0.99f;
+
+                res += Environment.NewLine;
+                res += $"Sell modifier: {plrMng.SellPriceModifier} / {nextLvlSellMod}";
+                res += Environment.NewLine;
+                res += $"Sell modifier (loot): {plrMng.SellPriceModifier_Loot} / {plrMng.SellPriceModifier_Loot + plrMng.SellPriceModPerLevelIncrease}";
+                break;
+
+            case Skill.Equipment_Skill:
+            default:
+                break;
+        }
+
+        return res;
+    }
+
+
+    #endregion METHODS
+
 }
 

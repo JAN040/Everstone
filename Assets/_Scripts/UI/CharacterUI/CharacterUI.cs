@@ -268,6 +268,9 @@ public class CharacterUI : MonoBehaviour
 
             Text_RuneEffects.text += Environment.NewLine;
         }
+
+        if (string.IsNullOrEmpty(Text_RuneEffects.text))
+            Text_RuneEffects.text = "No active rune effects.";
     }
 
     private string GetModifierDescription(StatModifier modifier)

@@ -31,8 +31,8 @@ public class PlayerManager
         set
         {
             sellPriceModifier = value;
-            if (sellPriceModifier > 1f)
-                sellPriceModifier = 1f;
+            if (sellPriceModifier > 0.99f)
+                sellPriceModifier = 0.99f;
         }
     }
     private float sellPriceModifier;
@@ -42,6 +42,34 @@ public class PlayerManager
     /// Can be greater than 1 since loot items cant be bought back from shop.
     /// </summary>
     public float SellPriceModifier_Loot { get; set; }
+
+    public readonly float SellPriceModPerLevelIncrease = 0.01f;
+
+    /// <summary>
+    /// Max amount of pets that can be added to the formation
+    /// </summary>
+    public int MaxPets
+    {
+        get => maxPets;
+        set
+        {
+            maxPets = Math.Clamp(value, 1, 5);
+        }
+    }
+    [SerializeField] private int maxPets;
+    
+    /// <summary>
+    /// Every MoreMaxPetsEveryNLevels amount of Taming levels, MaxPets is increased by one.
+    /// </summary>
+    public float MoreMaxPetsPerNLevels { get; private set; }
+    
+    /// <summary>
+    /// Bonus XP pets gain when attacking; based on player Taming skill level
+    /// </summary>
+    public float PetXpBonus { get; set; }
+
+    public readonly float PetXpBonusPerLevel = 0.03f;
+
 
 
     #endregion VARIABLES
@@ -54,6 +82,10 @@ public class PlayerManager
         PlayerHero = hero;
         SellPriceModifier = 0.75f;
         SellPriceModifier_Loot = 0.75f;
+
+        MaxPets = 1;
+        MoreMaxPetsPerNLevels = 10;
+        PetXpBonus = 0f;
     }
 
     public void SetAbilities(List<ScriptableAbility> classicAbilities, List<ScriptableAbility> specialAbilities)

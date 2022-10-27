@@ -270,13 +270,13 @@ public class UnitStatusBar : MonoBehaviour
         MaxHealth = unit.Stats.MaxHP.GetValue();
 
         Attack_Text.text = unit.Stats.ArtsDamage.GetValue() > 0 ?
-            $"{GetIcon(Icon.Attack_Arts)} {unit.Stats.ArtsDamage.GetValue().Round()}"
+            $"{GetIcon(Icon.Attack_Arts)} {unit.Stats.ArtsDamage.GetDisplayValue()}"
             :
-            $"{GetIcon(Icon.Attack_Phys)} {unit.Stats.PhysicalDamage.GetValue().Round()}";
+            $"{GetIcon(Icon.Attack_Phys)} {unit.Stats.PhysicalDamage.GetDisplayValue()}";
 
-        Speed_Text.text = $"{GetIcon(Icon.Speed)} {unit.Stats.Speed.GetValue().Round()}";
-        Defense_Text.text = $"{GetIcon(Icon.Defense)} {unit.Stats.Armor.GetValue().Round()}";
-        Resist_Text.text = $"{GetIcon(Icon.Arts_Resist)} {unit.Stats.ArtsResist.GetValue().Round()}";
+        Speed_Text.text = $"{GetIcon(Icon.Speed)} {unit.Stats.Speed.GetDisplayValue()}";
+        Defense_Text.text = $"{GetIcon(Icon.Defense)} {unit.Stats.Armor.GetDisplayValue()}";
+        Resist_Text.text = $"{GetIcon(Icon.Arts_Resist)} {unit.Stats.ArtsResist.GetDisplayValue()}";
     }
 
     private string GetIcon(Icon icon)

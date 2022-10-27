@@ -19,6 +19,7 @@ public class SkillLevelUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI Text_Level;
     [SerializeField] TextMeshProUGUI Text_Xp;
     [SerializeField] Image Image_XpBar;
+    [SerializeField] GameObject SkillInfoBoxPrefab;
 
 
     #endregion UI References
@@ -71,7 +72,11 @@ public class SkillLevelUI : MonoBehaviour
 
     public void IconButtonClicked()
     {
-        Debug.Log($"Clicked Skill Level {SkillLevelRef.GetSkillName()}");
+        var obj = Instantiate(SkillInfoBoxPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        obj.transform.localScale = Vector3.one;
+        obj.transform.localPosition = Vector3.zero;
+
+        obj.GetComponent<SkillInfoBox>().Init(SkillLevelRef);
     }
 
 

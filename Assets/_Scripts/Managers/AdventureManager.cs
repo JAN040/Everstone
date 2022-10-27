@@ -689,6 +689,6 @@ public class AdventureManager : MonoBehaviour
         var skillObj = PlayerHero.LevelSystem.Skills[skill.ToString()];
         PlayerHero.LevelSystem.AddExperienceToSkill(amount, skill);
 
-        LogInfo($"+ {amount} {ResourceSystem.GetIconTag(SkillLevel.SkillToIcon(skill))} XP ({skillObj.Experience}/{skillObj.ExpToNextLevel})");
+        LogInfo($"+ {amount} {ResourceSystem.GetSkillIconTag(skill)} XP ({skillObj.Experience}/{skillObj.ExpToNextLevel})");
     }
 }

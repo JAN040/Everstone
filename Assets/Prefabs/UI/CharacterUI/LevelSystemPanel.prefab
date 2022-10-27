@@ -565,6 +565,7 @@ MonoBehaviour:
   Text_Level: {fileID: 8271954637314506999}
   Text_Xp: {fileID: 3776198108466177469}
   Image_XpBar: {fileID: 4645091996261361069}
+  SkillInfoBoxPrefab: {fileID: 8377522264260309042, guid: b7af20bcb35f9ea4aa7f6805e0d15608, type: 3}
 --- !u!1 &5136164408501671043
 GameObject:
   m_ObjectHideFlags: 0

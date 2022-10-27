@@ -69,8 +69,7 @@ public class CharacterStats
         }
     }
 
-    [SerializeField] private int maxPets;
-    public int MaxPets { get => maxPets; set => maxPets = value; }
+    
 
     #endregion NON STAT VALUES
 
@@ -179,7 +178,6 @@ public class CharacterStats
         MaxMana = new Stat(maxMana, StatType.MaxMana, false);
         _mana = maxMana;
         ManaRecovery = new Stat(manaRecovery, StatType.ManaRecovery, true);
-        MaxPets = 0;
         CooldownReduction = new Stat(cooldownReduction, StatType.CooldownReduction, true);
 
         BlockChance = new Stat(block, StatType.BlockChance, false);

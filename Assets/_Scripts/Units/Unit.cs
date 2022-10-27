@@ -518,8 +518,8 @@ public class Unit : MonoBehaviour
                 break;
 
             case DamageType.Arts:
-                //arts resist can be negative (Note: its stored as a whole value, eg. 5 res means 0.05 dmg red., thats why division by 100)
-                var dmgAfterRes = damage.Amount - (damage.Amount * (Stats.ArtsResist.GetValue() / 100f));
+                //arts resist can be negative (Note: its stored as a percentage value, eg. 0.5 res means 50% dmg red.
+                var dmgAfterRes = damage.Amount - (damage.Amount * Stats.ArtsResist.GetValue());
                 dmgAmount = dmgAfterRes > 0 ? dmgAfterRes : 0;
                 break;
 

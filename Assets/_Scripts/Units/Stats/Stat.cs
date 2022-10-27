@@ -64,18 +64,101 @@ public class Stat
         //    GrowthParameters = new StatGrowthParameters();
     }
 
-    public string GetDisplayValue()
-    {
-        float value = GetValue();
-        bool showOneDecimal = Type.In(StatType.HealEfficiency,
-                                      StatType.EnergyRecovery,
-                                      StatType.ManaRecovery); 
 
-        return showOneDecimal ? $"{value:0.0}" : $"{value:0}";
+    #region STATIC METHODS
+
+
+    public static string GetDisplayName(StatType statType)
+    {
+        switch (statType)
+        {
+            case StatType.PhysicalDamage:
+                return "Physical Damage";
+
+            case StatType.Armor:
+                return "Armor";
+
+            case StatType.ArtsDamage:
+                return "Arts Damage";
+
+            case StatType.ArtsResist:
+                return "Arts Resist";
+
+            case StatType.MaxHP:
+                return "Max HP";
+
+            case StatType.MaxEnergy:
+                return "Max Energy";
+
+            case StatType.EnergyRecovery:
+                return "Energy Recovery";
+
+            case StatType.MaxMana:
+                return "Max Mana";
+
+            case StatType.ManaRecovery:
+                return "Mana Recovery";
+
+            case StatType.CooldownReduction:
+                return "Cooldown Reduction";
+
+            case StatType.Speed:
+                return "Speed";
+
+            case StatType.WeaponAccuracy:
+                return "Weapon Accuracy";
+
+            case StatType.DodgeChance:
+                return "Dodge Chance";
+
+            case StatType.Proficiency:
+                return "Proficiency";
+
+            case StatType.HealEfficiency:
+                return "Heal Efficiency";
+
+            case StatType.BlockChance:
+                return "Block Chance";
+
+            default:
+                break;
+        }
+
+        return string.Empty;
     }
 
 
+    #endregion STATIC METHODS
+
+
+
     #region METHODS
+
+    public string GetDisplayValue(float value = float.NaN)
+    {
+        if (float.IsNaN(value))
+            value = GetValue();
+
+        bool showOneDecimal = this.Type.In(StatType.HealEfficiency,
+                                           StatType.EnergyRecovery,
+                                           StatType.ManaRecovery);
+
+        bool isPercent = this.Type.In(StatType.ArtsResist,
+                                      StatType.BlockChance,
+                                      StatType.CooldownReduction,
+                                      StatType.DodgeChance,
+                                      StatType.WeaponAccuracy);
+        //for percentual values
+        if (isPercent)
+            value *= 100;        
+
+        return showOneDecimal ? $"{value:0.#}" : $"{value:0}{(isPercent ? "%" : "")}";
+    }
+
+    public string GetLevelDiffDisplayValue(bool isHalfGrowth)
+    {
+        return $"{ResourceSystem.GetStatIconTag(this.Type)} {this.GetDisplayValue(BaseValue)} / {this.GetDisplayValue(BaseValue + this.GetGrowthAmount(isHalfGrowth))}";
+    }
 
     /// <summary>
     /// Meant for modifying base stats on level up
@@ -120,7 +203,7 @@ public class Stat
 
         while (growByLevels > 0)
         {
-            float bonus = BaseValue * 0.01f * GetGrowthFixAmount();
+            float bonus = GetGrowthAmount(false);
             BaseValue += bonus;
             growthLevel += 1f;
             Debug.Log($"Grew stat {Type} by '{bonus}' to '{BaseValue}' (growthLevel {growthLevel})");
@@ -134,11 +217,24 @@ public class Stat
     /// </summary>
     public void GrowHalf()
     {
-        float bonus = BaseValue * 0.01f * GetGrowthFixAmount();
-        bonus /= 2;
+        float bonus = GetGrowthAmount(true);
         BaseValue += bonus;
         growthLevel += 0.5f;
+
         Debug.Log($"Grew stat {Type} by '{bonus}' to '{BaseValue}' (growthLevel {growthLevel})");
+    }
+
+    /// <summary>
+    /// Serves as a way to preview what the stats will be on level up and as a Grow helper method.
+    /// </summary>
+    public float GetGrowthAmount(bool isHalfGrowth)
+    {
+        float bonus = BaseValue * 0.01f * GetGrowthFixAmount();
+        
+        if (isHalfGrowth)
+            bonus /= 2;
+
+        return bonus;
     }
 
     private float GetGrowthFixAmount()
