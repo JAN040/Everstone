@@ -267,7 +267,7 @@ public class ResourceSystem : Singleton<ResourceSystem> {
         return AdventureLocations.OrderBy(x => x.name).OrderBy(x => x.difficulty).ToList();
     }
 
-    public ScriptableStatusEffect GetStatusEffect(StatusEffect effect)
+    public ScriptableStatusEffect GetStatusEffect(StatusEffectType effect)
     {
         return Instantiate(StatusEffects.FirstOrDefault(x => x.Effect == effect));
     }

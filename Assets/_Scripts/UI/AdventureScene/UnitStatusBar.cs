@@ -2,10 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.FilePathAttribute;
+
 
 public class UnitStatusBar : MonoBehaviour
 {
@@ -269,7 +268,25 @@ public class UnitStatusBar : MonoBehaviour
         Health_Text.text = $"{unit.Stats.HealthPoints.RoundHP()}/{unit.Stats.MaxHP.GetValue().RoundHP()}";
         MaxHealth = unit.Stats.MaxHP.GetValue();
 
-        Attack_Text.text = unit.Stats.ArtsDamage.GetValue() > 0 ?
+        //damage stat setup
+        bool showArtsAtkStat = false;
+        if (GameManager.Instance.PlayerManager.PlayerHero == UnitRef)
+        {
+            if (GameManager.Instance.PlayerManager.PlayerHero.ClassName.ToUpper().Equals("MAGE"))
+                showArtsAtkStat = true; //if nothing is equipped, show arts for mage
+
+            InventoryItem equipRightArm = GameManager.Instance.PlayerManager.Equipment.GetItemAt((int)EquipmentSlot.RightArm);
+            var equipData = equipRightArm?.ItemData as ItemDataEquipment;
+            if (equipRightArm != null && equipRightArm != null)
+            {   //if staff is equipped show arts
+                showArtsAtkStat = equipData.EquipmentType.In(EquipmentType.Staff);
+            }
+        }
+        else
+        {   //for non hero units only the highest stat matters
+            showArtsAtkStat = unit.Stats.ArtsDamage.GetValue() > unit.Stats.PhysicalDamage.GetValue();
+        }
+        Attack_Text.text = showArtsAtkStat ?
             $"{GetIcon(Icon.Attack_Arts)} {unit.Stats.ArtsDamage.GetDisplayValue()}"
             :
             $"{GetIcon(Icon.Attack_Phys)} {unit.Stats.PhysicalDamage.GetDisplayValue()}";

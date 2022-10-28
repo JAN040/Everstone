@@ -29,6 +29,16 @@ public class CharacterUI : MonoBehaviour
 
     [Space]
     [Header("Equipment/Stats Tab")]
+
+    [Header("Silhoutte params")]
+    [SerializeField] Image Image_Silhouette;
+    [SerializeField] Sprite Silh_Mag_M;
+    [SerializeField] Sprite Silh_Mag_F;
+    [SerializeField] Sprite Silh_War_M;
+    [SerializeField] Sprite Silh_War_F;
+    [SerializeField] Sprite Silh_Rog_M;
+    [SerializeField] Sprite Silh_Rog_F;
+
     [Header("Equipment slots")]
     public ItemSlotUI Helmet;
     public ItemSlotUI Shoulder;
@@ -160,6 +170,13 @@ public class CharacterUI : MonoBehaviour
     //assign the equipment system to the equipment slots
     private void InitTab_Equipment()
     {
+        var hero = GameManager.Instance.PlayerManager.PlayerHero;
+
+        //silhoutte
+        bool isMalePfp = hero.MenuSprite.name.ToUpper().EndsWith("M");
+        SetSilhoutte(hero.ClassName, isMalePfp);
+
+        //equipment items
         var equipment = GameManager.Instance.PlayerManager.Equipment;
 
         for (int i = 0; i < EquipmentSlots.Count; i++)
@@ -180,12 +197,35 @@ public class CharacterUI : MonoBehaviour
         }
 
         //stat section
-        var hero = GameManager.Instance.PlayerManager.PlayerHero;
-
         Image_PlayerIcon.sprite  = hero.MenuSprite;
         Text_HeroName.text       = hero.Name;
         Text_HeroClass.text      = hero.ClassName;
-        Text_HeroBackground.text = hero.Background;
+
+        if (hero.Background.Equals("None"))
+            Text_HeroBackground.text = string.Empty;
+        else
+            Text_HeroBackground.text = hero.Background;
+    }
+
+    private void SetSilhoutte(string className, bool isMalePfp)
+    {
+        Sprite silhoutte = Silh_War_M;
+        if (className.Equals("Mage"))
+        {
+            silhoutte = isMalePfp ? Silh_Mag_M : Silh_Mag_F;
+        }
+        else if (className.Equals("Warrior"))
+        {
+            silhoutte = isMalePfp ? Silh_War_M : Silh_War_F;
+        }
+        else if (className.Equals("Rogue"))
+        {
+            silhoutte = isMalePfp ? Silh_Rog_M : Silh_Rog_F;
+        }
+        else
+            Debug.LogError($"Unrecognised class name {className}, cant decide on silhoutte");
+
+        Image_Silhouette.sprite = silhoutte;
     }
 
     private void InitTab_Inventory()

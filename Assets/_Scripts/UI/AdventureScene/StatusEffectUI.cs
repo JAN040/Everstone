@@ -39,7 +39,7 @@ public class StatusEffectUI : MonoBehaviour
         if (Effect == null)
             return;
 
-        EffectValueText.text = Effect.DisplayValue;
+        EffectValueText.text = Effect.GetDisplayValue();
         EffectDurationIndicatorImage.fillAmount = Effect.GetRemainingDurationNormalized();
     }
 
@@ -47,13 +47,13 @@ public class StatusEffectUI : MonoBehaviour
     {
         Effect = effect;
 
-        EffectValueText.text                = effect.DisplayValue;
+        EffectValueText.text                = effect.GetDisplayValue();
         EffectImage.sprite                  = effect.MenuImage;
         EffectDurationIndicatorImage.sprite = effect.MenuImage;
     }
 
     public void IconButtonClicked()
     {
-        Debug.Log($"Status effect: '{Effect?.Name} Duration: '{Effect.CurrentDuration:0.00}/{Effect.DurationAtStart:0.00}'");
+        Debug.Log($"Status effect: '{Effect?.Name} Duration: '{Effect.CurrentDuration:0.00}/{Effect.Duration:0.00}'");
     }
 }

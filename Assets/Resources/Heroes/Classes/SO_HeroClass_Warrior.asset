@@ -15,7 +15,7 @@ MonoBehaviour:
   Name: 
   Faction: 0
   Type: 0
-  MenuSprite: {fileID: 21300000, guid: f42f0e0be94bf3647a8b5e03b3b10bff, type: 3}
+  MenuSprite: {fileID: 0}
   FaceDirection: 1
   Description: 
   Prefab: {fileID: 0}
@@ -40,7 +40,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     artsDamage:
-      baseValue: 0
+      baseValue: 5
       type: 2
       canBeNegative: 0
       growthParameters:
@@ -104,7 +104,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     maxMana:
-      baseValue: 2
+      baseValue: 5
       type: 7
       canBeNegative: 0
       growthParameters:
@@ -112,7 +112,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     manaRecovery:
-      baseValue: 0
+      baseValue: 1
       type: 8
       canBeNegative: 1
       growthParameters:

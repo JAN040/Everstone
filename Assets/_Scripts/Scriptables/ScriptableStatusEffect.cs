@@ -9,8 +9,9 @@ public class ScriptableStatusEffect : ScriptableObject
 {
     #region PROPERTIES
 
-
-    public StatusEffect Effect;
+    [Space]
+    [Header("Properties")]
+    public StatusEffectType Effect;
 
     public Sprite MenuImage;
 
@@ -42,17 +43,17 @@ public class ScriptableStatusEffect : ScriptableObject
     /// Amount of duration when the ability was activated.
     /// Not necessarily the same as Cooldown ? idk will see
     /// </summary>
-    [NonSerialized]
-    public float DurationAtStart;
+    //[NonSerialized]
+    //public float DurationAtStart;
 
     [NonSerialized]
     public GameObject Prefab;
 
     [NonSerialized]
-    private Unit UnitRef;
+    protected Unit UnitRef;
 
     [NonSerialized]
-    private List<StatModifier> AppliedStatModifiers = new List<StatModifier>();
+    protected List<StatModifier> AppliedStatModifiers = new List<StatModifier>();
 
     [Space]
     [Header("Effect values")]
@@ -62,45 +63,35 @@ public class ScriptableStatusEffect : ScriptableObject
     /// Since the effect logic is hardcoded, keeping the values separated makes it easier to modify.
     /// </summary>
     public float EffectValue;
-    public float EffectValue_2;
-    public float EffectValue_3;
-    public float EffectValue_4;
-    public float EffectValue_5;
-
-    /// <summary>
-    /// The value to display in the StatusEffectPanel
-    /// </summary>
-    public string DisplayValue;
-
-    /// <summary>
-    /// If true, adding the same effect type to the same unit twice will combine their effects
-    ///     instead of keeping the strongest one.
-    /// </summary>
-    [Space]
-    [Header("Flags")]
-
-    public bool IsStackable;
+    public bool IsEffectValuePercentual = false;
     
-    public bool IsActive { get; private set; } = false;
 
-   
+    /// <summary>
+    /// Defines what to display in the StatusEffectPanel
+    /// </summary>
+    public EffectDisplayValue DisplayValueType;
+
+    [Space]
+    [Header("Flags"), Tooltip("If true, adding the same effect type to the same unit twice will combine their effects instead of keeping the strongest one.")]
+    public bool IsStackable;
+
+    [Tooltip("Indicates the effect doesn't necessarily deactivate when its duration finishes, but instead executes arbitrary code")]
+    [SerializeField] bool TickOnDurationEnd;
+
+    public bool IsActive { get; private set; } = false;
 
 
     #region Effect specific variables
 
-    /// <summary>
-    /// Dodge effect downgrades after cca 0.1s to provide a lesser buff
-    /// </summary>
-    private float secondsToModifierDowngrade;
 
     /// <summary>
     /// For poison and similar ticks
     /// </summary>
-    private bool TickOnDurationEnd;
+    protected bool TickAmount;
 
-    private bool TickAmount;
+    protected bool CurrentTickAmount;
 
-    private bool CurrentTickAmount;
+    protected string CustomDisplayValue;
 
 
     #endregion Effect specific variables
@@ -109,7 +100,6 @@ public class ScriptableStatusEffect : ScriptableObject
     #endregion PROPERTIES
 
 
-    //public event Action<ScriptableAbility> OnAbilityActivated;
     public event Action<ScriptableStatusEffect> OnEffectExpired;
 
 
@@ -125,7 +115,7 @@ public class ScriptableStatusEffect : ScriptableObject
 
         this.IsActive = true;
         this.CurrentDuration = Duration;
-        this.DurationAtStart = Duration;
+        //this.DurationAtStart = Duration;
 
         ApplyEffect();
     }
@@ -146,12 +136,10 @@ public class ScriptableStatusEffect : ScriptableObject
     /// <summary>
     /// Has to be called every frame while the effect is active
     /// </summary>
-    public void Update()
+    public virtual void Update()
     {
         if (!IsActive)
             return;
-
-        EffectSpecificUpdate();
 
         //-1 stands for infinite
         if (CurrentDuration != -1f)
@@ -168,69 +156,67 @@ public class ScriptableStatusEffect : ScriptableObject
         }
     }
 
-    private void EffectSpecificUpdate()
+    public string GetDisplayValue()
     {
-        switch (Effect)
+        switch (DisplayValueType)
         {
-            case StatusEffect.Poison:
-                break;
+            case EffectDisplayValue.Duration:
+                if (CurrentDuration == -1)
+                    return ResourceSystem.GetIconTag(Icon.Infinity);
+                else
+                    return CurrentDuration.ToString();
 
-            case StatusEffect.EvasionBuff:
-                secondsToModifierDowngrade -= Time.deltaTime;
-                if (secondsToModifierDowngrade <= 0)
-                {
-                    //downgrade perfect dodge from 100 to 
-                    var modifier = AppliedStatModifiers.FirstOrDefault(x => x.ModifyingStatType == StatType.DodgeChance);
-                    modifier.Value = EffectValue;
-                    DisplayValue = $"{(int)(EffectValue * 100f)}";
-                }
-                break;
+            case EffectDisplayValue.EffectValue:
+                if (IsEffectValuePercentual)
+                    return (EffectValue * 100).ToString();
+                else
+                    return EffectValue.ToString();
 
-            case StatusEffect.ShieldBlock:
-                break;
+            case EffectDisplayValue.Custom:
+                return CustomDisplayValue;
 
-            case StatusEffect.Slow:
-                break;
-
+            case EffectDisplayValue.None:
             default:
-                break;
+                return string.Empty;
         }
     }
 
-    private void Tick()
+    
+
+    protected virtual void Tick()
     {
-        switch (Effect)
-        {
-            case StatusEffect.Poison:
-                //apply poison tick
-                UnitRef.TakeDamage(new Damage(EffectValue, ElementType.Poison), false);
-                EffectValue = (int) EffectValue / 2;
+        //switch (Effect)
+        //{
+        //    case StatusEffectType.Poison:
+        //        //apply poison tick
+        //        UnitRef.TakeDamage(new Damage(EffectValue, ElementType.Poison), false);
+        //        EffectValue = (int) EffectValue / 2;
 
-                if (EffectValue <= 0)
-                {
-                    this.Deactivate();
-                    return;
-                }
-                else
-                {
-                    DisplayValue = EffectValue.ToString();
-                }
+        //        if (EffectValue <= 0)
+        //        {
+        //            this.Deactivate();
+        //            return;
+        //        }
+        //        else
+        //        {
+        //            //DisplayValueType = EffectValue.ToString();
+        //        }
 
-                break;
+        //        break;
 
-            case StatusEffect.EvasionBuff:
-                break;
-            case StatusEffect.ShieldBlock:
-                break;
-            case StatusEffect.Slow:
-                break;
-            default:
-                break;
-        }
+        //    case StatusEffectType.EvasionBuff:
+        //        break;
+        //    case StatusEffectType.ShieldBlock:
+        //        break;
+        //    case StatusEffectType.Slow:
+        //        break;
+        //    default:
+        //        break;
+        //}
 
         //restart the next tick cycle
         this.CurrentDuration = Duration;
-        this.DurationAtStart = Duration;
+        //this.DurationAtStart = Duration;
     }
 
     public float GetRemainingDurationNormalized()
@@ -238,19 +224,20 @@ public class ScriptableStatusEffect : ScriptableObject
         if (CurrentDuration == -1)
             return 1;
 
-        if (DurationAtStart <= 0 || !IsActive)
+        if (CurrentDuration <= 0 || !IsActive)
             return 0;
         else
-            return CurrentDuration / DurationAtStart;
+            return CurrentDuration / Duration;
     }
 
-    public void SetEffectValues(float effectValue, float effectValue2 = 0, float effectValue3 = 0, float effectValue4 = 0, float effectValue5 = 0)
+    //, float effectValue2 = 0, float effectValue3 = 0, float effectValue4 = 0, float effectValue5 = 0
+    public void SetEffectValue(float effectValue)
     {
         EffectValue   = effectValue;
-        EffectValue_2 = effectValue2;
-        EffectValue_3 = effectValue3;
-        EffectValue_4 = effectValue4;
-        EffectValue_5 = effectValue5;
+        //EffectValue_2 = effectValue2;
+        //EffectValue_3 = effectValue3;
+        //EffectValue_4 = effectValue4;
+        //EffectValue_5 = effectValue5;
     }
 
     public void StackEffect(ScriptableStatusEffect dupeEffect)
@@ -264,43 +251,43 @@ public class ScriptableStatusEffect : ScriptableObject
         if (CurrentDuration != -1 && !TickOnDurationEnd)
         {
             CurrentDuration += dupeEffect.Duration;
-            DurationAtStart += dupeEffect.Duration;
+            //DurationAtStart += dupeEffect.Duration;
         }
 
-        if (Effect == StatusEffect.Poison)
-            DisplayValue = EffectValue.ToString();
+        //if (Effect == StatusEffectType.Poison)
+        //    DisplayValueType = EffectValue.ToString();
     }
 
-    private void ApplyEffect()
+    protected virtual void ApplyEffect()
     {
         switch (Effect)
         {
-            case StatusEffect.Poison:
+            case StatusEffectType.Poison:
                 TickOnDurationEnd = true;
-                DisplayValue = EffectValue.ToString();
+                //DisplayValueType = EffectValue.ToString();
 
                 break;
 
-            case StatusEffect.EvasionBuff:
+            case StatusEffectType.EvasionBuff:
                 //add 100% dodge chance
                 ApplyStatModifier(new StatModifier(1, StatType.DodgeChance, ModifierType.Flat));
 
-                secondsToModifierDowngrade = EffectValue_2;
-                DisplayValue = "100";
+                //secondsToModifierDowngrade = EffectValue_2;
+                //DisplayValueType = "100";
 
                 break;
 
-            case StatusEffect.ShieldBlock:
+            case StatusEffectType.ShieldBlock:
                 //TODO: when equipment is done, get actual shield stats for the armor modifiers etc..
                 ApplyStatModifiers(new List<StatModifier>() {
                     new StatModifier(20, StatType.Armor, ModifierType.Flat),
-                    new StatModifier(- EffectValue_2, StatType.EnergyRecovery, ModifierType.Percent),
+                    //new StatModifier(- EffectValue_2, StatType.EnergyRecovery, ModifierType.Percent),
                 });
-                DisplayValue = ResourceSystem.GetIconTag(Icon.Infinity);
+                //DisplayValueType = ResourceSystem.GetIconTag(Icon.Infinity);
 
                 break;
 
-            case StatusEffect.Slow:
+            case StatusEffectType.Slow:
                 break;
 
             default:

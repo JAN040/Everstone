@@ -261,7 +261,7 @@ public enum Ability
     PoisonSelf
 }
 
-public enum StatusEffect
+public enum StatusEffectType
 {
     Poison,
     EvasionBuff,
@@ -305,4 +305,29 @@ public enum EquipmentSlot
 
     RightArm,
     LeftArm,
+}
+
+public enum TargetType
+{
+    Self,
+
+    SelectedAlly,
+    RandomAlly,
+    MultipleAllies,
+    AllAllies,
+
+    SelectedEnemy,
+    RandomEnemy,
+    MultipleEnemies,
+    AllEnemies,
+
+    Everyone,
+}
+
+public enum EffectDisplayValue
+{
+    None,
+    Duration,
+    EffectValue,
+    Custom
 }

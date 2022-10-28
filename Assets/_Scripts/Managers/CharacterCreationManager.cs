@@ -252,9 +252,15 @@ public class CharacterCreationManager : MonoBehaviour
         AllocatedSkillPoints_Arts.text          = PointsAmount_Arts.ToString();
 
         //if hero name is empty disable start button
-        startButton.interactable = heroName.text.Length > 1;
+        startButton.interactable = IsCreationComplete();
 
         UpdateStatAllocationButtonsInteractable();
+    }
+
+    private bool IsCreationComplete()
+    {
+        return heroName.text.Length > 1 &&  //name must be longer than one char
+               iconDropdown.value != -1;    //an icon must be selected
     }
 
     private void UpdateStatAllocationButtonsInteractable()

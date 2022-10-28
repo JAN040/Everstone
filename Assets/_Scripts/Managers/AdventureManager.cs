@@ -439,13 +439,6 @@ public class AdventureManager : MonoBehaviour
         unitScript.Initialize(unit.BaseStats, unit, UnitGrid, this, PlayerHero);
         unitScript.OnSetTarget += SetTarget;
         unitScript.OnUnitDeath += HandleUnitDeath;
-
-        if (unit is ScriptableNpcUnit)
-            unitScript.IsRanged = GameManager.Instance.UnitData.IsClassRanged((unit as ScriptableNpcUnit).Class);
-
-        //TODO: assign this based on the equipped weapon!
-        if (unit is ScriptableHero)
-            unitScript.IsRanged = (unit as ScriptableHero).ClassName.Equals("Mage");
     }
 
     private void AddEnemyToGridByClass(ScriptableNpcUnit unit, bool teleport)
@@ -635,18 +628,18 @@ public class AdventureManager : MonoBehaviour
 
     private void CastAbility_Dodge(ScriptableAbility ability)
     {
-        var statusEffect = ResourceSystem.Instance.GetStatusEffect(StatusEffect.EvasionBuff);
+        var statusEffect = ResourceSystem.Instance.GetStatusEffect(StatusEffectType.EvasionBuff);
         //dodge chance increase & "perfect dodge" duration
-        statusEffect.SetEffectValues(ability.EffectValue, ability.EffectValue_2);
+        //statusEffect.SetEffectValues(ability.EffectValue, ability.EffectValue_2);
 
         PlayerHero.GetUnit()?.AddStatusEffect(statusEffect);
     }
 
     private void CastAbility_PoisonSelf(ScriptableAbility ability)
     {
-        var statusEffect = ResourceSystem.Instance.GetStatusEffect(StatusEffect.Poison);
+        var statusEffect = ResourceSystem.Instance.GetStatusEffect(StatusEffectType.Poison);
         //poison amount
-        statusEffect.SetEffectValues(ability.EffectValue);
+        statusEffect.SetEffectValue(ability.EffectValue);
 
         PlayerHero.GetUnit()?.AddStatusEffect(statusEffect);
     }
@@ -663,15 +656,15 @@ public class AdventureManager : MonoBehaviour
     {
         if (isToggled)
         {
-            var statusEffect = ResourceSystem.Instance.GetStatusEffect(StatusEffect.ShieldBlock);
+            var statusEffect = ResourceSystem.Instance.GetStatusEffect(StatusEffectType.ShieldBlock);
             //percent of shield stats, energy regen % red.
-            statusEffect.SetEffectValues(ability.EffectValue, ability.EffectValue_2);
+            statusEffect.SetEffectValue(ability.EffectValue);
 
             PlayerHero.GetUnit()?.AddStatusEffect(statusEffect);
         }
         else
         {
-            PlayerHero.GetUnit().RemoveStatusEffect(StatusEffect.ShieldBlock);
+            PlayerHero.GetUnit().RemoveStatusEffect(StatusEffectType.ShieldBlock);
         }
     }
 

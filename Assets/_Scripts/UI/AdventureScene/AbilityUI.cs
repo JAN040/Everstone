@@ -17,6 +17,7 @@ public class AbilityUI : MonoBehaviour
     [Header("UI References")]
 
     [SerializeField] Image AbilityImage;
+    [SerializeField] Sprite MageBasicAtkImage;
     [SerializeField] Button AbilityButton;
     [SerializeField] Image CooldownImage;
     [SerializeField] TextMeshProUGUI CooldownText;
@@ -101,6 +102,19 @@ public class AbilityUI : MonoBehaviour
         if (init)
         {
             AbilityImage.sprite = Ability.MenuImage;
+
+            if (Ability.Name.ToUpper().Equals("BASIC ATTACK"))
+            {
+                if (GameManager.Instance.PlayerManager.PlayerHero.ClassName.ToUpper().Equals("MAGE"))
+                    AbilityImage.sprite = MageBasicAtkImage;
+
+                InventoryItem equipRightArm = GameManager.Instance.PlayerManager.Equipment.GetItemAt((int)EquipmentSlot.RightArm);
+                if (equipRightArm != null)
+                {
+                    AbilityImage.sprite = equipRightArm.ItemData.MenuIcon;
+                }
+            }
+
             Ability.SetCostText(CostText_Energy, CostText_Mana);
         }
 

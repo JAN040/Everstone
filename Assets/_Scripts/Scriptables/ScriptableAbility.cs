@@ -76,7 +76,10 @@ public class ScriptableAbility : ScriptableObject
     //[SerializeField] List<UnlockCondition> UnlockConditions;
 
     //Hardcoded in AdventureManager or something
-    //public List<Effect> Effects;
+    public List<StatusEffect> OnActivedEffects;
+    public List<StatusEffect> OnDeactivatedEffects;
+
+    //public List<ScriptableStatusEffect> TestList;
 
 
     [Space]
