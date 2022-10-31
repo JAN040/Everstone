@@ -12,8 +12,7 @@ public class PlayerManager
 
     public ScriptableHero PlayerHero { get; private set; }
 
-    public List<ScriptableAbility> ClassicAbilities { get; private set; } = new List<ScriptableAbility>();
-    public List<ScriptableAbility> SpecialAbilities { get; private set; } = new List<ScriptableAbility>();
+    public List<ScriptableAbility> Abilities { get; private set; } = new List<ScriptableAbility>();
 
     public InventorySystem Inventory;
     public InventorySystem Storage;
@@ -88,10 +87,9 @@ public class PlayerManager
         PetXpBonus = 0f;
     }
 
-    public void SetAbilities(List<ScriptableAbility> classicAbilities, List<ScriptableAbility> specialAbilities)
+    public void SetAbilities(List<ScriptableAbility> abilities)
     {
-        ClassicAbilities.AddRange(classicAbilities);
-        SpecialAbilities.AddRange(specialAbilities);
+        Abilities.AddRange(abilities);
     }
 
     public void SetInventory(InventorySystem inventory, InventorySystem storage, EquipmentSystem equipment, EquipmentSystem runes)

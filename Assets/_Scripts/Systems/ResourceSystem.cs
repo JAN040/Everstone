@@ -11,8 +11,7 @@ public class ResourceSystem : Singleton<ResourceSystem> {
     private List<ScriptableHero> Heroes { get; set; }
     private Dictionary<string, ScriptableHero> _HeroesDict;
 
-    private List<ScriptableAbility> PlayerClassicAbilities { get; set; }
-    private List<ScriptableAbility> PlayerSpecialAbilities { get; set; }
+    private List<ScriptableAbility> PlayerAbilities { get; set; }
     private List<ScriptableStatusEffect> StatusEffects { get; set; }
 
     private List<ScriptableBackground> HeroBackgrounds { get; set; }
@@ -192,8 +191,7 @@ public class ResourceSystem : Singleton<ResourceSystem> {
 
 
         StatusEffects = Resources.LoadAll<ScriptableStatusEffect>("Heroes/Abilities/StatusEffects").ToList();
-        PlayerClassicAbilities = Resources.LoadAll<ScriptableAbility>("Heroes/Abilities/Classic").ToList();
-        PlayerSpecialAbilities = Resources.LoadAll<ScriptableAbility>("Heroes/Abilities/Special").ToList();
+        PlayerAbilities = Resources.LoadAll<ScriptableAbility>("Heroes/Abilities").ToList();
 
 
         var locationData = Resources.LoadAll<ScriptableAdventureLocation>("Locations/Adventure").ToList();
@@ -242,21 +240,11 @@ public class ResourceSystem : Singleton<ResourceSystem> {
         return names;
     }
 
-    public List<ScriptableAbility> GetClassicPlayerAbilities()
+    public List<ScriptableAbility> GetPlayerAbilities()
     {
         var res = new List<ScriptableAbility>();
 
-        foreach (var ability in PlayerClassicAbilities)
-            res.Add(Instantiate(ability));
-
-        return res;
-    }
-
-    public List<ScriptableAbility> GetSpecialPlayerAbilities()
-    {
-        var res = new List<ScriptableAbility>();
-
-        foreach (var ability in PlayerSpecialAbilities)
+        foreach (var ability in PlayerAbilities)
             res.Add(Instantiate(ability));
 
         return res;

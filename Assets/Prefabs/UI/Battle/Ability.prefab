@@ -869,7 +869,7 @@ TrailRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -35244903
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 2
   m_Time: 1
   m_Parameters:
@@ -990,6 +990,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AbilityImage: {fileID: 4846828286260354062}
+  MageBasicAtkImage: {fileID: 0}
   AbilityButton: {fileID: 6858707799609016206}
   CooldownImage: {fileID: 6541376902626576505}
   CooldownText: {fileID: 5313265900418617876}
@@ -1384,7 +1385,7 @@ TrailRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -35244903
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 2
   m_Time: 1
   m_Parameters:

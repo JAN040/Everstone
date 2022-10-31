@@ -10,6 +10,7 @@ using UnityEngine;
 ///     Allows differentiation between Physical and Arts damage types,
 ///     also supports mixed damage
 /// </summary>
+[Serializable]
 public class Damage
 {
     public float Amount { get; set; }
@@ -19,6 +20,10 @@ public class Damage
     //public float ElementalDamage { get; private set; }
     public DamageType Type { get; private set; }
     public ElementType ElementType { get; private set; } = ElementType.None;
+
+    public bool CanBeEvaded = true;
+    public bool CanBeBlocked = true;
+
 
     public Damage(float physicalDamage, float artsDamage = 0)
     {
@@ -41,16 +46,22 @@ public class Damage
     {
         Amount = amount > 0 ? amount : 0;
         Type = type;
+
+        CanBeEvaded = false;
+        CanBeBlocked = false;
     }
 
     /// <summary>
     /// For Elemental Damage
     /// </summary>
-    public Damage(float elementalDamage, ElementType elementType)
+    public Damage(float elementalDamage, ElementType elementType, bool canBeEvaded = true, bool canBeBlocked = false)
     {
         Amount = elementalDamage > 0 ? elementalDamage : 0;
         Type = DamageType.Elemental;
         ElementType = elementType;
+
+        CanBeEvaded = canBeEvaded;
+        CanBeBlocked = canBeBlocked;
     }
 
     /// <summary>

@@ -177,13 +177,16 @@ public class Stat
     public float GetValue()
     {
         float value = BaseValue;
-        (float flatModifiers, float percentModifiers) = GetModifierValues();
+        (float flatModifiers, float perc1mods, float perc2mods) = GetModifierValues();
 
         //step 1: add flat bonus
         value += flatModifiers;
 
         //step 2: add the percent bonus
-        value += value * percentModifiers;
+        value += value * perc1mods;
+
+        //step 2.5: add the percent (level 2) bonus
+        value += value * perc2mods;
 
         //step 3: is negative check
         if (value < 0 && !CanBeNegative)
@@ -296,10 +299,11 @@ public class Stat
         return true;
     }
 
-    private (float, float) GetModifierValues()
+    private (float, float, float) GetModifierValues()
     {
         float flatModifiers = 0;
         float percentModifiers = 0;
+        float percent2Modifiers = 0;
 
         if (statModifiers != null)
         {
@@ -310,10 +314,13 @@ public class Stat
                 
                 else if (modifier.Type == ModifierType.Percent)
                     percentModifiers += modifier.Value;
+
+                else if (modifier.Type == ModifierType.Percent_L2)
+                    percent2Modifiers += modifier.Value;
             }
         }
 
-        return (flatModifiers, percentModifiers);
+        return (flatModifiers, percentModifiers, percent2Modifiers);
     }
 
     # endregion METHODS

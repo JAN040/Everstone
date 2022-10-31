@@ -167,49 +167,20 @@ public class AbilityUI : MonoBehaviour
     private bool HandleAbilityCost(bool testOnly)
     {
         var stats = PlayerHeroUnit.Stats;
-        float eCost;
-        float mCost;
+        float eCost = Ability.EnergyCost;
+        float mCost = Ability.ManaCost;
 
-        if (Ability.CostType == CostType.Energy)
+        if (stats.Energy >= eCost && stats.Mana >= mCost)
         {
-            eCost = Ability.EnergyCost;
-
-            if (stats.Energy >= eCost)
+            if (!testOnly)
             {
-                if (!testOnly)
-                    stats.Energy -= eCost;
-
-                return true;
+                stats.Energy -= eCost;
+                stats.Mana -= mCost;
             }
-        }
-        else if (Ability.CostType == CostType.Mana)
-        {
-            mCost = Ability.ManaCost;
-
-            if (stats.Mana >= mCost)
-            {
-                if (!testOnly)
-                    stats.Mana -= mCost;
-
-                return true;
-            }
-        }
-        else if (Ability.CostType == CostType.EnergyAndMana)
-        {
-            eCost = Ability.EnergyCost;
-            mCost = Ability.ManaCost;
-
-            if (stats.Energy >= eCost && stats.Mana >= mCost)
-            {
-                if (!testOnly)
-                {
-                    stats.Energy -= eCost;
-                    stats.Mana -= mCost;
-                }
                 
-                return true;
-            }
+            return true;
         }
+        
 
         return false;
     }

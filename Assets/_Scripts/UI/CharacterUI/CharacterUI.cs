@@ -292,7 +292,10 @@ public class CharacterUI : MonoBehaviour
                 else if (modifier.Type == ModifierType.Percent)
                     percMod += modifier.Value;
                 else
+                {
+                    Debug.LogWarning($"Unexpected modifier type {modifier.Type}");
                     continue;   //shouldnt happen unless new modifierTypes get added
+                }
 
                 currentStatType = modifier.ModifyingStatType;
             }

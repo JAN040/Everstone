@@ -217,12 +217,6 @@ public enum UserLayers
     Enemies_Layer
 }
 
-public enum CostType
-{
-    Energy,
-    Mana,
-    EnergyAndMana
-}
 
 public enum DamageType
 {
@@ -258,15 +252,15 @@ public enum Ability
     BasicAttack,
     Dodge,
     ShieldBlock,
-    PoisonSelf
+    ThrowPoison
 }
 
 public enum StatusEffectType
 {
+    ModifyStat,
+    RegenerateHp,
     Poison,
-    EvasionBuff,
-    ShieldBlock,
-    Slow,
+    Burn,
     //etc.
 }
 

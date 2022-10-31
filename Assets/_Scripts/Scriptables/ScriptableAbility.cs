@@ -22,12 +22,8 @@ public class ScriptableAbility : ScriptableObject
 
     //0 => locked
     //when unlocked starts at level 1
-    public int Level = 0;
-
-    /// <summary>
-    /// Defines whether the ability can be toggled on & off
-    /// </summary>
-    public ToggleMode ToggleMode = ToggleMode.None;
+    public int Level = 1;
+    public int MaxLevel = 5;
 
     /// <summary>
     /// The amount (in seconds) it will take for the skill to become available after activation
@@ -57,30 +53,18 @@ public class ScriptableAbility : ScriptableObject
     [NonSerialized]
     public float CooldownAtStart;
 
-
     [Space]
-    [Header("Effect values")]
+    [SerializeField] List<UnlockCondition> UnlockConditions;
 
     /// <summary>
-    /// The value (damage/heal multiplier, stat buff, etc.) of the skill effect.
-    /// Since the skill effect is hardcoded, keeping the values separated makes it easier to modify.
+    /// List of effects that are activated when ability is activated
+    /// or OnToggle for toggle-able abilities
     /// </summary>
-    public float EffectValue;
-    public float EffectValue_2;
-    public float EffectValue_3;
-    public float EffectValue_4;
-    public float EffectValue_5;
-
-
-    //TODO
-    //[SerializeField] List<UnlockCondition> UnlockConditions;
-
-    //Hardcoded in AdventureManager or something
     public List<StatusEffect> OnActivedEffects;
-    public List<StatusEffect> OnDeactivatedEffects;
 
-    //public List<ScriptableStatusEffect> TestList;
-
+    [Space]
+    public float EnergyCost = 0f;
+    public float ManaCost = 0f;
 
     [Space]
     [Header("Flags")]
@@ -93,12 +77,12 @@ public class ScriptableAbility : ScriptableObject
     /// <summary>
     /// Defines whether its effect can be applied at range (for targetable abilities)
     /// </summary>
-    public bool IsRanged = false;
+    //public bool IsRanged = false;
 
     /// <summary>
     /// Defines whether the ability ignores the selected enemy/ally target and chooses a random one
     /// </summary>
-    public bool IsRandomTarget;
+    //public bool IsRandomTarget;
 
     /// <summary>
     /// Only selected abilities will be taken into battle; only valid for 'classic' abilities
@@ -107,17 +91,24 @@ public class ScriptableAbility : ScriptableObject
 
 
     [Space]
-    [Header("Cost")]
+    [Header("TOGGLE-ABLE ABILITIES")]
+    /// <summary>
+    /// Defines whether the ability can be toggled on & off
+    /// </summary>
+    public ToggleMode ToggleMode = ToggleMode.None;
 
-    public float UnlockCost;
-
+    /// <summary>
+    /// List of effects that are activated when ability is untoggled (only used for toggleable abilities)
+    /// </summary>
+    public List<StatusEffect> OnDeactivatedEffects;
 
     [Space]
+    [Header("Deactivation (toggle)")]
+    public float EnergyCost_Deactivate = 0f;
+    public float ManaCost_Deactivate = 0f;
 
-    public CostType CostType = CostType.Energy;
-    public float EnergyCost = 0f;
-    public float ManaCost = 0f;
-
+    [Tooltip("If not equal to -1, defines after how many seconds the ability forcefully deactivates")]
+    public float AutoDeactivateAfterSeconds = -1f;
 
     #endregion PROPERTIES
 
@@ -167,21 +158,18 @@ public class ScriptableAbility : ScriptableObject
         }
     }
 
-    //public string GetCostText()
-    //{
-    //    return null;
-    //    //return $"<color=#27A3FD>{mCost}</color> <color=#C06217>{eCost}</color>";
-    //}
-
     public void SetCostText(TextMeshProUGUI costText_Energy, TextMeshProUGUI costText_Mana)
     {
+        costText_Energy.text = string.Empty;
+
         string eCost = EnergyCost <= 0 ? "" : $"{EnergyCost}";
         string mCost =   ManaCost <= 0 ? "" : $"{ManaCost}";
 
         if (costText_Energy != null)
-            costText_Energy.text = $"<color=#C06217>{eCost}</color>";
+            costText_Energy.text += $"<color=#C06217>{eCost}</color>";
+
         if (costText_Mana != null)
-            costText_Mana.text = $"<color=#27A3FD>{mCost}</color>";
+            costText_Mana.text += $"<color=#27A3FD>{mCost}</color>";
     }
 
     public float GetCooldownNormalized()

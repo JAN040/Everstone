@@ -220,7 +220,7 @@ public class UnitGrid
                 target[k, l] = null;
     }
 
-    public ScriptableUnitBase GetDefaultTarget(Faction faction, bool includeRanged)
+    public ScriptableUnitBase GetRandomUnit(Faction faction, bool includeRanged)
     {
         var target = faction == Faction.Allies ? Allies : Enemies;
 

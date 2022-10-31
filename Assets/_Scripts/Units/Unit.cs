@@ -312,7 +312,7 @@ public class Unit : MonoBehaviour
             if (physDmg != null && this.IsRanged && UnitDataRef.Type != EnemyType.Boss)
                 physDmg.Amount /= 2;
 
-            enemyUnitScript.TakeDamage(damageList, true);
+            enemyUnitScript.TakeDamage(damageList);
 
             
             //Handle xp gain
@@ -477,10 +477,19 @@ public class Unit : MonoBehaviour
     }
 
     /// <summary>
-    /// If i ever need to inflict more than one damage type at once
+    /// For inflicting more than one damage type at once
     /// </summary>
-    public bool TakeDamage(List<Damage> damageList, bool canEvade)
+    public bool TakeDamage(List<Damage> damageList)
     {
+        bool canEvade = true;
+        bool canBlock = true;
+
+        foreach (var damage in damageList)
+        {
+            canEvade &= damage.CanBeEvaded;
+            canBlock &= damage.CanBeBlocked;
+        }
+
         if (canEvade && Helper.DiceRoll(this.Stats.DodgeChance.GetValue()))
         {
             float dmgSum = 0;
@@ -491,7 +500,16 @@ public class Unit : MonoBehaviour
             return false;
         }
 
-        damageList.ForEach(x => this.TakeDamage(x, false));
+        if (canBlock && Helper.DiceRoll(this.Stats.BlockChance.GetValue()))
+            return false;
+
+
+        damageList.ForEach(x =>
+        {
+            x.CanBeEvaded = false;  //already tested these, so set them to false
+            x.CanBeBlocked = false;
+            this.TakeDamage(x);
+        });
 
         return true;
     }
@@ -500,15 +518,18 @@ public class Unit : MonoBehaviour
     /// Handles taking damage
     /// </summary>
     /// <returns>True on hit, false on dodge</returns>
-    public bool TakeDamage(Damage damage, bool canEvade)
+    public bool TakeDamage(Damage damage)
     {
         //evasion check
-        if (canEvade && Helper.DiceRoll(this.Stats.DodgeChance.GetValue()))
+        if (damage.CanBeEvaded && Helper.DiceRoll(this.Stats.DodgeChance.GetValue()))
         {
             OnDodge(damage.Amount);
 
             return false;
         }
+        if (damage.CanBeBlocked && Helper.DiceRoll(this.Stats.BlockChance.GetValue()))
+            return false;
+
 
         float dmgAmount = GetDamageAmountAfterResistances(damage);
 
@@ -559,13 +580,13 @@ public class Unit : MonoBehaviour
     /// <param name="damage"></param>
     /// <param name="canEvade"></param>
     /// <returns>True on hit, false otherwise</returns>
-    public bool TakeRangedDamage(List<Damage> damageList, bool canEvade)
+    public bool TakeRangedDamage(List<Damage> damageList)
     {
         if (damageList == null || damageList.Count == 0)
             return false;
 
         //only animate if the attack wasnt dodged
-        if (TakeDamage(damageList, canEvade))
+        if (TakeDamage(damageList))
         {
             float intensityFactor = Mathf.Pow(2, RangedAtkMuzzle.GetFloat("ColorIntensity"));
 
@@ -736,7 +757,7 @@ public class Unit : MonoBehaviour
     public void BasicAttack()
     {
         if (!IsValidTarget(PreferredTargetOpponent)) //reselect a preffered target if needed
-            PreferredTargetOpponent = UnitGridRef.GetDefaultTarget(GetOpponentFaction(), this.IsRanged);
+            PreferredTargetOpponent = UnitGridRef.GetRandomUnit(GetOpponentFaction(), this.IsRanged);
         
         CurrentTargetOpponent = PreferredTargetOpponent;
 
@@ -788,7 +809,7 @@ public class Unit : MonoBehaviour
         bool isHit = false;
         //handle taking damage & playing the onHit animation
         if (IsValidTarget(CurrentTargetOpponent))
-            isHit = CurrentTargetOpponent.GetUnit().TakeRangedDamage(damageList, true);
+            isHit = CurrentTargetOpponent.GetUnit().TakeRangedDamage(damageList);
 
         //Handle xp gain
         if (IsPlayerHero() && isHit)
@@ -976,11 +997,11 @@ public class Unit : MonoBehaviour
             {
                 dupeEffect.StackEffect(newEffect);
                 
-                return;   
+                return;
             }
             else
             {
-                dupeEffect.Deactivate();
+                RemoveStatusEffect(dupeEffect);
             }
         }
 
@@ -994,17 +1015,12 @@ public class Unit : MonoBehaviour
         OnUnitStatusEffectAdded?.Invoke(newEffect);
     }
 
-    public void RemoveStatusEffect(StatusEffectType effect)
+    public void RemoveStatusEffect(ScriptableStatusEffect effect)
     {
-        var effectToRemove = ActiveEffects.FirstOrDefault(x => x.Effect == effect);
-        
-        if (effectToRemove == null)
-        {
-            Debug.LogWarning($"Couldnt find an active effect '{effect}' on unit {UnitDataRef.Name}");
-            return;
-        }
+        effect.Deactivate();
 
-        effectToRemove.Deactivate();
+        //called in EffectExpired
+        //ActiveEffects.Remove(effect);
     }
 
 

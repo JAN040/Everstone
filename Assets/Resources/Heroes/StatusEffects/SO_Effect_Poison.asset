@@ -9,24 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f83b6d9a1057094397327c6dbc85b96, type: 3}
+  m_Script: {fileID: 11500000, guid: 0d22cbb949949384f90c7746d78172d6, type: 3}
   m_Name: SO_Effect_Poison
   m_EditorClassIdentifier: 
-  Effect: 0
+  Effect: 2
   MenuImage: {fileID: 21300000, guid: 2a08d1bc9b04bba4fb2ba4e8e3bc8d7a, type: 3}
-  Name: Poisoned
-  Description: 'The unit is poisoned and will take [value1] poison damage.
-
-    After
-    taking poison damage, the poison amount is halved.
-
-    Damage is applied every
-    2s.'
+  Name: Poison
+  Description: Every [duration]s the unit takes [value] damage and the poison stack
+    value is halved.
   Duration: 2
   EffectValue: 0
-  EffectValue_2: 0
-  EffectValue_3: 0
-  EffectValue_4: 0
-  EffectValue_5: 0
-  DisplayValue: 
+  IsEffectValuePercentual: 0
+  DisplayValueType: 2
   IsStackable: 1
+  TickOnDurationEnd: 1

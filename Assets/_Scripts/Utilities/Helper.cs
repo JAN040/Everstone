@@ -48,4 +48,9 @@ public static class Helper
 
         return RandomPercent() <= chanceToSucceed;
     }
+
+    public static Faction OpponentFaction(Faction myFaction)
+    {
+        return myFaction == Faction.Allies ? Faction.Enemies : Faction.Allies;
+    }
 }

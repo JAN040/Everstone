@@ -428,8 +428,7 @@ public class CharacterCreationManager : MonoBehaviour
 
         //player abilities setup
         GameManager.Instance.PlayerManager.SetAbilities(
-            ResourceSystem.Instance.GetClassicPlayerAbilities(),
-            ResourceSystem.Instance.GetSpecialPlayerAbilities()
+            ResourceSystem.Instance.GetPlayerAbilities()
         );
 
         GameManager.Instance.Currency = GetSelectedBackground().startingCurrencyAmount;

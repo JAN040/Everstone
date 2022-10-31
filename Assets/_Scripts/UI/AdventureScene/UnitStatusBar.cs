@@ -118,7 +118,7 @@ public class UnitStatusBar : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.D))
         {
             Debug.Log($"Manually Damaged unit {unitRef.Name} from {UnitRef.Prefab.GetComponent<Unit>().Stats.HealthPoints} to {UnitRef.Prefab.GetComponent<Unit>().Stats.HealthPoints - 20}");
-            UnitRef.GetUnit().TakeDamage(new Damage(20, DamageType.True), false);
+            UnitRef.GetUnit().TakeDamage(new Damage(20, DamageType.True));
         }
 
         UpdateHpUI();

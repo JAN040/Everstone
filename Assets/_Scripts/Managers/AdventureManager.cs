@@ -61,7 +61,7 @@ public class AdventureManager : MonoBehaviour
         get
         {
             if (targetedEnemy == null)
-                return UnitGrid.GetDefaultTarget(Faction.Enemies, false) as ScriptableNpcUnit;
+                return UnitGrid.GetRandomUnit(Faction.Enemies, false) as ScriptableNpcUnit;
 
             return targetedEnemy;
         }
@@ -76,7 +76,7 @@ public class AdventureManager : MonoBehaviour
             {
                 if (currentTargetedEnemyUnit == null || currentTargetedEnemyUnit.IsDead)
                 {   //if the unit died; select a default target for the status bar
-                    SetStatusBarUnit(UnitGrid.GetDefaultTarget(Faction.Enemies, false), Faction.Enemies);
+                    SetStatusBarUnit(UnitGrid.GetRandomUnit(Faction.Enemies, false), Faction.Enemies);
                 }
                 //if the target was deselected manually, but the unit is still alive, keep the status bar as-is
             }
@@ -125,7 +125,7 @@ public class AdventureManager : MonoBehaviour
 
 
     //selected abilities
-    private List<ScriptableAbility> PlayerClassicAbilities = null;
+    private List<ScriptableAbility> PlayerAbilities = null;
     
     //selected + special cases like basic attack & dodge
     private List<ScriptableAbility> AllPlayerAbilities = new List<ScriptableAbility>();
@@ -154,7 +154,7 @@ public class AdventureManager : MonoBehaviour
 
         var playerStats = PlayerHero.Prefab.GetComponent<Unit>().Stats;
         playerStats.Mana = playerStats.MaxMana.GetValue();
-        PlayerEnergyBar.GetComponent<PlayerEnergyBar>().Initialize(PlayerHero, PlayerClassicAbilities);
+        PlayerEnergyBar.GetComponent<PlayerEnergyBar>().Initialize(PlayerHero, PlayerAbilities);
     }
 
     // Update is called once per frame
@@ -303,7 +303,7 @@ public class AdventureManager : MonoBehaviour
 
     private void ResetAbilityToggles()
     {
-        PlayerClassicAbilities.ForEach(x =>
+        PlayerAbilities.ForEach(x =>
         {
             if (x.ToggleMode == ToggleMode.Toggled)
                 x.ToggleMode = ToggleMode.UnToggled;
@@ -319,33 +319,33 @@ public class AdventureManager : MonoBehaviour
     private void InitPlayerAbilities() 
     {
         var pManager = GameManager.Instance.PlayerManager;
+        var pUnit = PlayerHero.Prefab.GetComponent<Unit>();
 
-        if (pManager.ClassicAbilities != null)
+        if (pManager.Abilities != null)
         {
-            var selectedAbilities = pManager.ClassicAbilities.Where(x => x.IsSelected).ToList();
+            var selectedAbilities = pManager.Abilities.Where(x => x.IsSelected).ToList();
             if (selectedAbilities.Count > 0)
             {
-                PlayerClassicAbilities = new List<ScriptableAbility>();
-                PlayerClassicAbilities.AddRange(selectedAbilities);
+                PlayerAbilities = new List<ScriptableAbility>();
+                PlayerAbilities.AddRange(selectedAbilities);
 
                 //remove the last element till we only have 7 selected abilities
-                while (PlayerClassicAbilities.Count > 7)
-                    PlayerClassicAbilities.RemoveAt(PlayerClassicAbilities.Count - 1);
+                while (PlayerAbilities.Count > 7)
+                    PlayerAbilities.RemoveAt(PlayerAbilities.Count - 1);
 
-                AllPlayerAbilities.AddRange(PlayerClassicAbilities);
+                AllPlayerAbilities.AddRange(PlayerAbilities);
             }
         }
 
-        var atkAbility   = pManager.SpecialAbilities.FirstOrDefault(x => x.Ability == Ability.BasicAttack);
-        var dodgeAbility = pManager.SpecialAbilities.FirstOrDefault(x => x.Ability == Ability.Dodge);
-        var pUnit = PlayerHero.Prefab.GetComponent<Unit>();
+        var atkAbility   = pManager.Abilities.FirstOrDefault(x => x.Ability == Ability.BasicAttack);
+        var dodgeAbility = pManager.Abilities.FirstOrDefault(x => x.Ability == Ability.Dodge);
 
         if (atkAbility != null)
             AllPlayerAbilities.Add(atkAbility);
-        
+
         if (dodgeAbility != null)
             AllPlayerAbilities.Add(dodgeAbility);
-         
+
         PlayerAttackButton.GetComponent<AbilityUI>().Initialize(pUnit, atkAbility);
         PlayerDodgeButton.GetComponent<AbilityUI>().Initialize(pUnit, dodgeAbility);
 
@@ -355,7 +355,22 @@ public class AdventureManager : MonoBehaviour
                 ability.OnAbilityToggled += AbilityToggled;
             else
                 ability.OnAbilityActivated += AbilityActivated;
+
+            //initialize EffectData
+            if (ability.OnActivedEffects != null)
+                foreach (var effect in ability.OnActivedEffects)
+                    InitStatusEffect(effect);
+
+            if (ability.OnDeactivatedEffects != null)
+                foreach (var effect in ability.OnDeactivatedEffects)
+                    InitStatusEffect(effect);
         }
+    }
+
+    private void InitStatusEffect(StatusEffect effect)
+    {
+        effect.EffectData = ResourceSystem.Instance.GetStatusEffect(effect.EffectType);
+        effect.EffectData.SetEffectValues(effect.EffectValue, effect.Duration, effect.StatModifier);
     }
 
     public void Test_ResetStage()
@@ -560,7 +575,7 @@ public class AdventureManager : MonoBehaviour
             if (TargetedEnemy == unit)
                 TargetedEnemy = null;
             else if (EnemyStatusBar.GetComponent<UnitStatusBar>().UnitRef == unit)
-                SetStatusBarUnit(UnitGrid.GetDefaultTarget(Faction.Enemies, false), Faction.Enemies);
+                SetStatusBarUnit(UnitGrid.GetRandomUnit(Faction.Enemies, false), Faction.Enemies);
         }
     }
 
@@ -581,34 +596,19 @@ public class AdventureManager : MonoBehaviour
                 CastAbility_BasicAttack(ability);
                 break;
 
-            case Ability.Dodge:
-                CastAbility_Dodge(ability);
-                break;
-
-            case Ability.PoisonSelf:
-                CastAbility_PoisonSelf(ability);
-                break;
-
             default:
-                Debug.LogWarning($"Activated ability ({ability.Name}) that has no implementation in the AdventureManager!");
+                CastAbility(ability, PlayerHero);
                 break;
         }
     }
 
-    
+   
 
     private void AbilityToggled(ScriptableAbility ability, bool isToggled)
     {
         AddAbilityAntiSpamCooldown();
 
-        switch (ability.Ability)
-        {
-            case Ability.ShieldBlock:
-                ToggleAbility_ShieldBlock(ability, isToggled);
-                break;
-            default:
-                break;
-        }
+        ToggleAbility(ability, isToggled);
     }
 
     private void AddAbilityAntiSpamCooldown()
@@ -617,59 +617,131 @@ public class AdventureManager : MonoBehaviour
     }
 
 
-
     #region Ability Cast Methods
 
+
+    public void CastAbility(ScriptableAbility ability, ScriptableUnitBase caster)
+    {
+        AddEffectsToTargets(ability.OnActivedEffects, caster);
+    }
+
+    private void AddEffectsToTargets(List<StatusEffect> effects, ScriptableUnitBase caster)
+    {
+        foreach (var effect in effects)
+        {
+            //STEP 1: get targets for this effect
+            var targetList = GetEffectTargets(effect.Target, effect.MultipleTargetCount, caster);
+
+            //STEP 2: add effect to the targets
+            foreach (var target in targetList)
+            {
+                if (effect.DamageList != null && effect.DamageList.Count > 0)
+                {
+                    target.GetUnit()?.TakeDamage(effect.DamageList);
+                }
+                else
+                {
+                    target.GetUnit()?.AddStatusEffect(effect.EffectData);
+                }
+            }
+        }
+    }
+
+    private List<ScriptableUnitBase> GetEffectTargets(TargetType target, int multipleTargetAmount, ScriptableUnitBase caster)
+    {
+        List<ScriptableUnitBase> res = new List<ScriptableUnitBase>();
+
+        switch (target)
+        {
+            case TargetType.Self:
+                res.Add(caster);
+                break;
+
+            case TargetType.SelectedAlly:
+                res.Add(SelectedAlly);
+                break;
+
+            case TargetType.RandomAlly:
+                res.Add(UnitGrid.GetRandomUnit(caster.Faction, true));
+                break;
+
+            case TargetType.MultipleAllies:
+                for (int i = 0; i < multipleTargetAmount; i++)
+                {
+                    res.Add(UnitGrid.GetRandomUnit(caster.Faction, true));
+                }
+                break;
+
+            case TargetType.AllAllies:
+                res.AddRange(caster.Faction == Faction.Allies ? AlliedUnitsList : EnemyUnitsList);
+                break;
+
+            case TargetType.SelectedEnemy:
+                res.Add(TargetedEnemy);
+                break;
+
+            case TargetType.RandomEnemy:
+                res.Add(UnitGrid.GetRandomUnit(Helper.OpponentFaction(caster.Faction), true));
+                break;
+
+            case TargetType.MultipleEnemies:
+                for (int i = 0; i < multipleTargetAmount; i++)
+                {
+                    res.Add(UnitGrid.GetRandomUnit(Helper.OpponentFaction(caster.Faction), true));
+                }
+                break;
+
+            case TargetType.AllEnemies:
+                res.AddRange(caster.Faction == Faction.Allies ? EnemyUnitsList : AlliedUnitsList);
+                break;
+
+            case TargetType.Everyone:
+                res.AddRange(AlliedUnitsList);
+                res.AddRange(EnemyUnitsList);
+                break;
+
+            default:
+                Debug.LogWarning($"Unexpected TargetType: {target}");
+                break;
+        }
+
+        return res;
+    }
 
     private void CastAbility_BasicAttack(ScriptableAbility ability)
     {
         PlayerHero.GetUnit()?.BasicAttack();
     }
 
-    private void CastAbility_Dodge(ScriptableAbility ability)
+    /// <summary>
+    /// Note: Only player has toggle-able abilities
+    /// </summary>
+    private void ToggleAbility(ScriptableAbility ability, bool isToggled)
     {
-        var statusEffect = ResourceSystem.Instance.GetStatusEffect(StatusEffectType.EvasionBuff);
-        //dodge chance increase & "perfect dodge" duration
-        //statusEffect.SetEffectValues(ability.EffectValue, ability.EffectValue_2);
+        if (isToggled)
+        {
+            //deactivate untoggled state effects
+            foreach (var effect in ability.OnDeactivatedEffects)
+            {
+                effect.EffectData.Deactivate();
+            }
 
-        PlayerHero.GetUnit()?.AddStatusEffect(statusEffect);
-    }
+            AddEffectsToTargets(ability.OnActivedEffects, PlayerHero);
+        }
+        else
+        {
+            //deactivate toggled state effects
+            foreach (var effect in ability.OnActivedEffects)
+            {
+                effect.EffectData.Deactivate();
+            }
 
-    private void CastAbility_PoisonSelf(ScriptableAbility ability)
-    {
-        var statusEffect = ResourceSystem.Instance.GetStatusEffect(StatusEffectType.Poison);
-        //poison amount
-        statusEffect.SetEffectValue(ability.EffectValue);
-
-        PlayerHero.GetUnit()?.AddStatusEffect(statusEffect);
+            AddEffectsToTargets(ability.OnDeactivatedEffects, PlayerHero);
+        }
     }
 
 
     #endregion Ability Cast Methods
-
-
-
-    #region Ability Toggle Methods
-
-
-    private void ToggleAbility_ShieldBlock(ScriptableAbility ability, bool isToggled)
-    {
-        if (isToggled)
-        {
-            var statusEffect = ResourceSystem.Instance.GetStatusEffect(StatusEffectType.ShieldBlock);
-            //percent of shield stats, energy regen % red.
-            statusEffect.SetEffectValue(ability.EffectValue);
-
-            PlayerHero.GetUnit()?.AddStatusEffect(statusEffect);
-        }
-        else
-        {
-            PlayerHero.GetUnit().RemoveStatusEffect(StatusEffectType.ShieldBlock);
-        }
-    }
-
-
-    #endregion Ability Toggle Methods
 
 
     public void LogInfo(string text)

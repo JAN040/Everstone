@@ -21,18 +21,38 @@ MonoBehaviour:
     dodge chance by [value1]. For the first [value2]s dodge chance is increased by
     100.'
   Level: 1
-  ToggleMode: 0
+  MaxLevel: 5
   Cooldown: 10
-  EffectValue: 0.5
-  EffectValue_2: 0.1
-  EffectValue_3: 0
-  EffectValue_4: 0
-  EffectValue_5: 0
-  IsCDRValid: 0
-  IsRanged: 0
-  IsRandomTarget: 0
-  IsSelected: 0
-  UnlockCost: 0
-  CostType: 0
+  UnlockConditions: []
+  OnActivedEffects:
+  - EffectType: 0
+    Target: 0
+    MultipleTargetCount: 0
+    EffectValue: 0.5
+    PerLevelValueChange: 0.01
+    Duration: 1
+    PerLevelDurationChange: 0.1
+    StatModifier:
+      _type: 0
+      _value: 0
+      _modifyingStatType: 12
+  - EffectType: 0
+    Target: 0
+    MultipleTargetCount: 0
+    EffectValue: 1
+    PerLevelValueChange: 0
+    Duration: 0.1
+    PerLevelDurationChange: 0.01
+    StatModifier:
+      _type: 0
+      _value: 0
+      _modifyingStatType: 12
   EnergyCost: 3
   ManaCost: 0
+  IsCDRValid: 0
+  IsSelected: 0
+  ToggleMode: 0
+  OnDeactivatedEffects: []
+  EnergyCost_Deactivate: 0
+  ManaCost_Deactivate: 0
+  AutoDeactivateAfterSeconds: -1

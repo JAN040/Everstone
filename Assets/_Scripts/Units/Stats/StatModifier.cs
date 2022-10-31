@@ -36,5 +36,6 @@ public class StatModifier
 public enum ModifierType
 {
     Flat,
-    Percent
+    Percent,
+    Percent_L2, //applied multiplicatively with Percent instead of additively
 }
