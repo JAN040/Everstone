@@ -11,7 +11,7 @@ public class ScriptableAbility : ScriptableObject
     #region PROPERTIES
 
 
-    public Ability Ability;
+    public Ability Ability = Ability.OrdinaryAbility;
 
     public Sprite MenuImage;
 
@@ -129,7 +129,7 @@ public class ScriptableAbility : ScriptableObject
             Debug.Log($"Toggled ability '{this.Name}'. It is now {ToggleMode}");
             
             OnAbilityToggled?.Invoke(this, ToggleMode == ToggleMode.Toggled);
-            
+
             return;
         }
         else
@@ -160,16 +160,43 @@ public class ScriptableAbility : ScriptableObject
 
     public void SetCostText(TextMeshProUGUI costText_Energy, TextMeshProUGUI costText_Mana)
     {
-        costText_Energy.text = string.Empty;
-
-        string eCost = EnergyCost <= 0 ? "" : $"{EnergyCost}";
-        string mCost =   ManaCost <= 0 ? "" : $"{ManaCost}";
+        (float eCost, float mCost) = GetCost();
 
         if (costText_Energy != null)
-            costText_Energy.text += $"<color=#C06217>{eCost}</color>";
+        {
+            if (eCost > 0f)
+                costText_Energy.text = $"<color=#C06217>{eCost}</color>";
+            else
+                costText_Energy.text = string.Empty;
+        }
 
         if (costText_Mana != null)
-            costText_Mana.text += $"<color=#27A3FD>{mCost}</color>";
+        {
+            if (mCost > 0f)
+                costText_Mana.text = $"<color=#27A3FD>{mCost}</color>";
+            else
+                costText_Mana.text = string.Empty;
+        }
+    }
+
+    public (float eCost, float mCost) GetCost()
+    {
+        float eCost;
+        float mCost;
+
+        if (ToggleMode.In(ToggleMode.None, ToggleMode.UnToggled))
+        {
+            eCost = EnergyCost;
+            mCost = ManaCost;
+        }
+        else
+        {
+            //when the ability is toggled, this is the price to untoggle it
+            eCost = EnergyCost_Deactivate;
+            mCost = ManaCost_Deactivate;
+        }
+
+        return (eCost, mCost);
     }
 
     public float GetCooldownNormalized()

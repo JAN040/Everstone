@@ -209,6 +209,8 @@ public enum Icon
     Poison,
     Electricity,
     Fire,
+    Buff,
+    Debuff
 }
 
 public enum UserLayers
@@ -252,7 +254,7 @@ public enum Ability
     BasicAttack,
     Dodge,
     ShieldBlock,
-    ThrowPoison
+    OrdinaryAbility
 }
 
 public enum StatusEffectType

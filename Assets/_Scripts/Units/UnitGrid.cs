@@ -226,8 +226,8 @@ public class UnitGrid
 
         if (includeRanged)
         {
-            int maxCol = target.GetLength(0) - 1;
-            int maxRow = target.GetLength(1) - 1;
+            int maxCol = target.GetLength(0); //no need to deduct 1 cause RandomRange needs +1 (because its exclusive)
+            int maxRow = target.GetLength(1);
 
             //select randomly 5 times anywhere in the grid, if we dont find anything, then select from
             //  the first row
@@ -236,7 +236,9 @@ public class UnitGrid
                 int randomCol = Random.Range(0, maxCol);
                 int randomRow = Random.Range(0, maxRow);
 
-                if (target[randomCol, randomRow] != null)
+                if (target[randomCol, randomRow] != null &&
+                    target[randomCol, randomRow].GetUnit() != null &&
+                    !target[randomCol, randomRow].GetUnit().IsDead)
                     return target[randomCol, randomRow];
             }
         }

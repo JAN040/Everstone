@@ -5400,10 +5400,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyUnitStatus
       objectReference: {fileID: 0}
-    - target: {fileID: 6811106623782889270, guid: 2361034eb67079e46ba8f89e13dd4f87, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0.89630127
-      objectReference: {fileID: 0}
     - target: {fileID: 9198772386291291354, guid: 2361034eb67079e46ba8f89e13dd4f87, type: 3}
       propertyPath: m_Pivot.x
       value: 1
@@ -5438,7 +5434,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9198772386291291354, guid: 2361034eb67079e46ba8f89e13dd4f87, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 270
+      value: 320
       objectReference: {fileID: 0}
     - target: {fileID: 9198772386291291354, guid: 2361034eb67079e46ba8f89e13dd4f87, type: 3}
       propertyPath: m_LocalPosition.x

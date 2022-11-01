@@ -356,22 +356,19 @@ public class AdventureManager : MonoBehaviour
             else
                 ability.OnAbilityActivated += AbilityActivated;
 
+            //  done when the ability activates
             //initialize EffectData
-            if (ability.OnActivedEffects != null)
-                foreach (var effect in ability.OnActivedEffects)
-                    InitStatusEffect(effect);
+            //if (ability.OnActivedEffects != null)
+            //    foreach (var effect in ability.OnActivedEffects)
+            //        InitStatusEffect(effect);
 
-            if (ability.OnDeactivatedEffects != null)
-                foreach (var effect in ability.OnDeactivatedEffects)
-                    InitStatusEffect(effect);
+            //if (ability.OnDeactivatedEffects != null)
+            //    foreach (var effect in ability.OnDeactivatedEffects)
+            //        InitStatusEffect(effect);
         }
     }
 
-    private void InitStatusEffect(StatusEffect effect)
-    {
-        effect.EffectData = ResourceSystem.Instance.GetStatusEffect(effect.EffectType);
-        effect.EffectData.SetEffectValues(effect.EffectValue, effect.Duration, effect.StatModifier);
-    }
+    
 
     public void Test_ResetStage()
     {
@@ -398,6 +395,7 @@ public class AdventureManager : MonoBehaviour
     {
         foreach (var enemy in EnemyUnitsList)
         {
+            enemy.GetUnit().IsDead = true;
             Destroy(enemy.Prefab);
         }
         EnemyUnitsList.Clear();
@@ -635,16 +633,25 @@ public class AdventureManager : MonoBehaviour
             //STEP 2: add effect to the targets
             foreach (var target in targetList)
             {
+
                 if (effect.DamageList != null && effect.DamageList.Count > 0)
                 {
                     target.GetUnit()?.TakeDamage(effect.DamageList);
                 }
                 else
                 {
+                    //init effectData with a fresh ScriptableStatusEffect object (every target gets a fresh effect obj)
+                    InitStatusEffect(effect);
                     target.GetUnit()?.AddStatusEffect(effect.EffectData);
                 }
             }
         }
+    }
+
+    private void InitStatusEffect(StatusEffect effect)
+    {
+        effect.EffectData = ResourceSystem.Instance.GetStatusEffect(effect.EffectType);
+        effect.EffectData.SetEffectValues(effect.EffectValue, effect.Duration, effect.StatModifier);
     }
 
     private List<ScriptableUnitBase> GetEffectTargets(TargetType target, int multipleTargetAmount, ScriptableUnitBase caster)

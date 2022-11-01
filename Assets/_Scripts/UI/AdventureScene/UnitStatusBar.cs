@@ -96,13 +96,22 @@ public class UnitStatusBar : MonoBehaviour
         }
     }
 
-    
-
+    //all currently spawned status effect panels are here, so we can clear them on unit switch
+    private List<GameObject> StatusEffectPanels;
+    private float ColorAnimationTimer;
+    private Color InitialColor;
 
     #endregion VARIABLES
 
 
     #region UNITY METHODS
+
+    private void Start()
+    {
+        StatusEffectPanels = new List<GameObject>();
+        ColorAnimationTimer = 0f;
+        InitialColor = Attack_Text.color;
+    }
 
     //TODO: animations
     private void Update()
@@ -175,6 +184,19 @@ public class UnitStatusBar : MonoBehaviour
             SetClassicSprites();
 
         #endregion Sprite swaps
+
+        #region Status Effects
+
+        //clear current status effect panels
+        StatusEffectPanels.ForEach(x => Destroy(x.gameObject));
+
+        //spawn new effect panels
+        foreach (var effect in unitScript.GetActiveEffects())
+        {
+            SpawnStatusEffectPanel(effect);
+        } 
+
+        #endregion Status Effects
     }
 
     private void UpdateHpUI()
@@ -248,12 +270,21 @@ public class UnitStatusBar : MonoBehaviour
 
     private IEnumerator HighlightTextForSeconds(TextMeshProUGUI textComponent)
     {
-        Color prevColor = textComponent.color;
         textComponent.color = Color.red;
+        ColorAnimationTimer = 0f;
 
-        while (textComponent.color != prevColor)
+        while (textComponent.color != InitialColor)
         {
-            textComponent.color = Color.Lerp(textComponent.color, prevColor, Time.deltaTime / TextHighlightSpeed);
+            textComponent.color = Color.Lerp(textComponent.color, InitialColor, Time.deltaTime / TextHighlightSpeed);
+            
+            ColorAnimationTimer += Time.deltaTime;
+
+            if (ColorAnimationTimer > 2f)
+            {
+                textComponent.color = InitialColor;
+                break;
+            }
+
             yield return null;
         }
     }
@@ -361,6 +392,8 @@ public class UnitStatusBar : MonoBehaviour
         spawnedPrefab.GetComponent<StatusEffectUI>()?.Initialize(effect);
 
         effect.Prefab = spawnedPrefab;
+
+        StatusEffectPanels.Add(spawnedPrefab);
     }
 
     private void AddUnitEvents(Unit unit)

@@ -48,8 +48,8 @@ public class StatusEffectUI : MonoBehaviour
         Effect = effect;
 
         EffectValueText.text                = effect.GetDisplayValue();
-        EffectImage.sprite                  = effect.MenuImage;
-        EffectDurationIndicatorImage.sprite = effect.MenuImage;
+        EffectImage.sprite                  = effect.GetIcon();
+        EffectDurationIndicatorImage.sprite = effect.GetIcon();
     }
 
     public void IconButtonClicked()

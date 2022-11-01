@@ -27,8 +27,9 @@ MonoBehaviour:
     MultipleTargetCount: 2
     EffectValue: 10
     PerLevelValueChange: 10
-    Duration: 0
+    Duration: 2
     PerLevelDurationChange: 0
+    DamageList: []
     StatModifier:
       _type: 0
       _value: 0

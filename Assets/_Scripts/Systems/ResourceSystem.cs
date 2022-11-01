@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.U2D;
 
 /// <summary>
 /// One repository for all scriptable objects. Create your query methods here to keep your business logic clean.
@@ -8,6 +9,9 @@ using UnityEngine;
 ///     saved to the actual ScriptableObject file??? cringe
 /// </summary>
 public class ResourceSystem : Singleton<ResourceSystem> {
+
+    [SerializeField] SpriteAtlas icon_sprite_atlas;
+
     private List<ScriptableHero> Heroes { get; set; }
     private Dictionary<string, ScriptableHero> _HeroesDict;
 
@@ -64,80 +68,101 @@ public class ResourceSystem : Singleton<ResourceSystem> {
         { Icon.Coin_Silver, "coin_silver"   },
         { Icon.Coin_Gold,   "coin_gold"     },
         { Icon.Fire,        "fire"          },
+        { Icon.Buff,        "buff"          },
+        { Icon.Debuff,      "debuff"        },
     };
 
 
     #region STATIC METHODS
 
+    public static Sprite GetStatIconImage(StatType statType)
+    {
+        if (Instance == null)
+            return null;
+
+        return Instance.icon_sprite_atlas.GetSprite(TMP_IconDict[GetStatIcon(statType)]);
+    }
 
     public static string GetStatIconTag(StatType statType)
+    {
+        return GetIconTag(GetStatIcon(statType));
+    }
+
+    private static Icon GetStatIcon(StatType statType)
     {
         switch (statType)
         {
             case StatType.PhysicalDamage:
-                return GetIconTag(Icon.Attack_Phys);
+                return Icon.Attack_Phys;
             case StatType.Armor:
-                return GetIconTag(Icon.Defense);
+                return Icon.Defense;
             case StatType.ArtsDamage:
-                return GetIconTag(Icon.Attack_Arts);
+                return Icon.Attack_Arts;
             case StatType.ArtsResist:
-                return GetIconTag(Icon.Arts_Resist);
+                return Icon.Arts_Resist;
             case StatType.MaxHP:
-                return GetIconTag(Icon.Health);
+                return Icon.Health;
             case StatType.MaxEnergy:
-                return GetIconTag(Icon.Stamina);
+                return Icon.Stamina;
             case StatType.EnergyRecovery:
-                return GetIconTag(Icon.Energy_Regen);
+                return Icon.Energy_Regen;
             case StatType.MaxMana:
-                return GetIconTag(Icon.Mana);
+                return Icon.Mana;
             case StatType.ManaRecovery:
-                return GetIconTag(Icon.Mana_Regen);
+                return Icon.Mana_Regen;
             case StatType.CooldownReduction:
-                return GetIconTag(Icon.Cooldown);
+                return Icon.Cooldown;
             case StatType.Speed:
-                return GetIconTag(Icon.Speed);
+                return Icon.Speed;
             case StatType.DodgeChance:
-                return GetIconTag(Icon.Dodge);
+                return Icon.Dodge;
             case StatType.HealEfficiency:
-                return GetIconTag(Icon.Health_Regen);
+                return Icon.Health_Regen;
             case StatType.BlockChance:
-                return GetIconTag(Icon.Block_Chance);
-            
+                return Icon.Block_Chance;
+
             case StatType.WeaponAccuracy:
             case StatType.Proficiency:
             default:
-                return "";
+                Debug.LogWarning($"Unexpected skill enum: {statType}");
+                return Icon.Everstone;
         }
     }
 
     public static string GetSkillIconTag(Skill skill)
     {
+        return GetIconTag(GetSkillIcon(skill));
+    }
+
+    private static Icon GetSkillIcon(Skill skill)
+    {
         switch (skill)
         {
             case Skill.Strength:
-                return GetIconTag(Icon.Strength);
+                return Icon.Strength;
 
             case Skill.Arts:
-                return GetIconTag(Icon.Attack_Arts);
-                
+                return Icon.Attack_Arts;
+
             case Skill.Agility:
-                return GetIconTag(Icon.Agility);
-                
+                return Icon.Agility;
+
             case Skill.Constitution:
-                return GetIconTag(Icon.Health);
-                
+                return Icon.Health;
+
             case Skill.Lockpicking:
-                return GetIconTag(Icon.Lockpicking);
-                
+                return Icon.Lockpicking;
+
             case Skill.Taming:
-                return GetIconTag(Icon.Taming);
-                
+                return Icon.Taming;
+
             case Skill.Trading:
-                return GetIconTag(Icon.Trading);
-                
+                return Icon.Trading;
+
             case Skill.Equipment_Skill:
             default:
-                return "";
+                Debug.LogWarning($"Unexpected skill enum: {skill}");
+                return Icon.Everstone;
         }
     }
 
@@ -190,7 +215,7 @@ public class ResourceSystem : Singleton<ResourceSystem> {
         _HeroBackgroundsDict = HeroBackgrounds.ToDictionary(x => x.backgroundName, x => x);
 
 
-        StatusEffects = Resources.LoadAll<ScriptableStatusEffect>("Heroes/Abilities/StatusEffects").ToList();
+        StatusEffects = Resources.LoadAll<ScriptableStatusEffect>("Heroes/StatusEffects").ToList();
         PlayerAbilities = Resources.LoadAll<ScriptableAbility>("Heroes/Abilities").ToList();
 
 

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: default_icon_assets
   m_EditorClassIdentifier: 
   hashCode: 594883363
-  material: {fileID: 5086191987651992607}
+  material: {fileID: 236302705662579603}
   materialHashCode: 0
   m_Version: 1.1.0
   m_FaceInfo:
@@ -49,173 +49,185 @@ MonoBehaviour:
     m_Unicode: 65534
     m_GlyphIndex: 1
     m_Scale: 1
+    m_Name: debuff
+    m_HashCode: -497553898
+  - m_ElementType: 2
+    m_Unicode: 65534
+    m_GlyphIndex: 2
+    m_Scale: 1
     m_Name: everstone
     m_HashCode: -1088207961
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 2
+    m_GlyphIndex: 3
+    m_Scale: 1
+    m_Name: buff
+    m_HashCode: 3580311
+  - m_ElementType: 2
+    m_Unicode: 65534
+    m_GlyphIndex: 4
     m_Scale: 1
     m_Name: defense
     m_HashCode: 764489498
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 3
+    m_GlyphIndex: 5
     m_Scale: 1
     m_Name: attack_arts
     m_HashCode: -658224669
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 4
+    m_GlyphIndex: 6
     m_Scale: 1
     m_Name: resist
     m_HashCode: 210788106
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 5
+    m_GlyphIndex: 7
     m_Scale: 1
     m_Name: attack_phys
     m_HashCode: -658801051
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 6
+    m_GlyphIndex: 8
     m_Scale: 1
     m_Name: health
     m_HashCode: -331737412
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 7
+    m_GlyphIndex: 9
     m_Scale: 1
     m_Name: energy
     m_HashCode: -222457054
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 8
+    m_GlyphIndex: 10
     m_Scale: 1
     m_Name: speed
     m_HashCode: 134764743
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 9
+    m_GlyphIndex: 11
     m_Scale: 1
     m_Name: mana
     m_HashCode: 4017059
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 10
+    m_GlyphIndex: 12
     m_Scale: 1
     m_Name: energy_regen
     m_HashCode: -583070490
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 11
+    m_GlyphIndex: 13
     m_Scale: 1
     m_Name: health_regen
     m_HashCode: 307973368
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 12
+    m_GlyphIndex: 14
     m_Scale: 1
     m_Name: mana_regen
     m_HashCode: -1723784857
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 13
+    m_GlyphIndex: 15
     m_Scale: 1
     m_Name: strength
     m_HashCode: -311902043
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 14
+    m_GlyphIndex: 16
     m_Scale: 1
     m_Name: block_chance
     m_HashCode: -466237164
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 15
+    m_GlyphIndex: 17
     m_Scale: 1
     m_Name: dodge
     m_HashCode: 115290221
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 16
+    m_GlyphIndex: 18
     m_Scale: 1
     m_Name: cooldown
     m_HashCode: -1412661891
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 17
+    m_GlyphIndex: 19
     m_Scale: 1
     m_Name: agility
     m_HashCode: 425436615
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 18
+    m_GlyphIndex: 20
     m_Scale: 1
     m_Name: lockpicking
     m_HashCode: 1266214138
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 19
+    m_GlyphIndex: 21
     m_Scale: 1
     m_Name: taming
     m_HashCode: 133290616
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 20
+    m_GlyphIndex: 22
     m_Scale: 1
     m_Name: electricity
     m_HashCode: 527668199
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 21
+    m_GlyphIndex: 23
     m_Scale: 1
     m_Name: trading
     m_HashCode: -556984733
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 22
+    m_GlyphIndex: 24
     m_Scale: 1
     m_Name: accuracy
     m_HashCode: -221330883
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 23
+    m_GlyphIndex: 25
     m_Scale: 1
     m_Name: poison
     m_HashCode: -11690620
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 24
+    m_GlyphIndex: 26
     m_Scale: 1
     m_Name: capacity
     m_HashCode: -1265146988
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 25
+    m_GlyphIndex: 27
     m_Scale: 1
     m_Name: luck
     m_HashCode: 3791985
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 26
+    m_GlyphIndex: 28
     m_Scale: 1
     m_Name: coin_copper
     m_HashCode: 1359372207
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 27
+    m_GlyphIndex: 29
     m_Scale: 1
     m_Name: coin_gold
     m_HashCode: -2132566444
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 28
+    m_GlyphIndex: 30
     m_Scale: 1
     m_Name: coin_silver
     m_HashCode: 745067043
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 29
+    m_GlyphIndex: 31
     m_Scale: 1
     m_Name: fire
     m_HashCode: 3711640
@@ -237,6 +249,21 @@ MonoBehaviour:
     sprite: {fileID: -381411382, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
   - m_Index: 1
     m_Metrics:
+      m_Width: 146.36108
+      m_Height: 146.37189
+      m_HorizontalBearingX: -0
+      m_HorizontalBearingY: 131.7347
+      m_HorizontalAdvance: 146.36108
+    m_GlyphRect:
+      m_X: 771
+      m_Y: 1841
+      m_Width: 146
+      m_Height: 146
+    m_Scale: 1
+    m_AtlasIndex: 0
+    sprite: {fileID: 1580528756, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
+  - m_Index: 2
+    m_Metrics:
       m_Width: 110.97708
       m_Height: 133.1019
       m_HorizontalBearingX: -0
@@ -250,7 +277,22 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: -607243726, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
-  - m_Index: 2
+  - m_Index: 3
+    m_Metrics:
+      m_Width: 147.16527
+      m_Height: 146.774
+      m_HorizontalBearingX: -0
+      m_HorizontalBearingY: 132.0966
+      m_HorizontalAdvance: 147.16527
+    m_GlyphRect:
+      m_X: 522
+      m_Y: 1840
+      m_Width: 147
+      m_Height: 146
+    m_Scale: 1
+    m_AtlasIndex: 0
+    sprite: {fileID: -998917882, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
+  - m_Index: 4
     m_Metrics:
       m_Width: 186.57016
       m_Height: 182.96486
@@ -265,7 +307,7 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: -284271303, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
-  - m_Index: 3
+  - m_Index: 5
     m_Metrics:
       m_Width: 182.95135
       m_Height: 181.35637
@@ -280,7 +322,7 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: -1819428829, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
-  - m_Index: 4
+  - m_Index: 6
     m_Metrics:
       m_Width: 186.16808
       m_Height: 184.17122
@@ -295,7 +337,7 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: -590624448, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
-  - m_Index: 5
+  - m_Index: 7
     m_Metrics:
       m_Width: 184.55971
       m_Height: 197.84332
@@ -310,7 +352,7 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: 96711997, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
-  - m_Index: 6
+  - m_Index: 8
     m_Metrics:
       m_Width: 171.69281
       m_Height: 155.62065
@@ -325,7 +367,7 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: 1203058466, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
-  - m_Index: 7
+  - m_Index: 9
     m_Metrics:
       m_Width: 177.32208
       m_Height: 160.84822
@@ -340,7 +382,7 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: 421691234, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
-  - m_Index: 8
+  - m_Index: 10
     m_Metrics:
       m_Width: 159.22798
       m_Height: 167.68428
@@ -355,7 +397,7 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: 624433053, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
-  - m_Index: 9
+  - m_Index: 11
     m_Metrics:
       m_Width: 177.72417
       m_Height: 187.38818
@@ -370,7 +412,7 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: -1378656818, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
-  - m_Index: 10
+  - m_Index: 12
     m_Metrics:
       m_Width: 190.99316
       m_Height: 191.00726
@@ -385,7 +427,7 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: 1327913135, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
-  - m_Index: 11
+  - m_Index: 13
     m_Metrics:
       m_Width: 190.99316
       m_Height: 190.60515
@@ -400,7 +442,7 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: 1385159701, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
-  - m_Index: 12
+  - m_Index: 14
     m_Metrics:
       m_Width: 190.99316
       m_Height: 190.60515
@@ -415,7 +457,7 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: -1098161507, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
-  - m_Index: 13
+  - m_Index: 15
     m_Metrics:
       m_Width: 204.26216
       m_Height: 197.84332
@@ -430,7 +472,7 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: 714057914, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
-  - m_Index: 14
+  - m_Index: 16
     m_Metrics:
       m_Width: 205.87053
       m_Height: 206.28784
@@ -445,7 +487,7 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: -248523930, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
-  - m_Index: 15
+  - m_Index: 17
     m_Metrics:
       m_Width: 197.42662
       m_Height: 193.82211
@@ -460,7 +502,7 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: -1603447309, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
-  - m_Index: 16
+  - m_Index: 18
     m_Metrics:
       m_Width: 198.2308
       m_Height: 194.22423
@@ -475,7 +517,7 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: -1034554020, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
-  - m_Index: 17
+  - m_Index: 19
     m_Metrics:
       m_Width: 203.45798
       m_Height: 199.85391
@@ -490,7 +532,7 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: -852115838, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
-  - m_Index: 18
+  - m_Index: 20
     m_Metrics:
       m_Width: 184.15762
       m_Height: 176.1288
@@ -505,7 +547,7 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: -604625697, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
-  - m_Index: 19
+  - m_Index: 21
     m_Metrics:
       m_Width: 197.02454
       m_Height: 196.23483
@@ -520,7 +562,7 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: -517590820, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
-  - m_Index: 20
+  - m_Index: 22
     m_Metrics:
       m_Width: 192.19943
       m_Height: 201.86452
@@ -535,7 +577,7 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: -487282531, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
-  - m_Index: 21
+  - m_Index: 23
     m_Metrics:
       m_Width: 207.0768
       m_Height: 206.68997
@@ -550,7 +592,7 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: 1147268071, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
-  - m_Index: 22
+  - m_Index: 24
     m_Metrics:
       m_Width: 182.95135
       m_Height: 185.7797
@@ -565,7 +607,7 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: 1125577496, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
-  - m_Index: 23
+  - m_Index: 25
     m_Metrics:
       m_Width: 163.65099
       m_Height: 178.94365
@@ -580,7 +622,7 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: -404247128, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
-  - m_Index: 24
+  - m_Index: 26
     m_Metrics:
       m_Width: 147.96944
       m_Height: 182.16061
@@ -595,7 +637,7 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: -1444852825, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
-  - m_Index: 25
+  - m_Index: 27
     m_Metrics:
       m_Width: 199.83917
       m_Height: 185.37758
@@ -610,7 +652,7 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: -371377159, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
-  - m_Index: 26
+  - m_Index: 28
     m_Metrics:
       m_Width: 123.03981
       m_Height: 152.40369
@@ -625,7 +667,7 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: -1584345259, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
-  - m_Index: 27
+  - m_Index: 29
     m_Metrics:
       m_Width: 122.63772
       m_Height: 152.80582
@@ -640,7 +682,7 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: 1807825837, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
-  - m_Index: 28
+  - m_Index: 30
     m_Metrics:
       m_Width: 122.23563
       m_Height: 153.20793
@@ -655,7 +697,7 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: -1619888574, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
-  - m_Index: 29
+  - m_Index: 31
     m_Metrics:
       m_Width: 171.29071
       m_Height: 173.31396
@@ -672,7 +714,7 @@ MonoBehaviour:
     sprite: {fileID: 399355126, guid: b44cc902e14812949bdfd42007fde4ac, type: 3}
   spriteInfoList: []
   fallbackSpriteAssets: []
---- !u!21 &5086191987651992607
+--- !u!21 &236302705662579603
 Material:
   serializedVersion: 8
   m_ObjectHideFlags: 1

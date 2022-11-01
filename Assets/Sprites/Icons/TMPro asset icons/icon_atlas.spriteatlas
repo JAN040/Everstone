@@ -1,0 +1,116 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: icon_atlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 4096
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 1
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 47ee9ce5d046aa34c8ec7fcc9aac9ed7, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: f68a8080f580c2e4fad66ead4420415e, type: 3}
+  - {fileID: 21300000, guid: 491d4ca18a0cae44eb9c48e143567ace, type: 3}
+  - {fileID: 21300000, guid: 0940d2d17f1733c408159af3f4ab3f32, type: 3}
+  - {fileID: 21300000, guid: bf6b4dd1ca36cf2409778b04bafee006, type: 3}
+  - {fileID: 21300000, guid: cfcef582ee9241a49b8ac72baeab78fe, type: 3}
+  - {fileID: 21300000, guid: aaca5f921f22a8e4d8657792b0fdc114, type: 3}
+  - {fileID: 21300000, guid: a101b9b29ce5975459aa4ce992ff5f74, type: 3}
+  - {fileID: 21300000, guid: a3401dd222519284586b0cbf25b56c66, type: 3}
+  - {fileID: 21300000, guid: e5d7dae23fd6bde439224c67b933b0b3, type: 3}
+  - {fileID: 21300000, guid: ac0dc21392b98dd4f972724583588232, type: 3}
+  - {fileID: 21300000, guid: 3b739e4361dea03419f8f75269920f53, type: 3}
+  - {fileID: 21300000, guid: a5804593bb1cac34f9c124d1aa25acfd, type: 3}
+  - {fileID: 21300000, guid: 924100c3c8f3ebc4ebd274eee56fa470, type: 3}
+  - {fileID: 21300000, guid: 11e578f3a7c6ed84e99b6f691e9eae39, type: 3}
+  - {fileID: 21300000, guid: cd63cf3588519514f85d3c2b5f5e43f8, type: 3}
+  - {fileID: 21300000, guid: a18fbfc5b34652a4d9b67f925b4ad255, type: 3}
+  - {fileID: 21300000, guid: 11fd30860db24df47a8cc18eb34fe89f, type: 3}
+  - {fileID: 21300000, guid: 7be391866510a5a4b8193093552a3eb3, type: 3}
+  - {fileID: 21300000, guid: 3ce0cbb7410a1094f9c45a6943addc1d, type: 3}
+  - {fileID: 21300000, guid: 7605c048dfbb4a0468e54a5d0e52dbdd, type: 3}
+  - {fileID: 21300000, guid: b2712348f3341dc40b5b411a8fa64ce2, type: 3}
+  - {fileID: 21300000, guid: 7b26ffe81db2ff6489c0312a5ef8c520, type: 3}
+  - {fileID: 21300000, guid: 1c7eb4b993544a74d9cac47d82ffc1e4, type: 3}
+  - {fileID: 21300000, guid: 3faed62a008b4584abaf4ea620952c45, type: 3}
+  - {fileID: 21300000, guid: 829cbfcab4f861e40aee145ac70862d9, type: 3}
+  - {fileID: 21300000, guid: bf8bec1cd23811543978958ee2119c69, type: 3}
+  - {fileID: 21300000, guid: 2ba221cd3f1b25348a658223b72aa201, type: 3}
+  - {fileID: 21300000, guid: 6c16440ec6ac4b843b3e4182a8208b1a, type: 3}
+  - {fileID: 21300000, guid: 544b481f01e8c074f9748129187c3a90, type: 3}
+  - {fileID: 21300000, guid: 7f01eb6f433552745b41ad112f9d85f0, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - block_chance
+  - speed
+  - health_regen
+  - taming
+  - coin_copper
+  - agility
+  - energy
+  - mana_regen
+  - coin_gold
+  - luck
+  - poison
+  - strength
+  - trading
+  - electricity
+  - accuracy
+  - coin_silver
+  - fire
+  - capacity
+  - defense
+  - resist
+  - attack_phys
+  - mana
+  - energy_regen
+  - everstone
+  - cooldown
+  - lockpicking
+  - attack_arts
+  - health
+  - mage_basicAtk
+  - dodge
+  m_RenderDataMap: {}
+  m_Tag: icon_atlas
+  m_IsVariant: 0

@@ -10,7 +10,7 @@ public class ScriptableStatusEffectModifyStat : ScriptableStatusEffect
     #region Effect specific variables
 
 
-    public Sprite MenuImage_Debuff;
+    //public Sprite MenuImage_Debuff;
 
 
     #endregion Effect specific variables
@@ -43,13 +43,15 @@ public class ScriptableStatusEffectModifyStat : ScriptableStatusEffect
         if (Modifier == null)
             return MenuImage;
 
-        return Modifier.IsPositive() ? MenuImage : MenuImage_Debuff;
+        return ResourceSystem.GetStatIconImage(Modifier.ModifyingStatType);
     }
 
     protected override string GetCustomDisplayValue()
     {
+        var icon = Modifier.IsPositive() ? Icon.Buff : Icon.Debuff;
+
         if (Modifier != null)
-            return ResourceSystem.GetStatIconTag(Modifier.ModifyingStatType);
+            return  ResourceSystem.GetIconTag(icon);
         else
             return string.Empty;
     }

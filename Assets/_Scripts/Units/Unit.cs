@@ -63,6 +63,11 @@ public class Unit : MonoBehaviour
     [SerializeField] VisualEffect RangedAtkMuzzle;
     [SerializeField] VisualEffect RangedAtkImpact;
 
+    [Space]
+    [Header("Effects")]
+    [SerializeField] GridLayoutGroup EffectPanelGrid;
+    [SerializeField] GameObject EffectPanelPrefab;
+
 
     #endregion UI References
 
@@ -196,6 +201,8 @@ public class Unit : MonoBehaviour
     [SerializeField] float LerpTimer = 0;
 
 
+    private List<GameObject> EffectPanelList;
+
 
     #endregion VARIABLES
 
@@ -225,18 +232,20 @@ public class Unit : MonoBehaviour
 
     private void Update()
     {
-        //increase energy amount if not dead
-        if (IsDead || IsAttacking)
+        if (IsDead)
             return;
 
         //animate HP changes
         UpdateHpUI();
 
-        //energy gain
-        GainEnergy();
-
         //update effects
         UpdateStatusEffects();
+
+        if (IsAttacking)
+            return;
+
+        //energy gain only when not already attacking
+        GainEnergy();
 
         //start attacking/action if energy full (the hero doesnt auto attack, all other units do)
         if (Stats.Energy >= Stats.MaxEnergy.GetValue() && UnitDataRef != HeroRef)
@@ -248,11 +257,16 @@ public class Unit : MonoBehaviour
 
     private void UpdateStatusEffects()
     {
-        //make a new list cause AllPlayerAbilities is modified when an effect expires
-        foreach (var effect in new List<ScriptableStatusEffect>(ActiveEffects))
+        foreach (var effect in GetActiveEffects())
         {
             effect.Update();
         }
+    }
+
+    public List<ScriptableStatusEffect> GetActiveEffects()
+    {
+        //make a new list cause AllPlayerAbilities is modified when an effect expires
+        return new List<ScriptableStatusEffect>(ActiveEffects);
     }
 
 
@@ -350,6 +364,7 @@ public class Unit : MonoBehaviour
         ManagerRef = manager;
         HeroRef = hero;
 
+        EffectPanelList = new List<GameObject>();
 
         if (UnitDataRef is ScriptableNpcUnit)
             this.IsRanged = GameManager.Instance.UnitData.IsClassRanged((UnitDataRef as ScriptableNpcUnit).Class);
@@ -399,8 +414,8 @@ public class Unit : MonoBehaviour
 
     private void LevelChanged(int prevLevel, int newLevel, SkillLevel skill)
     {
-        CreateStatusIndicator($"{skill} lvl {prevLevel} => {newLevel}", Color.white);
-        ManagerRef.LogInfo($"{skill} leveled up from {prevLevel} to {newLevel}! ({skill.Experience}/{skill.ExpToNextLevel})");
+        CreateStatusIndicator($"{skill.SkillType} lvl {prevLevel} => {newLevel}", Color.white);
+        ManagerRef.LogInfo($"{skill.SkillType} leveled up from {prevLevel} to {newLevel}! ({skill.Experience}/{skill.ExpToNextLevel})");
     }
 
     private void SetUnitData(ScriptableUnitBase unitData)
@@ -537,7 +552,7 @@ public class Unit : MonoBehaviour
         ReduceHPByAmount(dmgAmount);
 
         //Handle xp gain
-        if (IsPlayerHero() && dmgAmount > 0 && !IsDead)
+        if (IsPlayerHero() && dmgAmount > 0 && !IsDead && this.Stats.HealthPoints > 0)
         {
             ManagerRef.AddPlayerXp(dmgAmount.RoundHP(), Skill.Constitution);
         }
@@ -678,7 +693,7 @@ public class Unit : MonoBehaviour
 
     public void RemoveAllStatusEffects()
     {
-        foreach (var effect in new List<ScriptableStatusEffect>(ActiveEffects))
+        foreach (var effect in GetActiveEffects())
         {
             effect.Deactivate();
         }
@@ -689,6 +704,9 @@ public class Unit : MonoBehaviour
         {
             Debug.LogWarning("RemoveAllStatusEffects(): ActiveEffects is still not empty!");
         }
+
+        //also remove the panels
+        EffectPanelList.ForEach(x => Destroy(x.gameObject));
     }
 
     public IEnumerator PlayDeathAnimation()
@@ -987,30 +1005,21 @@ public class Unit : MonoBehaviour
         if (ActiveEffects == null)
             ActiveEffects = new List<ScriptableStatusEffect>();
 
-        var dupeEffect = ActiveEffects.FirstOrDefault(x => x.Effect == newEffect.Effect && x.IsActive); 
-        
-        //if the same effect exists in the list
-        if (dupeEffect != null)
+        var dupeEffect = ActiveEffects.FirstOrDefault(x => x.Effect == newEffect.Effect && x.IsActive);
+
+        //if the same effect exists in the list and both of the effects are stackable, stack them
+        if (dupeEffect != null && newEffect.IsStackable && dupeEffect.IsStackable)
         {
-            //if the effects are stackable, stack them, otherwise keep the newer effect
-            if (newEffect.IsStackable && dupeEffect.IsStackable)
-            {
-                dupeEffect.StackEffect(newEffect);
-                
-                return;
-            }
-            else
-            {
-                RemoveStatusEffect(dupeEffect);
-            }
+            dupeEffect.StackEffect(newEffect);
+            
+            return;
         }
 
         newEffect.OnEffectExpired += EffectExpired;
         newEffect.Activate(this);
 
         ActiveEffects.Add(newEffect);
-
-        //TODO: add modifiers ??
+        EffectListChanged();
 
         OnUnitStatusEffectAdded?.Invoke(newEffect);
     }
@@ -1021,6 +1030,34 @@ public class Unit : MonoBehaviour
 
         //called in EffectExpired
         //ActiveEffects.Remove(effect);
+        //EffectListChanged();
+    }
+
+    private void EffectListChanged()
+    {
+        //clear the panel grid
+        EffectPanelList.ForEach(x => Destroy(x.gameObject));
+
+        //add new effect panels to the grid
+        var effectList = this.GetActiveEffects();
+
+        for (int i= 0; i < effectList.Count; i++)
+        {
+            if (i > 3) break;   //display up to 4 effects max
+
+            SpawnStatusEffectPanel(effectList[i]);
+        }
+    }
+
+    private void SpawnStatusEffectPanel(ScriptableStatusEffect effect)
+    {
+        var spawnedPrefab = Instantiate(EffectPanelPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+
+        spawnedPrefab.transform.SetParent(EffectPanelGrid.transform, false);
+        spawnedPrefab.transform.localScale = Vector3.one;
+        spawnedPrefab.GetComponent<StatusEffectUI>()?.Initialize(effect);
+
+        EffectPanelList.Add(spawnedPrefab);
     }
 
 
@@ -1028,8 +1065,7 @@ public class Unit : MonoBehaviour
     {
         effect.OnEffectExpired -= EffectExpired;
         ActiveEffects.Remove(effect);
-
-        //TODO: remove modifiers
+        EffectListChanged();
     }
 
     private bool IsPlayerHero()

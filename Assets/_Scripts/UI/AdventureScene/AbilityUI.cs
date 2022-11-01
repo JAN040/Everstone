@@ -85,8 +85,9 @@ public class AbilityUI : MonoBehaviour
 
     private void UpdateUI(bool init)
     {
+        //blank ability tile
         if (Ability == null)
-        {   //blank ability tile
+        {
             AbilityButton.interactable = false;
             CooldownImage.fillAmount = 0;
             CooldownText.text = "";
@@ -154,6 +155,9 @@ public class AbilityUI : MonoBehaviour
         Ability.CurrentCooldown = cd;
 
         Ability.Activate();
+
+        //in case the cost changes (toggleable abilities)
+        Ability.SetCostText(CostText_Energy, CostText_Mana);
     }
 
     /// <summary>
@@ -167,8 +171,7 @@ public class AbilityUI : MonoBehaviour
     private bool HandleAbilityCost(bool testOnly)
     {
         var stats = PlayerHeroUnit.Stats;
-        float eCost = Ability.EnergyCost;
-        float mCost = Ability.ManaCost;
+        (float eCost, float mCost) = Ability.GetCost();
 
         if (stats.Energy >= eCost && stats.Mana >= mCost)
         {
@@ -180,7 +183,6 @@ public class AbilityUI : MonoBehaviour
                 
             return true;
         }
-        
 
         return false;
     }

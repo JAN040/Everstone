@@ -255,6 +255,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbbb4df6f1ead9046a6d9c4b818d80a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  icon_sprite_atlas: {fileID: 4343727234628468602, guid: 7253bdb057264b14f98e47b02b42b0b9, type: 2}
 --- !u!1 &802013815
 GameObject:
   m_ObjectHideFlags: 0
@@ -427,6 +428,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7efb1ae7a61b254489a4d92a2d5a7065, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currency: 0
+  gameDifficulty: 0
+  InitialCampStorageSpace: 70
+  BattleGameSpeed: 1
+  NumOfCopperForOneSilver: 10
+  NumOfSilverForOneGold: 100
 --- !u!1 &1461370444
 GameObject:
   m_ObjectHideFlags: 0
@@ -602,6 +609,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transition: {fileID: 258772571}
   transitionDuration: 1
+  IsSwitchingLocation: 0
+  CurrentScene: 0
 --- !u!1 &1163341469097971918
 GameObject:
   m_ObjectHideFlags: 0

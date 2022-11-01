@@ -58,6 +58,18 @@ MonoBehaviour:
       _type: 2
       _value: 0
       _modifyingStatType: 6
+  - EffectType: 0
+    Target: 0
+    MultipleTargetCount: 0
+    EffectValue: 10
+    PerLevelValueChange: 0
+    Duration: -1
+    PerLevelDurationChange: 0
+    DamageList: []
+    StatModifier:
+      _type: 0
+      _value: 10
+      _modifyingStatType: 1
   EnergyCost: 1
   ManaCost: 0
   IsCDRValid: 0
