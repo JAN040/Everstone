@@ -19,6 +19,8 @@ MonoBehaviour:
     damage.
   Level: 1
   MaxLevel: 5
+  UpgradeCost: 50
+  CostPerLevelMultiplier: 3
   Cooldown: 3
   UnlockConditions:
   - Skill: 1

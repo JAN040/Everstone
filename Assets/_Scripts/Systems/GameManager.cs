@@ -7,6 +7,7 @@ public class GameManager : Singleton<GameManager>
 {
     #region VARIABLES
 
+
     [SerializeField] private int currency;
     [SerializeField] private Difficulty gameDifficulty;
 
@@ -41,7 +42,19 @@ public class GameManager : Singleton<GameManager>
     public ScriptableAdventureLocation CurrentLocation { get; private set; }
     public List<ScriptableAdventureLocation> AdventureLocationData { get; set; } = null;
 
-    public int Currency { get => currency; set => currency = value; }
+    public int Currency
+    {
+        get => currency;
+        set
+        {
+            var oldAmount = currency;
+            currency = value;
+
+            if (oldAmount != currency)
+                OnCurrencyChanged?.Invoke(oldAmount, currency);
+        }
+    }
+
     public Difficulty GameDifficulty { get => gameDifficulty; private set => gameDifficulty = value; }
 
     public bool IsHardcore { get; private set; }
@@ -61,6 +74,27 @@ public class GameManager : Singleton<GameManager>
 
 
     #endregion VARIABLES
+
+
+    #region STATIC METHODS
+
+
+    public static bool CanAfford(int amountToCompare)
+    {
+        if (Instance == null)
+            return false;
+
+        return Instance.Currency >= amountToCompare;
+    }
+
+
+    #endregion STATIC METHODS
+
+
+    /// <summary>
+    /// Fires when Currency amount changes. Data: old amount, new amount
+    /// </summary>
+    public event Action<int, int> OnCurrencyChanged;
 
 
     #region UNITY METHODS

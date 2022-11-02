@@ -22,10 +22,12 @@ public class CharacterUI : MonoBehaviour
     public GameObject DraggedItemContainer;
     [SerializeField] GameObject ItemPrefab;
 
+
     [Space]
     [Header("Tabs")]
     [SerializeField] TabGroup TabGroup;
     [SerializeField] TabGroupButton InventoryTabButton;
+
 
     [Space]
     [Header("Equipment/Stats Tab")]
@@ -55,6 +57,7 @@ public class CharacterUI : MonoBehaviour
     public ItemSlotUI RightArm;
     public ItemSlotUI LeftArm;
 
+
     [Space]
     [Header("Status Tab")]
     [SerializeField] GameObject SkillLevelUIContainer;
@@ -66,12 +69,21 @@ public class CharacterUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI Text_HeroClass;
     [SerializeField] TextMeshProUGUI Text_HeroBackground;
 
- 
+
+    [Space]
+    [Header("Abilities Tab")]
+    [SerializeField] GameObject AbilityPanelContainer;
+    [SerializeField] GameObject AbilityPanelPrefab;
+    private List<AbilityPanelUI> AbilityPanelList;
+    public List<ScriptableAbility> EquippedAbilities;
+    private const int AbilitySlotAmount = 7;
+
+
     [Space]
     [Header("Runes Tab")]
     [Header("Rune slots")]
     public List<ItemSlotUI> RuneSlotList;
-    [SerializeField] TextMeshProUGUI  Text_RuneEffects;
+    [SerializeField] TextMeshProUGUI Text_RuneEffects;
 
 
     #endregion UI References
@@ -111,7 +123,6 @@ public class CharacterUI : MonoBehaviour
             //GameManager.Instance.PlayerManager.Storage.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Other[0]));
             for (int i = 0; i < GameManager.Instance.PlayerManager.Storage.InventorySize; i++)
                 GameManager.Instance.PlayerManager.Storage.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Other[UnityEngine.Random.Range(0, ResourceSystem.Instance.Items_Other.Count)]));
-        
         }
 
         EquipmentSlots = new List<ItemSlotUI>()
@@ -133,6 +144,7 @@ public class CharacterUI : MonoBehaviour
         InitTab_Equipment();
         InitTab_Inventory();
         InitTab_Status();
+        InitTab_Abilities();
         InitTab_Runes();
     }
 
@@ -346,6 +358,95 @@ public class CharacterUI : MonoBehaviour
             skillLevelPrefab.GetComponent<SkillLevelUI>()?.Init(skillLevel);
         }
     }
+
+
+    #region Ability Tab
+
+
+    private void InitTab_Abilities()
+    {
+        AbilityPanelList = new List<AbilityPanelUI>();
+        EquippedAbilities = new List<ScriptableAbility>(AbilitySlotAmount);
+        for (int i = 0; i < AbilitySlotAmount; i++)
+            EquippedAbilities.Add(null);
+
+        //basic attack is not upgrade-able as it is weapon-reliant
+        List<ScriptableAbility> abilities = GameManager.Instance
+                                                       .PlayerManager
+                                                       .Abilities
+                                                       .Where(x => x.Ability != Ability.BasicAttack)
+                                                       .ToList();
+
+        // initialize EquippedAbilities list (note: dodge shouldnt be added to the equipped abilities list)
+        var idx = 0;
+        foreach (var ability in abilities.Where(x => x.IsSelected && x.Ability != Ability.Dodge))
+        {
+            EquippedAbilities[idx] = ability;
+            idx++;
+        }
+
+        foreach (var ability in abilities)
+        {
+            var abilityPanelPrefab = InstantiatePrefab(AbilityPanelPrefab, AbilityPanelContainer.transform);
+            var abilityPanelUI = abilityPanelPrefab.GetComponent<AbilityPanelUI>();
+
+            if (abilityPanelUI != null)
+            {
+                abilityPanelUI.Init(ability, this);
+                AbilityPanelList.Add(abilityPanelUI);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Call UpdateUI() on every AbilityPanelUI in the ability tab
+    /// </summary>
+    public void RefreshAbilityPanels()
+    {
+        AbilityPanelList.ForEach(x => x.UpdateUI());
+    }
+
+    public void EquipAbility(ScriptableAbility ability, int index = -1)
+    {
+        if (index == -1)
+        {
+            index = GetFirstFreeAbilitySlot();
+            if (index == -1)
+                return;
+        }
+
+        EquippedAbilities[index] = ability;
+    }
+
+    public void UnequipAbility(ScriptableAbility abilityToRemove, int index = -1)
+    {
+        if (index >= EquippedAbilities.Count)
+            return;
+
+        if (index == -1)
+            EquippedAbilities.Remove(abilityToRemove);
+        else
+            EquippedAbilities.RemoveAt(index);
+    }
+
+    public bool HasFreeAbilitySlots()
+    {
+        return GetFirstFreeAbilitySlot() != -1;
+    }
+
+    private int GetFirstFreeAbilitySlot()
+    {
+        for (int i = 0; i < EquippedAbilities.Count; i++)
+        {
+            if (EquippedAbilities[i] != null)
+                return i;
+        }
+
+        return -1;
+    } 
+
+
+    #endregion Ability Tab
 
     public ItemSlotUI GetFirstFreeSlotOfInventory(InventorySystem inventory)
     {

@@ -90,10 +90,10 @@ public class InventorySystem
     }
 
     /// <returns>The amount of items the inventory is currently holding</returns>
-    public int GetItemAmount()
-    {
-        return InventoryItems.Count;
-    }
+    //public int GetItemAmount()
+    //{
+    //    return InventoryItems.Count;
+    //}
 
     /// <summary>
     /// Increase the amount of items the inventory can hold
@@ -210,6 +210,9 @@ public class InventorySystem
         OnInventoryChanged?.Invoke(this);
     }
 
+    /// <summary>
+    /// Get the index of the first free inventory slot, or -1 if the inventory is full.
+    /// </summary>
     public int FirstFreeSlotIndex()
     {
         if (InventoryItems == null)

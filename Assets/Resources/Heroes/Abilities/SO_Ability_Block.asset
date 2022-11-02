@@ -19,6 +19,8 @@ MonoBehaviour:
     equipped shield attributes) but lose [effect2]% of your energy regen.'
   Level: 0
   MaxLevel: 5
+  UpgradeCost: 50
+  CostPerLevelMultiplier: 3
   Cooldown: 2
   UnlockConditions: []
   OnActivedEffects:

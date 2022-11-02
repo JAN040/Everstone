@@ -18,6 +18,8 @@ MonoBehaviour:
   Description: Use the fist or the weapon you hold in your right hand to attack.
   Level: 1
   MaxLevel: 5
+  UpgradeCost: 50
+  CostPerLevelMultiplier: 3
   Cooldown: 3
   UnlockConditions: []
   OnActivedEffects:
@@ -36,7 +38,7 @@ MonoBehaviour:
   EnergyCost: 4
   ManaCost: 0
   IsCDRValid: 0
-  IsSelected: 0
+  IsSelected: 1
   ToggleMode: 0
   OnDeactivatedEffects: []
   EnergyCost_Deactivate: 0

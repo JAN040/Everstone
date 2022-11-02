@@ -22,8 +22,18 @@ public class ScriptableAbility : ScriptableObject
 
     //0 => locked
     //when unlocked starts at level 1
-    public int Level = 1;
+    public int Level = 0;
     public int MaxLevel = 5;
+
+    /// <summary>
+    /// The amount of currency that is spent for one ability level upgrade
+    /// </summary>
+    public int UpgradeCost = 50;
+
+    /// <summary>
+    /// On every level-up, the UpgradeCost is multiplied by this amount
+    /// </summary>
+    public int CostPerLevelMultiplier = 3;
 
     /// <summary>
     /// The amount (in seconds) it will take for the skill to become available after activation
@@ -202,6 +212,31 @@ public class ScriptableAbility : ScriptableObject
     public float GetCooldownNormalized()
     {
         return CooldownAtStart <= 0 ? 0 : CurrentCooldown / CooldownAtStart;
+    }
+
+    //level up the ability
+    public void Upgrade()
+    {
+        if (Level == MaxLevel)
+            return;
+
+        Level++;
+        UpgradeCost *= CostPerLevelMultiplier;
+
+        //increase effect values
+        if (OnActivedEffects != null)
+            foreach (var effect  in OnActivedEffects)
+            {
+                effect.EffectValue += effect.PerLevelValueChange;
+                effect.Duration    += effect.PerLevelDurationChange;
+            }
+
+        if (OnDeactivatedEffects != null)
+            foreach (var effect in OnDeactivatedEffects)
+            {
+                effect.EffectValue += effect.PerLevelValueChange;
+                effect.Duration += effect.PerLevelDurationChange;
+            }
     }
 }
 

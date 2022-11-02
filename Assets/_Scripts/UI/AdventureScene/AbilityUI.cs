@@ -6,6 +6,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
+/// <summary>
+/// Logic for the Ability button in the adventure scene
+/// </summary>
 public class AbilityUI : MonoBehaviour
 {
     #region VARIABLES
