@@ -19,6 +19,8 @@ MonoBehaviour:
     damage.
   Level: 1
   MaxLevel: 5
+  UpgradeCost: 50
+  CostPerLevelMultiplier: 3
   Cooldown: 3
   UnlockConditions: []
   OnActivedEffects:
@@ -37,7 +39,7 @@ MonoBehaviour:
   EnergyCost: 0
   ManaCost: 1
   IsCDRValid: 1
-  IsSelected: 1
+  IsSelected: 0
   ToggleMode: 0
   OnDeactivatedEffects: []
   EnergyCost_Deactivate: 0

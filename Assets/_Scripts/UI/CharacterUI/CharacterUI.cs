@@ -75,8 +75,14 @@ public class CharacterUI : MonoBehaviour
     [SerializeField] GameObject AbilityPanelContainer;
     [SerializeField] GameObject AbilityPanelPrefab;
     private List<AbilityPanelUI> AbilityPanelList;
-    public List<ScriptableAbility> EquippedAbilities;
-    private const int AbilitySlotAmount = 7;
+    private List<ScriptableAbility> EquippedAbilities;
+
+    [Tooltip("the list of panels showing which abilities are equipped")]
+    [SerializeField] List<EquippedAbilityPanelUI> EquippedAbilityPanelList;
+    [SerializeField] EquippedAbilityPanelUI EquippedAbilityPanel_Dodge;
+    [SerializeField] EquippedAbilityPanelUI EquippedAbilityPanel_BasicAttack;
+    
+    
 
 
     [Space]
@@ -366,9 +372,7 @@ public class CharacterUI : MonoBehaviour
     private void InitTab_Abilities()
     {
         AbilityPanelList = new List<AbilityPanelUI>();
-        EquippedAbilities = new List<ScriptableAbility>(AbilitySlotAmount);
-        for (int i = 0; i < AbilitySlotAmount; i++)
-            EquippedAbilities.Add(null);
+        EquippedAbilities = GameManager.Instance.PlayerManager.EquippedAbilities;
 
         //basic attack is not upgrade-able as it is weapon-reliant
         List<ScriptableAbility> abilities = GameManager.Instance
@@ -378,12 +382,12 @@ public class CharacterUI : MonoBehaviour
                                                        .ToList();
 
         // initialize EquippedAbilities list (note: dodge shouldnt be added to the equipped abilities list)
-        var idx = 0;
-        foreach (var ability in abilities.Where(x => x.IsSelected && x.Ability != Ability.Dodge))
-        {
-            EquippedAbilities[idx] = ability;
-            idx++;
-        }
+        //var idx = 0;
+        //foreach (var ability in abilities.Where(x => x.IsSelected && x.Ability != Ability.Dodge))
+        //{
+        //    EquippedAbilities[idx] = ability;
+        //    idx++;
+        //}
 
         foreach (var ability in abilities)
         {
@@ -396,6 +400,16 @@ public class CharacterUI : MonoBehaviour
                 AbilityPanelList.Add(abilityPanelUI);
             }
         }
+
+        //update equipped abilities panels
+        EquippedAbilityPanel_Dodge.SetAbility(
+            GameManager.Instance.PlayerManager.Abilities.FirstOrDefault(x => x.Ability == Ability.Dodge)
+        );
+        EquippedAbilityPanel_BasicAttack.SetAbility(
+            GameManager.Instance.PlayerManager.Abilities.FirstOrDefault(x => x.Ability == Ability.BasicAttack)
+        );
+
+        RefreshEquippedAbilitiesPanels();
     }
 
     /// <summary>
@@ -404,6 +418,17 @@ public class CharacterUI : MonoBehaviour
     public void RefreshAbilityPanels()
     {
         AbilityPanelList.ForEach(x => x.UpdateUI());
+    }
+
+    /// <summary>
+    /// Refresh the panels which show what abilities are equipped
+    /// </summary>
+    public void RefreshEquippedAbilitiesPanels()
+    {
+        for (int i = 0; i < EquippedAbilityPanelList.Count; i++)
+        {
+            EquippedAbilityPanelList[i].SetAbility(EquippedAbilities[i]);
+        }
     }
 
     public void EquipAbility(ScriptableAbility ability, int index = -1)
@@ -416,6 +441,8 @@ public class CharacterUI : MonoBehaviour
         }
 
         EquippedAbilities[index] = ability;
+
+        RefreshEquippedAbilitiesPanels();
     }
 
     public void UnequipAbility(ScriptableAbility abilityToRemove, int index = -1)
@@ -424,9 +451,11 @@ public class CharacterUI : MonoBehaviour
             return;
 
         if (index == -1)
-            EquippedAbilities.Remove(abilityToRemove);
-        else
-            EquippedAbilities.RemoveAt(index);
+            index = EquippedAbilities.FindIndex(x => x == abilityToRemove);
+            
+        EquippedAbilities[index] = null;
+
+        RefreshEquippedAbilitiesPanels();
     }
 
     public bool HasFreeAbilitySlots()
@@ -438,7 +467,7 @@ public class CharacterUI : MonoBehaviour
     {
         for (int i = 0; i < EquippedAbilities.Count; i++)
         {
-            if (EquippedAbilities[i] != null)
+            if (EquippedAbilities[i] == null)
                 return i;
         }
 
@@ -447,6 +476,7 @@ public class CharacterUI : MonoBehaviour
 
 
     #endregion Ability Tab
+
 
     public ItemSlotUI GetFirstFreeSlotOfInventory(InventorySystem inventory)
     {

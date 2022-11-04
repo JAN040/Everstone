@@ -126,12 +126,12 @@ public class AbilityPanelUI : MonoBehaviour
 
     public void IconButtonClicked()
     {
-        Debug.Log($"Clicked ability {AbilityRef.Name}");
-        //var obj = Instantiate(AbilityInfoBoxPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-        //obj.transform.localScale = Vector3.one;
-        //obj.transform.localPosition = Vector3.zero;
+        //Debug.Log($"Clicked ability {AbilityRef.Name}");
+        var obj = Instantiate(AbilityInfoBoxPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        obj.transform.localScale = Vector3.one;
+        obj.transform.localPosition = Vector3.zero;
 
-        //obj.GetComponent<SkillInfoBox>().Init(SkillLevelRef);
+        obj.GetComponent<AbilityInfoBox>().Init(AbilityRef);
     }
 
     public void UpgradeClicked()
@@ -146,6 +146,11 @@ public class AbilityPanelUI : MonoBehaviour
     public void EquipClicked()
     {
         AbilityRef.IsSelected = !AbilityRef.IsSelected;
+        
+        if (AbilityRef.IsSelected)
+            CharacterUIRef.EquipAbility(AbilityRef);
+        else
+            CharacterUIRef.UnequipAbility(AbilityRef);
 
         // refresh everything because we could have hit max selected abilities/we are no longer at max abilities
         CharacterUIRef.RefreshAbilityPanels();

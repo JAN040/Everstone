@@ -12,7 +12,9 @@ public class PlayerManager
 
     public ScriptableHero PlayerHero { get; private set; }
 
-    public List<ScriptableAbility> Abilities { get; private set; } = new List<ScriptableAbility>();
+    public List<ScriptableAbility> Abilities { get; private set; }
+    public List<ScriptableAbility> EquippedAbilities;
+    private const int AbilitySlotAmount = 7;
 
     public InventorySystem Inventory;
     public InventorySystem Storage;
@@ -89,7 +91,12 @@ public class PlayerManager
 
     public void SetAbilities(List<ScriptableAbility> abilities)
     {
+        Abilities = new List<ScriptableAbility>();
         Abilities.AddRange(abilities);
+
+        EquippedAbilities = new List<ScriptableAbility>(AbilitySlotAmount);
+        for (int i = 0; i < AbilitySlotAmount; i++)
+            EquippedAbilities.Add(null);
     }
 
     public void SetInventory(InventorySystem inventory, InventorySystem storage, EquipmentSystem equipment, EquipmentSystem runes)

@@ -189,6 +189,28 @@ public class ScriptableAbility : ScriptableObject
         }
     }
 
+    public string GetCostTextWithIcons()
+    {
+        (float eCost, float mCost) = GetCost();
+        string res = string.Empty;
+
+        if (eCost > 0f)
+        {
+            res += $"<color=#C06217>{eCost}</color>  {ResourceSystem.GetIconTag(Icon.Stamina)}";
+
+            if (mCost > 0f)
+            {
+                res += $"  <color=#27A3FD>{mCost}</color> {ResourceSystem.GetIconTag(Icon.Mana)}";
+                return res;
+            }
+        }
+        
+        if (mCost > 0f)
+            res += $"<color=#27A3FD>{mCost}</color> {ResourceSystem.GetIconTag(Icon.Mana)}";
+
+        return res;
+    }
+
     public (float eCost, float mCost) GetCost()
     {
         float eCost;
@@ -237,6 +259,44 @@ public class ScriptableAbility : ScriptableObject
                 effect.EffectValue += effect.PerLevelValueChange;
                 effect.Duration += effect.PerLevelDurationChange;
             }
+    }
+
+    public string GetDescription()
+    {
+        string res = string.Empty;
+        res += $"Cost: {GetCostTextWithIcons()}" + Environment.NewLine;
+        res += $"Cooldown: {Cooldown}" + Environment.NewLine + Environment.NewLine;
+
+        res += "Effects:" + Environment.NewLine + Environment.NewLine;
+
+        foreach (var effect in OnActivedEffects)
+        {
+            res += "- " + effect.GetEffectDescription(IsMaxed()) + Environment.NewLine;
+        }
+
+        //for toggled ability
+        if (ToggleMode != ToggleMode.None)
+        {
+            res += Environment.NewLine;
+
+            if (OnDeactivatedEffects.Count != 0)
+                res += "When untoggled:" + Environment.NewLine + Environment.NewLine;
+
+            foreach (var effect in OnDeactivatedEffects)
+            {
+                res += "- " + effect.GetEffectDescription(IsMaxed()) + Environment.NewLine;
+            }
+
+            if (AutoDeactivateAfterSeconds != -1)
+                res += $"\nAuto-deactivates after {AutoDeactivateAfterSeconds}s";
+        }
+
+        return res;
+    }
+
+    public bool IsMaxed()
+    {
+        return Level == MaxLevel;
     }
 }
 

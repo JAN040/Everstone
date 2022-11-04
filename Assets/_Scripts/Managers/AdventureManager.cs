@@ -305,7 +305,7 @@ public class AdventureManager : MonoBehaviour
     {
         PlayerAbilities.ForEach(x =>
         {
-            if (x.ToggleMode == ToggleMode.Toggled)
+            if (x != null && x.ToggleMode == ToggleMode.Toggled)
                 x.ToggleMode = ToggleMode.UnToggled;
         });
     }
@@ -323,17 +323,17 @@ public class AdventureManager : MonoBehaviour
 
         if (pManager.Abilities != null)
         {
-            var selectedAbilities = pManager.Abilities.Where(x => x.IsSelected).ToList();
-            if (selectedAbilities.Count > 0)
+            var equippedAbilities = pManager.EquippedAbilities;
+            if (equippedAbilities.Count > 0)
             {
                 PlayerAbilities = new List<ScriptableAbility>();
-                PlayerAbilities.AddRange(selectedAbilities);
+                PlayerAbilities.AddRange(equippedAbilities);
 
-                //remove the last element till we only have 7 selected abilities
-                while (PlayerAbilities.Count > 7)
-                    PlayerAbilities.RemoveAt(PlayerAbilities.Count - 1);
-
-                AllPlayerAbilities.AddRange(PlayerAbilities);
+                foreach (var ability in equippedAbilities)
+                {
+                    if (ability != null)
+                        AllPlayerAbilities.Add(ability);
+                }
             }
         }
 
@@ -367,8 +367,6 @@ public class AdventureManager : MonoBehaviour
             //        InitStatusEffect(effect);
         }
     }
-
-    
 
     public void Test_ResetStage()
     {

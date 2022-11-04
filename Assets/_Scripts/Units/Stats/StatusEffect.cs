@@ -46,5 +46,19 @@ public class StatusEffect
     }
 
 
+    public string GetEffectDescription(bool isAbilityMaxLevel)
+    {
+        var res = string.Empty;
+        var data = ResourceSystem.Instance.GetStatusEffect(this.EffectType);
+        
+        if (data == null)
+            return res;
+        
+        data.SetEffectValues(EffectValue, Duration, StatModifier);
+
+        return data.GetEffectDescription(isAbilityMaxLevel, PerLevelValueChange, PerLevelDurationChange);
+    }
+
+
     #endregion METHODS
 }

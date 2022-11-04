@@ -75,7 +75,7 @@ MonoBehaviour:
   EnergyCost: 1
   ManaCost: 0
   IsCDRValid: 0
-  IsSelected: 1
+  IsSelected: 0
   ToggleMode: 2
   OnDeactivatedEffects: []
   EnergyCost_Deactivate: 0

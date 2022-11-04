@@ -55,4 +55,13 @@ public class ScriptableStatusEffectModifyStat : ScriptableStatusEffect
         else
             return string.Empty;
     }
+
+    public override string GetEffectDescription(bool isMaxLevel, float valuePerLevel, float durationPerLevel)
+    {
+        var res = base.GetEffectDescription(isMaxLevel, valuePerLevel, durationPerLevel);
+        
+        res = res.Replace("[stat]", Stat.GetDisplayName(Modifier.ModifyingStatType));
+
+        return res;
+    }
 }

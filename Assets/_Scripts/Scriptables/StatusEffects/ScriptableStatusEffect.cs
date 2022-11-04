@@ -242,4 +242,25 @@ public abstract class ScriptableStatusEffect : ScriptableObject
     {
         return string.Empty;
     }
+
+    public virtual string GetEffectDescription(bool isMaxLevel, float valuePerLevel, float durationPerLevel)
+    {
+        string value = IsEffectValuePercentual ? $"{EffectValue * 100f}%" : $"{EffectValue}";
+        string valPerLevel = IsEffectValuePercentual ? $"{valuePerLevel * 100f}%" : $"{valuePerLevel}";
+        string duration = Duration == -1 ? ResourceSystem.GetIconTag(Icon.Infinity) : Duration.ToString();
+
+        if (!isMaxLevel)
+        {
+            if (valuePerLevel != 0)
+                value += $" (+{valPerLevel})";
+            if (durationPerLevel != 0)
+                duration += $" (+{durationPerLevel})";
+        }
+
+        var res = Description;
+        res = res.Replace("[value]", value);
+        res = res.Replace("[duration]", duration);
+
+        return res;
+    }
 }

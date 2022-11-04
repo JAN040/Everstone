@@ -852,7 +852,7 @@ MonoBehaviour:
   Text_Name: {fileID: 2069100206110614417}
   Text_Level: {fileID: 8271954637314506999}
   Text_UpgradeCost: {fileID: 8613234722786004639}
-  AbilityInfoBoxPrefab: {fileID: 0}
+  AbilityInfoBoxPrefab: {fileID: 8377522264260309042, guid: 7b59cd28fc1df7e47b92ae2238dd6a31, type: 3}
   Button_Upgrade: {fileID: 451348020628339607}
   Button_Equip: {fileID: 1282108260675999093}
 --- !u!1 &4253956856291319571

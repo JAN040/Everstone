@@ -213,6 +213,7 @@ MonoBehaviour:
   SkillPointsButton_Plus_Arts: {fileID: 1355743340}
   SkillPointsButton_Minus_Arts: {fileID: 302896015}
   HardcoreCheckbox: {fileID: 635391289}
+  MageBasicAtkImage: {fileID: 21300000, guid: 544b481f01e8c074f9748129187c3a90, type: 3}
 --- !u!1 &18755024
 GameObject:
   m_ObjectHideFlags: 0

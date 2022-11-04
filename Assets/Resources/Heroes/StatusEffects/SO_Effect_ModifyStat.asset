@@ -15,11 +15,10 @@ MonoBehaviour:
   Effect: 0
   MenuImage: {fileID: 21300000, guid: b4d0555fd3d473d43b2112063a46d9ed, type: 3}
   Name: ModifyStat
-  Description: 
+  Description: Modify stat [stat] by [value] for [duration]s.
   Duration: 0
   EffectValue: 0
   IsEffectValuePercentual: 0
   DisplayValueType: 3
   IsStackable: 0
   TickOnDurationEnd: 0
-  MenuImage_Debuff: {fileID: 0}

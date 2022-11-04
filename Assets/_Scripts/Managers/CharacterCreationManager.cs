@@ -117,6 +117,8 @@ public class CharacterCreationManager : MonoBehaviour
     [Header("Other")]
     [SerializeField] Toggle HardcoreCheckbox;
 
+    [SerializeField] Sprite MageBasicAtkImage;
+
 
     #endregion UI References
 
@@ -430,6 +432,15 @@ public class CharacterCreationManager : MonoBehaviour
         GameManager.Instance.PlayerManager.SetAbilities(
             ResourceSystem.Instance.GetPlayerAbilities()
         );
+
+        //change the default basic attack sprite for mage class
+        if (hero.ClassName.ToUpper().Equals("MAGE"))
+        {
+            var basicAtkAbility = GameManager.Instance.PlayerManager.Abilities.FirstOrDefault(x => x.Ability == Ability.BasicAttack);
+
+            if (basicAtkAbility != null)
+                basicAtkAbility.MenuImage = MageBasicAtkImage;
+        }
 
         GameManager.Instance.Currency = GetSelectedBackground().startingCurrencyAmount;
         GameManager.Instance.SetGameDifficulty((Difficulty)difficultyDropdown.value, HardcoreCheckbox.isOn);
