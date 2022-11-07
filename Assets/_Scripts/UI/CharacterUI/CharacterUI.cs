@@ -453,7 +453,8 @@ public class CharacterUI : MonoBehaviour
         if (index == -1)
             index = EquippedAbilities.FindIndex(x => x == abilityToRemove);
             
-        EquippedAbilities[index] = null;
+        if (index != -1)
+            EquippedAbilities[index] = null;
 
         RefreshEquippedAbilitiesPanels();
     }

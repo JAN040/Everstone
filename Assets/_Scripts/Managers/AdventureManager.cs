@@ -5,6 +5,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.Linq;
+using static UnityEngine.UI.Image;
 
 public class AdventureManager : MonoBehaviour
 {
@@ -321,9 +322,13 @@ public class AdventureManager : MonoBehaviour
         var pManager = GameManager.Instance.PlayerManager;
         var pUnit = PlayerHero.Prefab.GetComponent<Unit>();
 
-        if (pManager.Abilities != null)
+        if (pManager.EquippedAbilities != null)
         {
+            //re-check special cases like shieldBlock
+            pManager.CheckAbilitySpecialCases();
+
             var equippedAbilities = pManager.EquippedAbilities;
+
             if (equippedAbilities.Count > 0)
             {
                 PlayerAbilities = new List<ScriptableAbility>();
@@ -340,14 +345,14 @@ public class AdventureManager : MonoBehaviour
         var atkAbility   = pManager.Abilities.FirstOrDefault(x => x.Ability == Ability.BasicAttack);
         var dodgeAbility = pManager.Abilities.FirstOrDefault(x => x.Ability == Ability.Dodge);
 
+        PlayerAttackButton.GetComponent<AbilityUI>().Initialize(pUnit, atkAbility);
+        PlayerDodgeButton.GetComponent<AbilityUI>().Initialize(pUnit, dodgeAbility);
+
         if (atkAbility != null)
             AllPlayerAbilities.Add(atkAbility);
 
         if (dodgeAbility != null)
             AllPlayerAbilities.Add(dodgeAbility);
-
-        PlayerAttackButton.GetComponent<AbilityUI>().Initialize(pUnit, atkAbility);
-        PlayerDodgeButton.GetComponent<AbilityUI>().Initialize(pUnit, dodgeAbility);
 
         foreach (var ability in AllPlayerAbilities)
         {
@@ -355,18 +360,10 @@ public class AdventureManager : MonoBehaviour
                 ability.OnAbilityToggled += AbilityToggled;
             else
                 ability.OnAbilityActivated += AbilityActivated;
-
-            //  done when the ability activates
-            //initialize EffectData
-            //if (ability.OnActivedEffects != null)
-            //    foreach (var effect in ability.OnActivedEffects)
-            //        InitStatusEffect(effect);
-
-            //if (ability.OnDeactivatedEffects != null)
-            //    foreach (var effect in ability.OnDeactivatedEffects)
-            //        InitStatusEffect(effect);
         }
     }
+
+   
 
     public void Test_ResetStage()
     {
@@ -631,10 +628,9 @@ public class AdventureManager : MonoBehaviour
             //STEP 2: add effect to the targets
             foreach (var target in targetList)
             {
-
                 if (effect.DamageList != null && effect.DamageList.Count > 0)
                 {
-                    target.GetUnit()?.TakeDamage(effect.DamageList);
+                    target.GetUnit()?.ApplyTakeDamageEffect(effect.DamageList, caster);
                 }
                 else
                 {

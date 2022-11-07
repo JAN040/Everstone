@@ -17,7 +17,7 @@ MonoBehaviour:
   Name: Block
   Description: 'Toggled: Use your shield to block (Stats increase by [value1] of
     equipped shield attributes) but lose [effect2]% of your energy regen.'
-  Level: 0
+  Level: 1
   MaxLevel: 5
   UpgradeCost: 50
   CostPerLevelMultiplier: 3

@@ -27,6 +27,13 @@ public class AbilityPanelUI : MonoBehaviour
     [SerializeField] Button Button_Upgrade;
     [SerializeField] Button Button_Equip;
 
+    [Space]
+    [Header("UI References")]
+    [SerializeField] GameObject LockPanel;
+    [SerializeField] Button Button_Unlock;
+    [SerializeField] TextMeshProUGUI Text_UnlockConditions;
+    [SerializeField] GameObject UnlockConditions_Panel;
+
 
     #endregion UI References
 
@@ -86,6 +93,73 @@ public class AbilityPanelUI : MonoBehaviour
                 AbilityRef.IsSelected = true;
             Button_Equip.interactable = false;
         }
+
+        RefreshUnlockConditions();
+    }
+
+    private void RefreshUnlockConditions()
+    {
+        Text_UnlockConditions.text = string.Empty;
+        LockPanel.SetActive(true);
+        UnlockConditions_Panel.SetActive(true);
+        Button_Unlock.gameObject.SetActive(true);
+
+        //special case for shield block which doesn't have a level req., but instead needs a shield
+        //  to be equipped
+        if (AbilityRef.Ability == Ability.ShieldBlock)
+        {
+            bool isShieldEquipped = GameManager.Instance.PlayerManager.Equipment.HasShieldEquipped();
+            
+            if (isShieldEquipped)
+                LockPanel.SetActive(false);
+            else
+            {
+                LockPanel.SetActive(true);
+                Text_UnlockConditions.text = $"Only available when a shield is equipped.";
+                Button_Unlock.gameObject.SetActive(false);
+                
+                AbilityRef.IsSelected = false;
+                CharacterUIRef.UnequipAbility(AbilityRef);
+            }
+
+            return;
+        }
+
+        var unfulfilledConditions = 
+            GameManager.Instance.PlayerManager.PlayerHero.LevelSystem.GetUnfulfilledConditions(AbilityRef.UnlockConditions);
+
+        if (unfulfilledConditions.Count > 0)
+        {
+            //ability is definitely locked
+            Button_Unlock.interactable = false;
+
+            Text_UnlockConditions.text = GetConditionsText(unfulfilledConditions);
+
+            return;
+        }
+
+        //ability might still be locked, but can be unlocked now
+        if (AbilityRef.Level < 1)   //level 0 means the ability is locked
+        {
+            Button_Unlock.interactable = true;
+            UnlockConditions_Panel.SetActive(false);    //to disable scrolling empty text
+        }
+        else
+        {
+            LockPanel.SetActive(false);
+        }
+    }
+
+    private string GetConditionsText(List<UnlockCondition> unfulfilledConditions)
+    {
+        string res = string.Empty;
+
+        foreach (var condition in unfulfilledConditions)
+        {
+            res += $"{condition.Skill} Lvl. {condition.Level}" + Environment.NewLine;
+        }
+
+        return res;
     }
 
     private void SetEquipButtonText()
@@ -154,6 +228,15 @@ public class AbilityPanelUI : MonoBehaviour
 
         // refresh everything because we could have hit max selected abilities/we are no longer at max abilities
         CharacterUIRef.RefreshAbilityPanels();
+    }
+
+    public void UnlockClicked()
+    {
+        if (AbilityRef.Level < 1)
+            AbilityRef.Level = 1;
+
+        LockPanel.SetActive(false);
+        UpdateUI();
     }
 
 

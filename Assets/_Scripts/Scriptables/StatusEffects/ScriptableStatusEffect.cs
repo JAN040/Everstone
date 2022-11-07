@@ -96,6 +96,7 @@ public abstract class ScriptableStatusEffect : ScriptableObject
 
     public event Action<ScriptableStatusEffect> OnEffectExpired;
 
+
     public virtual void SetEffectValues(float effectValue, float duration, StatModifier modifier)
     {
         EffectValue = effectValue;

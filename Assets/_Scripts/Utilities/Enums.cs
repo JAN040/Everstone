@@ -263,6 +263,7 @@ public enum StatusEffectType
     RegenerateHp,
     Poison,
     Burn,
+    DealDamage,
     //etc.
 }
 

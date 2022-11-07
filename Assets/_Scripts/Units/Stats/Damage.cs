@@ -13,17 +13,32 @@ using UnityEngine;
 [Serializable]
 public class Damage
 {
-    public float Amount { get; set; }
+    public float Amount { get => amount; set => amount = value; }
+    [SerializeField] float amount;
     //public float PhysicalDamage { get; private set; }
     //public float ArtsDamage { get; private set; }
     //public float TrueDamage { get; private set; }
     //public float ElementalDamage { get; private set; }
-    public DamageType Type { get; private set; }
-    public ElementType ElementType { get; private set; } = ElementType.None;
+    public DamageType Type { get => type; private set => type = value; }
+    [SerializeField] DamageType type;
+    public ElementType ElementType { get => elementType; private set => elementType = value; }
+    [SerializeField] ElementType elementType = ElementType.None;
+
+    /// <summary>
+    /// for when Damage is used in ScriptableAbility
+    /// </summary>
+    [SerializeField] float PerLevelDamageChange = 0f;
 
     public bool CanBeEvaded = true;
     public bool CanBeBlocked = true;
 
+    //public Damage()
+    //{
+    //    Type = DamageType.Physical;
+    //    ElementType = ElementType.None;
+    //    CanBeEvaded = true;
+    //    CanBeBlocked = true;
+    //}
 
     public Damage(float physicalDamage, float artsDamage = 0)
     {
@@ -101,6 +116,11 @@ public class Damage
                 Debug.LogWarning($"Unexpected damageType: '{Type}'");
                 return Color.white;
         }
+    }
+
+    public float GetPerLevelAmountChange()
+    {
+        return PerLevelDamageChange;
     }
 }
 

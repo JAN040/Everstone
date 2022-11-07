@@ -41,6 +41,21 @@ public class LevelSystem
         Skills[skill.ToString()].AddExperience(amount);
     }
 
+    public List<UnlockCondition> GetUnfulfilledConditions(List<UnlockCondition> unlockConditions)
+    {
+        var unfulfilledConditions = new List<UnlockCondition>();
+
+        foreach (var condition in unlockConditions)
+        {
+            if (Skills[condition.Skill.ToString()].Level < condition.Level)
+            {
+                unfulfilledConditions.Add(condition);
+            }
+        }
+
+        return unfulfilledConditions;
+    }
+
     //public void AddExperienceToWeaponSkill(int amount, WeaponType weaponType)
     //{
     //    Skills[weaponType.ToString()].AddExperience(amount);

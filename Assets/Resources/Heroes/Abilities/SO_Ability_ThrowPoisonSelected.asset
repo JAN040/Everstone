@@ -13,16 +13,18 @@ MonoBehaviour:
   m_Name: SO_Ability_ThrowPoisonSelected
   m_EditorClassIdentifier: 
   Ability: 3
-  MenuImage: {fileID: 21300000, guid: 9d70632e1ada0b14999732a6bb395c98, type: 3}
-  Name: Throw poison
+  MenuImage: {fileID: 21300000, guid: 14a80bbad6f7c9e4d8072efd9c25763f, type: 3}
+  Name: Throw poison at selected
   Description: Throw poison vials two times at a random enemy and apply [value] poison
     damage.
-  Level: 1
+  Level: 0
   MaxLevel: 5
   UpgradeCost: 50
   CostPerLevelMultiplier: 3
   Cooldown: 3
-  UnlockConditions: []
+  UnlockConditions:
+  - Skill: 2
+    Level: 5
   OnActivedEffects:
   - EffectType: 2
     Target: 5

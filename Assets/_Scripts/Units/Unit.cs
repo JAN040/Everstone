@@ -997,6 +997,11 @@ public class Unit : MonoBehaviour
             Image_DamageEffect.color = Color.clear;
     }
 
+    /// <summary>
+    /// Adds the effect newEffect to this Unit
+    /// </summary>
+    /// <param name="newEffect"></param>
+    /// <param name="origin">Which unit activated the ability that caused this effect to be applied</param>
     public void AddStatusEffect(ScriptableStatusEffect newEffect)
     {
         if (newEffect == null)
@@ -1022,6 +1027,35 @@ public class Unit : MonoBehaviour
         EffectListChanged();
 
         OnUnitStatusEffectAdded?.Invoke(newEffect);
+    }
+
+    public void ApplyTakeDamageEffect(List<Damage> damageList, ScriptableUnitBase origin)
+    {
+        var origStats = origin.BaseStats;
+        var correctedDmgList = new List<Damage>(damageList);
+
+        foreach (var damage in correctedDmgList)
+        {
+            //phys dmg & arts damage are percentual values based on the casters stats and need be corrected to actual values
+            switch (damage.Type)
+            {
+                case DamageType.Physical:
+                    damage.Amount = damage.Amount * origStats.PhysicalDamage.GetValue();
+                    break;
+
+                case DamageType.Arts:
+                    damage.Amount = damage.Amount * origStats.ArtsDamage.GetValue();
+                    break;
+
+                case DamageType.True:
+                case DamageType.Elemental:
+                default:
+                    break;
+
+            }
+        }
+
+        this.TakeDamage(correctedDmgList);
     }
 
     public void RemoveStatusEffect(ScriptableStatusEffect effect)

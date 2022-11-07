@@ -64,7 +64,7 @@ public class ScriptableAbility : ScriptableObject
     public float CooldownAtStart;
 
     [Space]
-    [SerializeField] List<UnlockCondition> UnlockConditions;
+    public List<UnlockCondition> UnlockConditions;
 
     /// <summary>
     /// List of effects that are activated when ability is activated

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 //holds all player related data
@@ -120,6 +121,21 @@ public class PlayerManager
             :
             SellPriceModifier;
     }
+
+    public void CheckAbilitySpecialCases()
+    {
+        //Shield block
+        var blockAbility = EquippedAbilities.FirstOrDefault(x => x != null && x.Ability == Ability.ShieldBlock);
+        if (blockAbility != null && !Equipment.HasShieldEquipped())
+        {
+            blockAbility.IsSelected = false;
+
+            int index = EquippedAbilities.IndexOf(blockAbility);
+            if (index != -1)
+                EquippedAbilities[index] = null;
+        }
+    }
+
 
     #endregion METHODS
 

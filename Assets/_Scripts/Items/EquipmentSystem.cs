@@ -246,6 +246,17 @@ public class EquipmentSystem : InventorySystem
         return false;
     }
 
+    public bool HasShieldEquipped()
+    {
+        var leftHandEq = InventoryItems[GetDefaultEquipSlotIndexFromEquipType(EquipmentType.Shield)];
+        var equipData = leftHandEq?.ItemData as ItemDataEquipment;
+
+        if (leftHandEq == null || equipData == null)
+            return false;
+
+        return equipData.EquipmentType == EquipmentType.Shield;
+    }
+
 
     #endregion METHODS
 }
