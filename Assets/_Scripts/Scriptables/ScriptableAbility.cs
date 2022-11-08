@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-[CreateAssetMenu(menuName = "Scriptable/Ability/New Hero Ability", fileName = "SO_Ability_")]
+[CreateAssetMenu(menuName = "Scriptable/Ability/New Ability", fileName = "SO_Ability_")]
 public class ScriptableAbility : ScriptableObject
 {
     #region PROPERTIES

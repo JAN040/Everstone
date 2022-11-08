@@ -935,6 +935,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Next_Button
       objectReference: {fileID: 0}
+    - target: {fileID: 3460191778315157930, guid: 92d3bd98c333b1443b2a8814b1875e10, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3460191778315157930, guid: 92d3bd98c333b1443b2a8814b1875e10, type: 3}
+      propertyPath: m_PixelsPerUnitMultiplier
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3460191778315157931, guid: 92d3bd98c333b1443b2a8814b1875e10, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 1
@@ -6020,6 +6028,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Randomize_Button
       objectReference: {fileID: 0}
+    - target: {fileID: 3460191778315157930, guid: 92d3bd98c333b1443b2a8814b1875e10, type: 3}
+      propertyPath: m_Type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3460191778315157930, guid: 92d3bd98c333b1443b2a8814b1875e10, type: 3}
+      propertyPath: m_PixelsPerUnitMultiplier
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3460191778315157931, guid: 92d3bd98c333b1443b2a8814b1875e10, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 1
@@ -6923,6 +6939,14 @@ PrefabInstance:
     - target: {fileID: 3460191778315157925, guid: 92d3bd98c333b1443b2a8814b1875e10, type: 3}
       propertyPath: m_Name
       value: Back_Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 3460191778315157930, guid: 92d3bd98c333b1443b2a8814b1875e10, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3460191778315157930, guid: 92d3bd98c333b1443b2a8814b1875e10, type: 3}
+      propertyPath: m_PixelsPerUnitMultiplier
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 92d3bd98c333b1443b2a8814b1875e10, type: 3}

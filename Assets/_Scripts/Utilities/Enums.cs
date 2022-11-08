@@ -59,7 +59,7 @@ public enum UnitClass
     Tank,       //  slow,       low,        high,       armor
     Titan,      //  V slow,     high,       V high      armor, ELITE
     Vanguard,   //  fast,       low,        normal      melee
-    Assassin,   //  fast,       high,       low,        melee, invis
+    Assassin,   //  fast,       high,       low,        melee, invis?
     Healer,     //  slow,       low,        low,        heal team
     Warrior     //  normal,     normal,     normal     
 }
@@ -73,16 +73,16 @@ public enum StatScaling
     VeryHigh
 }
 
-public enum SpecialAbility
-{
-    CC,             //stuns the enemy (could be freeze or someth when/if i add elements)
-    OpponentDebuff, OpponentTeamDebuff,
-    SelfBuff,       TeamBuff,
-    SelfHeal,       TeamHeal,
-    AoeAtk,         //hits the unit & the ones behind, in front, above and below the target
-    PiercingAtk1,   //hits the unit & one unit behind
-    PiercingAtk2    //hits the unit & all the ones behind
-}
+//public enum SpecialAbility
+//{
+//    CC,             //stuns the enemy (could be freeze or someth when/if i add elements)
+//    OpponentDebuff, OpponentTeamDebuff,
+//    SelfBuff,       TeamBuff,
+//    SelfHeal,       TeamHeal,
+//    AoeAtk,         //hits the unit & the ones behind, in front, above and below the target
+//    PiercingAtk1,   //hits the unit & one unit behind
+//    PiercingAtk2    //hits the unit & all the ones behind
+//}
 
 public enum EnemyType
 {

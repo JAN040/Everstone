@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfee79429a23a6845a15e0205ee8c742, type: 3}
-  m_Name: SO_Enemy_OrcWarrior_E
+  m_Name: SO_Enemy_OrcShaman
   m_EditorClassIdentifier: 
-  Name: Orc Warrior
+  Name: Orc Shaman
   Faction: 1
   Type: 0
-  MenuSprite: {fileID: 21300000, guid: 2748e0d8cb61ef64f88d470b996b2c16, type: 3}
+  MenuSprite: {fileID: 21300000, guid: b2aa5b7e787a5cd4db184fc3548a4f2a, type: 3}
   FaceDirection: 0
   Description: 
   Prefab: {fileID: 0}
@@ -72,7 +72,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     energyRecovery:
-      baseValue: 5
+      baseValue: 1
       type: 6
       canBeNegative: 1
       growthParameters:
@@ -80,7 +80,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     speed:
-      baseValue: 8
+      baseValue: 10
       type: 10
       canBeNegative: 0
       growthParameters:
@@ -88,7 +88,7 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     dodgeChance:
-      baseValue: 10
+      baseValue: 2
       type: 12
       canBeNegative: 0
       growthParameters:
@@ -96,8 +96,8 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
     healEfficiency:
-      baseValue: 0
-      type: 15
+      baseValue: 1
+      type: 14
       canBeNegative: 1
       growthParameters:
         AdditionMultiplier: 0
@@ -121,7 +121,7 @@ MonoBehaviour:
         DivisionMultiplier: 0
     blockChance:
       baseValue: 0
-      type: 16
+      type: 15
       canBeNegative: 0
       growthParameters:
         AdditionMultiplier: 0
@@ -135,5 +135,5 @@ MonoBehaviour:
         AdditionMultiplier: 0
         PowerMultiplier: 0
         DivisionMultiplier: 0
-  Class: 4
+  Class: 10
   Abilities: []

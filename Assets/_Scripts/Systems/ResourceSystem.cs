@@ -18,6 +18,11 @@ public class ResourceSystem : Singleton<ResourceSystem> {
     private List<ScriptableAbility> PlayerAbilities { get; set; }
     private List<ScriptableStatusEffect> StatusEffects { get; set; }
 
+    /// <summary>
+    /// Abilities mostly used by special enemy classes like bruiser, controller, etc.
+    /// </summary>
+    private List<ScriptableAbility> UnitClassAbilities { get; set; }
+
     private List<ScriptableBackground> HeroBackgrounds { get; set; }
     private Dictionary<string, ScriptableBackground> _HeroBackgroundsDict;
 
@@ -218,6 +223,7 @@ public class ResourceSystem : Singleton<ResourceSystem> {
         StatusEffects = Resources.LoadAll<ScriptableStatusEffect>("Heroes/StatusEffects").ToList();
         PlayerAbilities = Resources.LoadAll<ScriptableAbility>("Heroes/Abilities").ToList();
 
+        UnitClassAbilities = Resources.LoadAll<ScriptableAbility>("Enemies/Abilities").ToList();
 
         var locationData = Resources.LoadAll<ScriptableAdventureLocation>("Locations/Adventure").ToList();
         AdventureLocations = new List<ScriptableAdventureLocation>();
@@ -273,6 +279,54 @@ public class ResourceSystem : Singleton<ResourceSystem> {
             res.Add(Instantiate(ability));
 
         return res;
+    }
+
+    public List<ScriptableAbility> GetUnitClassAbilities(UnitClass unitClass)
+    {
+        var res = new List<ScriptableAbility>();
+        
+        switch (unitClass)
+        {
+            case UnitClass.Artillery:
+                res.Add(GetClassAbilityFromName("Multi Attack"));
+                break;
+
+            case UnitClass.Controller:
+                res.Add(GetClassAbilityFromName("Buff Team Damage"));
+                res.Add(GetClassAbilityFromName("Buff Team Defense"));
+                res.Add(GetClassAbilityFromName("Debuff Enemy Damage"));
+                res.Add(GetClassAbilityFromName("Debuff Enemy Defense"));
+                break;
+
+            case UnitClass.Bruiser:
+                res.Add(GetClassAbilityFromName("Bruiser Buff"));
+                break;
+
+            case UnitClass.Battlemage:
+                res.Add(GetClassAbilityFromName("Shield Self"));
+                break;
+
+            case UnitClass.Healer:
+                res.Add(GetClassAbilityFromName("Heal All"));
+                break;
+
+            case UnitClass.Marksman:
+            case UnitClass.Mage:
+            case UnitClass.Tank:
+            case UnitClass.Titan:
+            case UnitClass.Vanguard:
+            case UnitClass.Assassin:
+            case UnitClass.Warrior:
+            default:
+                break;
+        }
+
+        return res;
+    }
+
+    private ScriptableAbility GetClassAbilityFromName(string name)
+    {
+        return Instantiate(UnitClassAbilities.FirstOrDefault(x => x.Name.Equals(name)));
     }
 
     public List<ScriptableAdventureLocation> GetAdventureLocations()

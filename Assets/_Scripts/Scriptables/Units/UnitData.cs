@@ -12,73 +12,73 @@ public class UnitData
     {
         {
             UnitClass.Marksman,
-            new UnitClassData(UnitClass.Marksman, null,
+            new UnitClassData(UnitClass.Marksman, 
                 StatScaling.High, StatScaling.Low, StatScaling.Low, 0f, 
                 StatScaling.High, isRanged: true)
         },
         {
             UnitClass.Mage,
-            new UnitClassData(UnitClass.Mage, new List<SpecialAbility>(){ SpecialAbility.SelfBuff, SpecialAbility.SelfHeal },
+            new UnitClassData(UnitClass.Mage,
                 StatScaling.Low, StatScaling.Low, StatScaling.VeryLow, 0.5f,
                 StatScaling.High, DamageType.Arts, true)
         },
         {
             UnitClass.Artillery,
-            new UnitClassData(UnitClass.Artillery, new List<SpecialAbility>(){ SpecialAbility.AoeAtk},
+            new UnitClassData(UnitClass.Artillery,
                 StatScaling.Low, StatScaling.VeryHigh, StatScaling.Normal, 0f,
                 StatScaling.High, isRanged: true)
         },
         {
             UnitClass.Controller,
-            new UnitClassData(UnitClass.Controller, new List<SpecialAbility>(){ SpecialAbility.CC, SpecialAbility.OpponentTeamDebuff, SpecialAbility.TeamBuff},
+            new UnitClassData(UnitClass.Controller,
                 StatScaling.Low, StatScaling.Normal, StatScaling.Normal, 0.15f,
                 StatScaling.Low)
         },
         {
             UnitClass.Bruiser,
-            new UnitClassData(UnitClass.Bruiser, new List<SpecialAbility>(){ SpecialAbility.SelfHeal},
+            new UnitClassData(UnitClass.Bruiser,
                 StatScaling.Normal, StatScaling.Normal, StatScaling.Normal, 0.10f,
                 StatScaling.Normal)
         },
         {
             UnitClass.Battlemage,
-            new UnitClassData(UnitClass.Battlemage, new List<SpecialAbility>(){ SpecialAbility.OpponentTeamDebuff},
+            new UnitClassData(UnitClass.Battlemage,
                 StatScaling.Normal, StatScaling.Normal, StatScaling.Normal, 0.40f,
                 StatScaling.Normal, DamageType.Arts)
         },
         {
             UnitClass.Tank,
-            new UnitClassData(UnitClass.Tank, null,
+            new UnitClassData(UnitClass.Tank,
                 StatScaling.Low, StatScaling.High, StatScaling.High, 0.05f,
                 StatScaling.High)
         },
         {
             UnitClass.Titan,
-            new UnitClassData(UnitClass.Titan, new List<SpecialAbility>(){ SpecialAbility.CC},
+            new UnitClassData(UnitClass.Titan,
                 StatScaling.VeryLow, StatScaling.VeryHigh, StatScaling.VeryHigh, 0f,
                 StatScaling.VeryHigh)
         },
         {
             UnitClass.Vanguard,
-            new UnitClassData(UnitClass.Vanguard, null,
+            new UnitClassData(UnitClass.Vanguard,
                 StatScaling.High, StatScaling.Normal, StatScaling.Low, 0f,
                 StatScaling.Low)
         },
         {
             UnitClass.Assassin,
-            new UnitClassData(UnitClass.Assassin, new List<SpecialAbility>(){ SpecialAbility.SelfBuff},
+            new UnitClassData(UnitClass.Assassin,
                 StatScaling.High, StatScaling.Low, StatScaling.Low, 0f,
                 StatScaling.High, isRanged: true, onlyUseSpecialSkills: true)
         },
         {
             UnitClass.Healer,
-            new UnitClassData(UnitClass.Healer, new List<SpecialAbility>(){ SpecialAbility.TeamHeal},
+            new UnitClassData(UnitClass.Healer,
                 StatScaling.Low, StatScaling.Low, StatScaling.VeryLow, 0.20f,
                 StatScaling.Low, isRanged: true, onlyUseSpecialSkills: true)
         },
         {
             UnitClass.Warrior,
-            new UnitClassData(UnitClass.Warrior, null,
+            new UnitClassData(UnitClass.Warrior,
                 StatScaling.Normal, StatScaling.Normal, StatScaling.Normal, 0f,
                 StatScaling.Normal)
         },
@@ -129,6 +129,11 @@ public class UnitData
     public bool IsClassRanged(UnitClass @class)
     {
         return ClassDataDict[@class].IsRanged;
+    }
+
+    public bool CanOnlyUseSpecialAbilities(UnitClass @class)
+    {
+        return ClassDataDict[@class].OnlyUseSpecialSkills;
     }
 
     private float CalculateStatModifier(EnemyType enemyType, Difficulty gameDiff, ScriptableAdventureLocation location)
@@ -189,4 +194,44 @@ public class UnitData
 
         return res;
     }
+
+    public void SetupClassAbility(ScriptableAbility ability, ScriptableNpcUnit unit)
+    {
+        StatusEffect eff;
+
+        switch (ability.Name)
+        {
+            case "Multi Attack":
+                break;
+
+            case "Buff Team Damage":
+                break;
+
+            case "Buff Team Defense":
+                break;
+
+            case "Debuff Enemy Damage":
+                break;
+
+            case "Debuff Enemy Defense":
+                break;
+
+            case "Bruiser Buff":
+                eff = ability.OnActivedEffects.FirstOrDefault(x => x.EffectType == StatusEffectType.RegenerateHp);
+                eff.EffectValue = unit.BaseStats.MaxHP.GetValue() / 50f;    //aka recover 2% of MaxHP every tick
+                break;
+
+            case "Shield Self":
+                break;
+
+            case "Heal All":
+                eff = ability.OnActivedEffects.FirstOrDefault(x => x.EffectType == StatusEffectType.RegenerateHp);
+                eff.EffectValue = unit.BaseStats.PhysicalDamage.GetValue();    //aka recover 100% of atk HP to every unit per tick
+                break;
+
+            default:
+                break;
+        }
+    }
+
 }

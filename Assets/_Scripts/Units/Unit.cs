@@ -175,6 +175,12 @@ public class Unit : MonoBehaviour
     public bool IsRanged { get; private set; }
 
     /// <summary>
+    /// Determines whether this NpcUnit can only use abilities (cannot basic attack)
+    /// </summary>
+    private bool CanOnlyUseAbilities { get; set; }
+    private float ChanceToUseAbility = 0.4f;
+
+    /// <summary>
     /// Decided by who the player targets (for allies) or randomly (enemies)
     /// </summary>
     public ScriptableUnitBase PreferredTargetOpponent;
@@ -250,6 +256,10 @@ public class Unit : MonoBehaviour
         //start attacking/action if energy full (the hero doesnt auto attack, all other units do)
         if (Stats.Energy >= Stats.MaxEnergy.GetValue() && UnitDataRef != HeroRef)
         {
+            //if the unit has abilities and decides to use one, then dont basic attack
+            if (UseAbility())
+                return;
+            
             //auto attack
             BasicAttack();
         }
@@ -367,7 +377,10 @@ public class Unit : MonoBehaviour
         EffectPanelList = new List<GameObject>();
 
         if (UnitDataRef is ScriptableNpcUnit)
+        {
             this.IsRanged = GameManager.Instance.UnitData.IsClassRanged((UnitDataRef as ScriptableNpcUnit).Class);
+            this.CanOnlyUseAbilities = GameManager.Instance.UnitData.CanOnlyUseSpecialAbilities((UnitDataRef as ScriptableNpcUnit).Class);
+        }
 
         //assign IsRanged status based on class and equipped weapon
         if (UnitDataRef == HeroRef)
@@ -843,6 +856,31 @@ public class Unit : MonoBehaviour
 
         yield return new WaitForSeconds(0.1f);
         CurrentTargetOpponent?.GetUnit()?.RemoveVelocity();
+    }
+
+    /// <summary>
+    /// Test for ability use. Also takes care of ability casting if true
+    /// </summary>
+    /// <returns>True if the unit used an ability, false if it has none or didnt use any</returns>
+    private bool UseAbility()
+    {
+        var npcUnitData = UnitDataRef as ScriptableNpcUnit;
+        if (npcUnitData == null)
+            return false;   //not an NPC unit
+            
+        if (npcUnitData.Abilities == null || npcUnitData.Abilities.Count == 0)
+            return false;   //no abilities
+    
+        if (CanOnlyUseAbilities || Helper.DiceRoll(ChanceToUseAbility))
+        {
+            var ability = npcUnitData.GetRandomAbility();
+            GameManager.Instance.UnitData.SetupClassAbility(ability, npcUnitData);
+            ManagerRef.CastAbility(ability, UnitDataRef);
+            this.Stats.Energy = 0;  //consume the energy
+            return true;
+        }
+
+        return false;
     }
 
     private List<Damage> GetBasicAttackDamageList()

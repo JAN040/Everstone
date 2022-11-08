@@ -261,7 +261,7 @@ public class AdventureManager : MonoBehaviour
             foreach (var extra in extraAllies)
             {
                 extra.Faction = Faction.Allies;
-                extra.SetBaseStats(GameManager.Instance.GameDifficulty, CurrentLocation);
+                extra.InitStatsAndAbilities(GameManager.Instance.GameDifficulty, CurrentLocation);
             }
             AlliedUnitsList.AddRange(extraAllies);
 
@@ -424,7 +424,7 @@ public class AdventureManager : MonoBehaviour
     {
         foreach (var enemy in EnemyUnitsList)
         {
-            enemy.SetBaseStats(GameManager.Instance.GameDifficulty, CurrentLocation);
+            enemy.InitStatsAndAbilities(GameManager.Instance.GameDifficulty, CurrentLocation);
 
             //create prefab
             CreateUnitPrefab(enemy);

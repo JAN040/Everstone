@@ -226,9 +226,9 @@ public abstract class ScriptableStatusEffect : ScriptableObject
 
             case EffectDisplayValue.EffectValue:
                 if (IsEffectValuePercentual)
-                    return (EffectValue * 100).ToString();
+                    return (EffectValue * 100).Round().ToString();
                 else
-                    return EffectValue.ToString();
+                    return EffectValue.RoundHP().ToString();
 
             case EffectDisplayValue.Custom:
                 return GetCustomDisplayValue();

@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0538acc9f8b876428eb411a4bfc3265, type: 3}
+  m_Name: SO_Ability_ControllerBuffTeamDefense
+  m_EditorClassIdentifier: 
+  Ability: 3
+  MenuImage: {fileID: 0}
+  Name: Buff Team Defense
+  Description: 
+  Level: 0
+  MaxLevel: 5
+  UpgradeCost: 50
+  CostPerLevelMultiplier: 3
+  Cooldown: 0
+  UnlockConditions: []
+  OnActivedEffects:
+  - EffectType: 0
+    Target: 3
+    MultipleTargetCount: 2
+    EffectValue: 0.3
+    PerLevelValueChange: 0
+    Duration: 10
+    PerLevelDurationChange: 0
+    DamageList: []
+    StatModifier:
+      _type: 2
+      _value: 0
+      _modifyingStatType: 1
+  - EffectType: 0
+    Target: 3
+    MultipleTargetCount: 2
+    EffectValue: 0.2
+    PerLevelValueChange: 0
+    Duration: 10
+    PerLevelDurationChange: 0
+    DamageList: []
+    StatModifier:
+      _type: 0
+      _value: 0
+      _modifyingStatType: 3
+  EnergyCost: 0
+  ManaCost: 0
+  IsCDRValid: 1
+  IsSelected: 0
+  ToggleMode: 0
+  OnDeactivatedEffects: []
+  EnergyCost_Deactivate: 0
+  ManaCost_Deactivate: 0
+  AutoDeactivateAfterSeconds: -1
