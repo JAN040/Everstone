@@ -16,8 +16,7 @@ public class CharacterUI : MonoBehaviour
 
 
     [Header("UI References")]
-    [SerializeField] ItemGrid ItemGrid_Inventory;
-    [SerializeField] ItemGrid ItemGrid_Storage;
+    
     public Canvas ParentCanvas;
     public GameObject DraggedItemContainer;
     [SerializeField] GameObject ItemPrefab;
@@ -71,6 +70,12 @@ public class CharacterUI : MonoBehaviour
 
 
     [Space]
+    [Header("Inventory Tab")]
+    [SerializeField] ItemGrid ItemGrid_Inventory;
+    [SerializeField] ItemGrid ItemGrid_Storage;
+
+
+    [Space]
     [Header("Abilities Tab")]
     [SerializeField] GameObject AbilityPanelContainer;
     [SerializeField] GameObject AbilityPanelPrefab;
@@ -97,8 +102,11 @@ public class CharacterUI : MonoBehaviour
 
     [Space]
     [Header("Variables")]
-    public ItemUI CurrentlyDraggedItem;
+
+    //public ItemUI CurrentlyDraggedItem;
     public List<ItemSlotUI> EquipmentSlots;
+    public DraggedItemData ItemDragData { get; private set; }
+
 
     #endregion VARIABLES
 
@@ -110,26 +118,6 @@ public class CharacterUI : MonoBehaviour
     void Start()
     {
         TabGroup.OnTabSelected += TabSelected;
-
-        //TODO: remove; for testing only
-        if (GameManager.Instance?.PlayerManager?.Inventory == null)
-        {
-            GameManager.Instance?.PlayerManager.SetInventory(
-                new InventorySystem(40),
-                new InventorySystem(GameManager.Instance.InitialCampStorageSpace),
-                new EquipmentSystem((int)Enum.GetValues(typeof(EquipmentSlot)).Cast<EquipmentSlot>().Max() + 1, false),
-                new EquipmentSystem(6, true)
-            );
-
-            //test items
-            GameManager.Instance.PlayerManager.Equipment.EquipItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[0]));
-            GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[1]));
-            GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[2]));
-            
-            //GameManager.Instance.PlayerManager.Storage.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Other[0]));
-            for (int i = 0; i < GameManager.Instance.PlayerManager.Storage.InventorySize; i++)
-                GameManager.Instance.PlayerManager.Storage.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Other[UnityEngine.Random.Range(0, ResourceSystem.Instance.Items_Other.Count)]));
-        }
 
         EquipmentSlots = new List<ItemSlotUI>()
         {
@@ -146,6 +134,8 @@ public class CharacterUI : MonoBehaviour
             RightArm,
             LeftArm
         };
+        ItemDragData = new DraggedItemData(ParentCanvas.scaleFactor, DraggedItemContainer, ItemGrid_Inventory);
+        ItemDragData.SetCharacterUI(this);
 
         InitTab_Equipment();
         InitTab_Inventory();
@@ -199,13 +189,13 @@ public class CharacterUI : MonoBehaviour
 
         for (int i = 0; i < EquipmentSlots.Count; i++)
         {
-            EquipmentSlots[i].Init(equipment, this);
+            EquipmentSlots[i].Init(equipment, ItemDragData);
 
             if (equipment.EquipmentItems[i] != null)
             {
                 var currItemPrefab = InstantiatePrefab(ItemPrefab, EquipmentSlots[i].ItemContainer.transform);
                 currItemPrefab.GetComponent<ItemUI>().Init(
-                    this,
+                    ItemDragData,
                     equipment.EquipmentItems[i],
                     EquipmentSlots[i]
                 );
@@ -248,8 +238,8 @@ public class CharacterUI : MonoBehaviour
 
     private void InitTab_Inventory()
     {
-        ItemGrid_Inventory.Initialize(GameManager.Instance.PlayerManager.Inventory, this);
-        ItemGrid_Storage  .Initialize(GameManager.Instance.PlayerManager.Storage, this);
+        ItemGrid_Inventory.Initialize(GameManager.Instance.PlayerManager.Inventory, ItemDragData);
+        ItemGrid_Storage  .Initialize(GameManager.Instance.PlayerManager.Storage,   ItemDragData);
     }
 
     private void InitTab_Runes()
@@ -258,13 +248,13 @@ public class CharacterUI : MonoBehaviour
 
         for (int i = 0; i < RuneSlotList.Count; i++)
         {
-            RuneSlotList[i].Init(runes, this);
+            RuneSlotList[i].Init(runes, ItemDragData);
 
             if (runes.EquipmentItems[i] != null)
             {
                 var currItemPrefab = InstantiatePrefab(ItemPrefab, RuneSlotList[i].ItemContainer.transform);
                 currItemPrefab.GetComponent<ItemUI>().Init(
-                    this,
+                    ItemDragData,
                     runes.EquipmentItems[i],
                     RuneSlotList[i]
                 );
@@ -479,19 +469,7 @@ public class CharacterUI : MonoBehaviour
     #endregion Ability Tab
 
 
-    public ItemSlotUI GetFirstFreeSlotOfInventory(InventorySystem inventory)
-    {
-        int firstFreeIdx = inventory.FirstFreeSlotIndex();
-        if (firstFreeIdx == -1)
-            return null;
-
-        if (ItemGrid_Inventory.ItemSource == inventory)
-            return ItemGrid_Inventory.GetSlotAtIndex(firstFreeIdx);
-        else if (ItemGrid_Storage.ItemSource == inventory)
-            return ItemGrid_Storage.GetSlotAtIndex(firstFreeIdx);
-
-        return null;
-    }
+    
 
     #endregion METHODS
 }

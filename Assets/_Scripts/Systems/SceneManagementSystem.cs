@@ -111,4 +111,5 @@ public enum Scenes
     HeroSelect = 4,
     AdventureSelect = 5,
     Residence = 6,
+    Shop = 7,
 }

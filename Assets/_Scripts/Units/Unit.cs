@@ -720,6 +720,7 @@ public class Unit : MonoBehaviour
 
         //also remove the panels
         EffectPanelList.ForEach(x => Destroy(x.gameObject));
+        EffectPanelList.Clear();
     }
 
     public IEnumerator PlayDeathAnimation()
@@ -1109,6 +1110,7 @@ public class Unit : MonoBehaviour
     {
         //clear the panel grid
         EffectPanelList.ForEach(x => Destroy(x.gameObject));
+        EffectPanelList.Clear();
 
         //add new effect panels to the grid
         var effectList = this.GetActiveEffects();

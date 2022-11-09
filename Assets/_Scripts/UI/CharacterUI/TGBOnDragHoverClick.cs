@@ -55,7 +55,7 @@ public class TGBOnDragHoverClick : MonoBehaviour, IPointerEnterHandler, IPointer
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (CharacterUIRef != null && CharacterUIRef.CurrentlyDraggedItem != null)
+        if (CharacterUIRef != null && CharacterUIRef.ItemDragData.CurrentlyDraggedItem != null)
             IsDragHovering = true;
     }
 

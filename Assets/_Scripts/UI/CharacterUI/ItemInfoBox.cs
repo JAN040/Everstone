@@ -205,9 +205,9 @@ public class ItemInfoBox : MonoBehaviour
 
         //need to reparent the item from current slot to equipmentSlot
         ItemSlotUI equipSlot = isRune ? 
-            currSlot.CharacterUIRef.RuneSlotList[equipSlotId]
+            currSlot.ItemDragData.GetCharacterUI()?.RuneSlotList[equipSlotId]
             :
-            currSlot.CharacterUIRef.EquipmentSlots[equipSlotId];
+            currSlot.ItemDragData.GetCharacterUI()?.EquipmentSlots[equipSlotId];
         
         item.SlotInto(equipSlot);
 
@@ -240,7 +240,7 @@ public class ItemInfoBox : MonoBehaviour
             GameManager.Instance.PlayerManager.Equipment.UnequipItem((int)equipSlot.EquipmentSlot);
 
         //need to reparent the item from the equipmentSlot to the first free inventory slot
-        ItemSlotUI freeSlot = equipSlot.CharacterUIRef.GetFirstFreeSlotOfInventory(GameManager.Instance.PlayerManager.Inventory);
+        ItemSlotUI freeSlot = equipSlot.ItemDragData.InventoryGrid.GetFirstFreeSlotOfInventory();
         item.SlotInto(freeSlot);
         freeSlot.InventoryRef.AddItem(ItemRef);
 
@@ -272,10 +272,10 @@ public class ItemInfoBox : MonoBehaviour
             return;
         }
 
-        ItemSlotUI slotForClone = currSlot.CharacterUIRef.GetFirstFreeSlotOfInventory(currSlot.InventoryRef);
+        ItemSlotUI slotForClone = currSlot.ItemDragData.InventoryGrid.GetFirstFreeSlotOfInventory();
         
         InventoryItem itemClone = ItemRef.Clone();
-        itemClone.Prefab.GetComponent<ItemUI>().Init(currSlot.CharacterUIRef, itemClone, null);
+        itemClone.Prefab.GetComponent<ItemUI>().Init(currSlot.ItemDragData, itemClone, null);
 
         int halfStack = ItemRef.StackSize / 2;
 

@@ -46,7 +46,7 @@ public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEn
     [Header("Variables")]
 
     //reference to the canvas this UI element is on
-    private CharacterUI CharacterUIRef;
+    private DraggedItemData ItemDragData;
     [SerializeField] CanvasGroup canvasGroup;
     private RectTransform rectTransform;
 
@@ -59,7 +59,7 @@ public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEn
             isBeingDragged = value;
 
             canvasGroup.blocksRaycasts = !value;
-            CharacterUIRef.CurrentlyDraggedItem = value ? this : null;
+            ItemDragData.CurrentlyDraggedItem = value ? this : null;
             
             RefreshBorder(isBeingDragged);
         }
@@ -105,14 +105,12 @@ public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEn
 
         IsBeingDragged = true;
         
-        MakeChildOf(CharacterUIRef.DraggedItemContainer.transform);
+        MakeChildOf(ItemDragData.DraggedItemContainer.transform);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        var movement = eventData.delta;
-        if (CharacterUIRef.ParentCanvas != null)
-            movement /= CharacterUIRef.ParentCanvas.scaleFactor;
+        var movement = eventData.delta / ItemDragData.CanvasScaleFactor;
 
         rectTransform.anchoredPosition += movement;
     }
@@ -142,9 +140,9 @@ public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEn
     #region METHODS
 
 
-    public void Init(CharacterUI charaUI, InventoryItem item, ItemSlotUI slot = null)
+    public void Init(DraggedItemData draggedItemData, InventoryItem item, ItemSlotUI slot = null)
     {
-        CharacterUIRef = charaUI;
+        ItemDragData = draggedItemData;
         SlotRef = slot;
 
         ItemRef = item;

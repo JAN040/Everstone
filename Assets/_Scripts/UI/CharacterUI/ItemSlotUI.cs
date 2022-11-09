@@ -24,7 +24,7 @@ public class ItemSlotUI : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPo
 
     [Space]
     [Header("Variables")]
-    public CharacterUI CharacterUIRef;
+    public DraggedItemData ItemDragData;
     public InventorySystem InventoryRef;
 
     public List<ItemType> AcceptedItemTypes; //none means all items are accepted
@@ -56,13 +56,13 @@ public class ItemSlotUI : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPo
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (CharacterUIRef?.CurrentlyDraggedItem == null)
+        if (ItemDragData?.CurrentlyDraggedItem == null)
             return;
 
         bool showEff = true;
 
-        showEff &= CharacterUIRef.CurrentlyDraggedItem.SlotRef != this;
-        showEff &= CanSlotItem(CharacterUIRef.CurrentlyDraggedItem, true);
+        showEff &= ItemDragData.CurrentlyDraggedItem.SlotRef != this;
+        showEff &= CanSlotItem(ItemDragData.CurrentlyDraggedItem, true);
 
         if (showEff)
         {
@@ -83,10 +83,10 @@ public class ItemSlotUI : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPo
 
 
     /// <param name="inventory">The inventory this item slot belongs to</param>
-    public void Init(InventorySystem inventory, CharacterUI characterUI)
+    public void Init(InventorySystem inventory, DraggedItemData draggedItemData)
     {
         InventoryRef = inventory;
-        CharacterUIRef = characterUI;
+        ItemDragData = draggedItemData;
 
         if (!(inventory is EquipmentSystem))
         {
@@ -207,7 +207,6 @@ public class ItemSlotUI : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPo
         return this.transform.GetComponentInChildren<ItemUI>();
     }
 
-    
 
     #endregion METHODS
 }

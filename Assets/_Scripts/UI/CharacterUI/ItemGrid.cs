@@ -28,7 +28,7 @@ public class ItemGrid : MonoBehaviour
     [Header("Variables")]
 
     public InventorySystem ItemSource;
-    private CharacterUI CharaUIRef; //need this for ItemUI
+    private DraggedItemData ItemDragData; //need this for ItemUI
 
 
     #endregion VARIABLES
@@ -40,9 +40,9 @@ public class ItemGrid : MonoBehaviour
     }
 
 
-    public void Initialize(InventorySystem itemSource, CharacterUI charaUi)
+    public void Initialize(InventorySystem itemSource, DraggedItemData draggedItemData)
     {
-        CharaUIRef = charaUi;
+        ItemDragData = draggedItemData;
         ItemSource = itemSource;
         ItemSource.OnInventoryChanged += RefreshInventory;
         ItemContainerList = new List<GameObject>();
@@ -54,13 +54,13 @@ public class ItemGrid : MonoBehaviour
             var currSlotPrefab = InstantiatePrefab(ItemSlotPrefab, ItemSlotGrid.transform);
             var currSlotScript = currSlotPrefab.GetComponent<ItemSlotUI>();
             
-            currSlotScript.Init(itemSource, CharaUIRef);
+            currSlotScript.Init(itemSource, ItemDragData);
 
             if (itemList[i] != null)
             {
                 var currItemPrefab = InstantiatePrefab(ItemPrefab, currSlotScript.ItemContainer.transform);
                 currItemPrefab.GetComponent<ItemUI>().Init(
-                    CharaUIRef,
+                    ItemDragData,
                     itemList[i],
                     currSlotPrefab.GetComponent<ItemSlotUI>()
                 );
@@ -101,5 +101,14 @@ public class ItemGrid : MonoBehaviour
     public ItemSlotUI GetSlotAtIndex(int index)
     {
         return ItemContainerList[index].GetComponent<ItemSlotUI>();
+    }
+
+    public ItemSlotUI GetFirstFreeSlotOfInventory()
+    {
+        int firstFreeIdx = ItemSource.FirstFreeSlotIndex();
+        if (firstFreeIdx == -1)
+            return null;
+
+        return ItemContainerList[firstFreeIdx].GetComponent<ItemSlotUI>();
     }
 }
