@@ -291,7 +291,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5525986569851682211, guid: 58e583cd41e53124684837f0dcc7021d, type: 3}
       propertyPath: m_Name
-      value: OutskirtsMenuButton_Residence
+      value: OutskirtsMenuButton_Outskirts
       objectReference: {fileID: 0}
     - target: {fileID: 5525986569851682223, guid: 58e583cd41e53124684837f0dcc7021d, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -611,7 +611,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5525986569851682211, guid: 58e583cd41e53124684837f0dcc7021d, type: 3}
       propertyPath: m_Name
-      value: OutskirtsMenuButton_Adventure
+      value: OutskirtsMenuButton_Guild
       objectReference: {fileID: 0}
     - target: {fileID: 5525986569851682223, guid: 58e583cd41e53124684837f0dcc7021d, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -623,7 +623,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5525986569851682223, guid: 58e583cd41e53124684837f0dcc7021d, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5525986570109912475, guid: 58e583cd41e53124684837f0dcc7021d, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1368,7 +1368,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5525986569851682211, guid: 58e583cd41e53124684837f0dcc7021d, type: 3}
       propertyPath: m_Name
-      value: OutskirtsMenuButton_Town
+      value: OutskirtsMenuButton_Shop
       objectReference: {fileID: 0}
     - target: {fileID: 5525986569851682223, guid: 58e583cd41e53124684837f0dcc7021d, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -1380,7 +1380,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5525986569851682223, guid: 58e583cd41e53124684837f0dcc7021d, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
-      value: 2
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 5525986570109912475, guid: 58e583cd41e53124684837f0dcc7021d, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1698,7 +1698,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 395.54007, y: 117.09999}
+  m_AnchoredPosition: {x: 395.5401, y: 117.099976}
   m_SizeDelta: {x: 1807.41, y: 400}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &2082891281

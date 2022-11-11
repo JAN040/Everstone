@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine.UI;
 using System;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class ItemInfoBox : MonoBehaviour
 {
@@ -103,11 +104,9 @@ public class ItemInfoBox : MonoBehaviour
         Text_Name.text   = itemData.DisplayName;
         Text_Rarity.text = $"Rarity: {GetRarityText()}";
 
-        string buyPrice = GameManager.Instance.CurrencyToDisplayString(itemData.BuyPrice.Round());
-        float totalSell = itemData.BuyPrice *
-                          itemRef.StackSize *
-                          GameManager.Instance.PlayerManager.GetSellPriceModifier(itemData.ItemType);
-        string totalSellText = GameManager.Instance.CurrencyToDisplayString(totalSell.Round());
+        string buyPrice = GameManager.Instance.CurrencyToDisplayString(itemData.BuyPrice);
+        int totalSell = ItemRef.GetSellPrice();
+        string totalSellText = GameManager.Instance.CurrencyToDisplayString(totalSell);
         Text_Value.text  = $"{buyPrice}\n{totalSellText} ({itemRef.StackSize})";
 
         Text_Description.text = itemData.Description;
@@ -144,9 +143,14 @@ public class ItemInfoBox : MonoBehaviour
             :
             GameManager.Instance.PlayerManager.Equipment.IsEquipped(ItemRef);
         bool inventoryHasFreeSpace = GameManager.Instance.PlayerManager.Inventory.FirstFreeSlotIndex() != -1;
+        bool isInResidenceScene = SceneManager.GetActiveScene().buildIndex == (int)Scenes.Residence;
+        bool isInShopScene = SceneManager.GetActiveScene().buildIndex == (int)Scenes.Shop;
 
         //equip is available for equipment items which arent equipped
-        Button_Equip.SetActive(isEquipment && !isEquipped);
+        Button_Equip.SetActive(isEquipment && 
+            !isEquipped && 
+            isInResidenceScene   //make sure we're in character UI   
+        );
 
         //Unequip is available for equipped equipment items when there is free space in the inventory
         Button_Unequip.SetActive(isEquipment && isEquipped && inventoryHasFreeSpace);

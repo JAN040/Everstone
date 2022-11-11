@@ -264,6 +264,7 @@ public class SkillLevel
 
         playerMng.SellPriceModifier += playerMng.SellPriceModPerLevelIncrease;
         playerMng.SellPriceModifier_Loot += playerMng.SellPriceModPerLevelIncrease;
+        playerMng.ShopItemAmount++;
     }
 
     private void LevelUp_Taming()

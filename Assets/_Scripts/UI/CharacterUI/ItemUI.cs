@@ -19,6 +19,7 @@ public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEn
     [SerializeField] TextMeshProUGUI StackSizeText;
     [SerializeField] Image RarityBorder;
     [SerializeField] GameObject InfoBoxPrefab;
+    [SerializeField] TextMeshProUGUI PriceTagText; 
 
 
     [Space]
@@ -61,7 +62,7 @@ public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEn
             canvasGroup.blocksRaycasts = !value;
             ItemDragData.CurrentlyDraggedItem = value ? this : null;
             
-            RefreshBorder(isBeingDragged);
+            RefreshUIOnDragChange(isBeingDragged);
         }
     }
 
@@ -150,6 +151,8 @@ public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEn
 
         this.Icon.sprite = ItemRef.ItemData.MenuIcon;
         RarityBorder.gameObject.SetActive(!IsEquippedRune());
+        PriceTagText.gameObject.SetActive(ItemRef.IsShopOwned);
+        PriceTagText.text = GameManager.Instance.CurrencyToDisplayString(ItemRef.ItemData.BuyPrice, true);
 
         SetRarityBorder(ItemRef.ItemData.Rarity);
         UpdateStackSizeText();
@@ -231,7 +234,7 @@ public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEn
         SlotRef = slot;
         MakeChildOf(slot.ItemContainer.transform);
         MoveToSlotPosition();
-        RefreshBorder(IsBeingDragged);
+        RefreshUIOnDragChange(IsBeingDragged);
     }
 
     /// <returns>True, if this item is a rune that is also equipped</returns>
@@ -246,10 +249,12 @@ public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEn
         return false;
     }
 
-    public void RefreshBorder(bool isDragged)
+    public void RefreshUIOnDragChange(bool isDragged)
     {
         bool isEquippedRune = IsEquippedRune(); //equipped runes shouldnt show a border
+        
         RarityBorder.gameObject.SetActive(!isDragged && !isEquippedRune);
+        PriceTagText.gameObject.SetActive(!isDragged && ItemRef.IsShopOwned);
     }
 
 

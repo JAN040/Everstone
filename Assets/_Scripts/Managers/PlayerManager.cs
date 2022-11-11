@@ -19,6 +19,7 @@ public class PlayerManager
 
     public InventorySystem Inventory;
     public InventorySystem Storage;
+    public InventorySystem ShopInventory;
     public EquipmentSystem Equipment;
     public EquipmentSystem Runes;
 
@@ -48,6 +49,24 @@ public class PlayerManager
     public readonly float SellPriceModPerLevelIncrease = 0.01f;
 
     /// <summary>
+    /// The amount of items available in the shop. Increases with Trading skill level.
+    /// </summary>
+    public int ShopItemAmount
+    {
+        get => shopItemAmount; 
+        set
+        {
+            if (shopItemAmount > value)
+                return;
+
+            if (shopItemAmount < value)
+                ShopInventory.AddSpace(value - shopItemAmount);
+
+            shopItemAmount = value;
+        }
+    }
+
+    /// <summary>
     /// Max amount of pets that can be added to the formation
     /// </summary>
     public int MaxPets
@@ -59,12 +78,13 @@ public class PlayerManager
         }
     }
     [SerializeField] private int maxPets;
-    
+    private int shopItemAmount = 10;
+
     /// <summary>
     /// Every MoreMaxPetsEveryNLevels amount of Taming levels, MaxPets is increased by one.
     /// </summary>
     public float MoreMaxPetsPerNLevels { get; private set; }
-    
+
     /// <summary>
     /// Bonus XP pets gain when attacking; based on player Taming skill level
     /// </summary>
@@ -112,6 +132,57 @@ public class PlayerManager
 
         if (runes != null)
             Runes = runes;
+
+        if (ShopInventory == null)
+        {
+            ShopInventory = new InventorySystem(ShopItemAmount, true);
+            RefreshShopInventory();
+        }
+    }
+
+    /// <summary>
+    /// To be called every time the player returns from adventure scene
+    /// </summary>
+    public void RefreshShopInventory()
+    {
+        List<InventoryItem> shopItemList = new List<InventoryItem>(ShopItemAmount + GameManager.Instance.PlayerInventorySpace);
+
+        float chance_equip = 1f;
+        float chance_potion = 0f; //no potions atm
+        //float chance_loot = 0.4f; loot items shouldnt be sold
+
+        for (int i = 0; i < ShopItemAmount; i++)
+        {
+            ItemType itemType = RollItemType(chance_equip, chance_potion);
+            ItemDataBase itemData = ResourceSystem.Instance.GetRandomItemByType(itemType);
+            
+            if (itemData == null)
+                continue;
+
+            InventoryItem item = new InventoryItem(itemData, true);
+            shopItemList.Add(item);
+        }
+
+        for (int i = ShopItemAmount; i < ShopItemAmount + Inventory.InventorySize; i++)
+        {
+            shopItemList.Add(null);
+        }
+
+        ShopInventory.SetInventoryItemList(shopItemList);
+    }
+
+    private ItemType RollItemType(float chance_equip, float chance_potion)
+    {
+        if (Helper.DiceRoll(chance_equip))
+            return ItemType.Equipment;
+
+        if (Helper.DiceRoll(chance_potion))
+            return ItemType.Potion;
+
+        //if (Helper.DiceRoll(chance_equip))
+        //    return ItemType.Equipment;
+
+        return ItemType.Potion;
     }
 
     public float GetSellPriceModifier(ItemType itemType)

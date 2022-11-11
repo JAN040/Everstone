@@ -32,7 +32,7 @@ public class ResourceSystem : Singleton<ResourceSystem> {
 
     private List<ScriptableNpcUnit> CommonEnemies { get; set; }
 
-    public List<ItemDataBase> Items_Other { get; private set; }
+    public List<ItemDataBase> Items_Loot { get; private set; }
     public List<ItemDataEquipment> Items_Equipment { get; private set; }
 
 
@@ -244,7 +244,7 @@ public class ResourceSystem : Singleton<ResourceSystem> {
 
         //load items
         Items_Equipment = Resources.LoadAll<ItemDataEquipment>("Items/Equipment").ToList();
-        Items_Other     = Resources.LoadAll<ItemDataBase>("Items/Other").ToList();
+        Items_Loot     = Resources.LoadAll<ItemDataBase>("Items/Loot").ToList();
     }
 
   
@@ -337,5 +337,26 @@ public class ResourceSystem : Singleton<ResourceSystem> {
     public ScriptableStatusEffect GetStatusEffect(StatusEffectType effect)
     {
         return Instantiate(StatusEffects.FirstOrDefault(x => x.Effect == effect));
+    }
+
+    public ItemDataBase GetRandomItemByType(ItemType itemType)
+    {
+        switch (itemType)
+        {
+            case ItemType.Equipment:
+                return Items_Equipment[Random.Range(0, Items_Equipment.Count)];
+
+            case ItemType.Loot:
+                return Items_Loot[Random.Range(0, Items_Loot.Count)];
+
+            case ItemType.Potion:
+                break;
+
+            case ItemType.None:
+            default:
+                return null;
+        }
+
+        return null;
     }
 }   

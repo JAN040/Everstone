@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,7 +14,7 @@ public class ItemDataBase : ScriptableObject
     public Sprite MenuIcon;
 
     [Space]
-    public float BuyPrice;
+    public int BuyPrice;
     public bool  CanBeSold = true; //key/quest items shouldnt be sellable
 
     [Range(1, 999)]

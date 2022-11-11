@@ -115,6 +115,16 @@ public class ItemSlotUI : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPo
         if (checkSwap)
             canSlot &= item.SlotRef.CanSlotItem(this.GetSlottedItem(), false);
 
+        if (item.ItemRef.IsShopOwned)
+        {
+            canSlot &= !this.InventoryRef.IsShop;       //dont allow moving items inside the shop inventory
+            canSlot &= this.GetSlottedItem() == null;   //can only drag into empty slot from shop
+            canSlot &= item.ItemRef.CanAfford();        //if you can afford to buy the item
+        }
+
+        if (this.GetSlottedItem() != null)
+            canSlot &= !this.GetSlottedItem().ItemRef.IsShopOwned; // cant drop on a slot with a shop item
+
         return canSlot;
     }
 

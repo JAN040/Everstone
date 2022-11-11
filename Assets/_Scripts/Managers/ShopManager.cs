@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,7 @@ public class ShopManager : MonoBehaviour
 
     [Header("UI References")]
 
+    public Canvas ParentCanvas;
     public GameObject DraggedItemContainer;
 
     [Space]
@@ -24,6 +26,8 @@ public class ShopManager : MonoBehaviour
 
     //[Space]
     //[Header("Variables")]
+    private DraggedItemData ItemDragData;
+
 
 
     #endregion VARIABLES
@@ -32,11 +36,16 @@ public class ShopManager : MonoBehaviour
     #region UNITY METHODS
 
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        
+        ItemDragData = new DraggedItemData(ParentCanvas.scaleFactor, DraggedItemContainer, ItemGrid_Inventory);
     }
+
+    private void OnEnable()
+    {
+        InitUI();
+    }
+
 
     // Update is called once per frame
     void Update()
@@ -50,7 +59,16 @@ public class ShopManager : MonoBehaviour
 
     #region METHODS
 
-    
+
+    private void InitUI()
+    {
+        if (ItemGrid_Inventory == null || ItemGrid_Shop == null)
+            return;
+
+        ItemGrid_Inventory.Initialize(GameManager.Instance.PlayerManager.Inventory,     ItemDragData);
+        ItemGrid_Shop     .Initialize(GameManager.Instance.PlayerManager.ShopInventory, ItemDragData);
+    }
+
 
     #endregion METHODS
 }

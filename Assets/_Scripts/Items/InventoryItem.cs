@@ -6,8 +6,16 @@ using UnityEngine;
 [Serializable]
 public class InventoryItem
 {
+    #region Variables
+
+
     public ItemDataBase ItemData;
     public GameObject Prefab;
+
+    /// <summary>
+    /// Indicates whether transfering this item from ShopInventory to the Players inventory system should charge BuyPrice
+    /// </summary>
+    [NonSerialized] public bool IsShopOwned = false;
 
     private int stackSize = 1;
     public int StackSize
@@ -18,16 +26,24 @@ public class InventoryItem
             stackSize = value;
             OnStackSizeChanged?.Invoke();
         }
-    }
+    } 
+
+
+    #endregion Variables
 
 
     public event Action OnStackSizeChanged;
 
 
-    public InventoryItem(ItemDataBase itemData)
+    public InventoryItem(ItemDataBase itemData, bool isShopOwned = false)
     {
         this.ItemData = itemData;
+        this.IsShopOwned = isShopOwned;
     }
+
+
+    #region METHODS
+
 
     public void AddToStack(int amount = 1)
     {
@@ -47,8 +63,9 @@ public class InventoryItem
 
         if (Prefab != null)
             clone.Prefab = UnityEngine.Object.Instantiate(Prefab);
-        
+
         clone.StackSize = StackSize;
+        clone.IsShopOwned = IsShopOwned;
         //clone.OnStackSizeChanged = OnStackSizeChanged;
 
         return clone;
@@ -62,6 +79,19 @@ public class InventoryItem
             return false;
 
         return equipData.EquipmentType == EquipmentType.Rune;
+    } 
+
+    public int GetSellPrice()
+    {
+        return (ItemData.BuyPrice * StackSize * GameManager.Instance.PlayerManager.GetSellPriceModifier(ItemData.ItemType)).Round();
     }
+
+    public bool CanAfford()
+    {
+        return ItemData.BuyPrice <= GameManager.Instance.Currency;
+    }
+
+
+    #endregion METHODS
 }
 

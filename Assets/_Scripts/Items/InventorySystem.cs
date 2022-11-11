@@ -13,16 +13,18 @@ public class InventorySystem
     /// <summary>
     /// Max amount of items the inventory can hold
     /// </summary>
-    public int InventorySize { get { return InventoryItems.Capacity; } }
+    public int InventorySize { get { return InventoryItems.Count; } }
 
+    public bool IsShop;
 
     public event Action<InventorySystem> OnInventoryChanged;
 
    
-    public InventorySystem(int size)
+    public InventorySystem(int size, bool isShop = false)
     {
+        IsShop = isShop;
         InventoryItems = new List<InventoryItem>(size);
-
+        
         for (int i = 0; i < size; i++)
             InventoryItems.Add(null);
     }
@@ -154,6 +156,28 @@ public class InventorySystem
             return StackItemToTarget(itemIndex, targetInventory, targetIndex);
         }
 
+        #region Shop
+
+        //buying from shop
+        if (this != targetInventory && this.IsShop)
+        {
+            //if not enough currency reject transaction
+            if (!invItem.CanAfford())
+                return ItemMoveResult.NoChange;
+
+            GameManager.Instance.Currency -= invItem.ItemData.BuyPrice;
+            invItem.IsShopOwned = false;
+        }
+        //selling to shop
+        if (this != targetInventory && targetInventory.IsShop)
+        {
+            GameManager.Instance.Currency += invItem.GetSellPrice();
+            invItem.IsShopOwned = true;
+        }
+
+        #endregion Shop
+
+
         bool hasSwapped = invItemTarget != null;
 
         //swap items
@@ -241,5 +265,10 @@ public class InventorySystem
                 InventoryItems[i] = null;
             }
         }
+    }
+
+    public void SetInventoryItemList(List<InventoryItem> inventoryItems)
+    {
+        InventoryItems = inventoryItems;
     }
 }

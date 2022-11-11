@@ -59,7 +59,8 @@ public class GameManager : Singleton<GameManager>
 
     public bool IsHardcore { get; private set; }
 
-    public int InitialCampStorageSpace = 70;
+    public int CampStorageSpace = 70;
+    public int PlayerInventorySpace = 10;
 
 
     #region Player prefs
@@ -136,7 +137,12 @@ public class GameManager : Singleton<GameManager>
         //GameData data = Deserialize(location);
     }
 
-    public string CurrencyToDisplayString(int amount)
+    /// <summary>
+    /// Convert currency amount to a pretty display string with coin icons
+    /// </summary>
+    /// <param name="amount">Amount to convert</param>
+    /// <param name="compactMode">If true, no spaces will be added between coins</param>
+    public string CurrencyToDisplayString(int amount, bool compactMode = false)
     {
         int copperAmnt = amount % NumOfCopperForOneSilver;
         
@@ -150,7 +156,10 @@ public class GameManager : Singleton<GameManager>
         string silverIcon = ResourceSystem.GetIconTag(Icon.Coin_Silver);
         string goldIcon   = ResourceSystem.GetIconTag(Icon.Coin_Gold);
 
-        return $"{(goldAmnt > 0 ? $"{goldIcon} {goldAmnt}  " : "")}{(silverAmnt > 0 ? $"{silverIcon} {silverAmnt}  " : "")}{copperIcon} {copperAmnt}";
+        if (compactMode)    //no spaces
+            return $"{(goldAmnt > 0 ? $"{goldIcon} {goldAmnt}" : "")}{(silverAmnt > 0 ? $"{silverIcon}{silverAmnt}" : "")}{copperIcon}{copperAmnt}";
+        else
+            return $"{(goldAmnt > 0 ? $"{goldIcon} {goldAmnt}  " : "")}{(silverAmnt > 0 ? $"{silverIcon} {silverAmnt}  " : "")}{copperIcon} {copperAmnt}";
     }
 
     #endregion METHODS

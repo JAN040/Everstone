@@ -406,8 +406,8 @@ public class CharacterCreationManager : MonoBehaviour
 
         //inventory setup
         GameManager.Instance.PlayerManager.SetInventory(
-            new InventorySystem(10),
-            new InventorySystem(GameManager.Instance.InitialCampStorageSpace),
+            new InventorySystem(GameManager.Instance.PlayerInventorySpace),
+            new InventorySystem(GameManager.Instance.CampStorageSpace),
             new EquipmentSystem((int)Enum.GetValues(typeof(EquipmentSlot)).Cast<EquipmentSlot>().Max() + 1, false),
             new EquipmentSystem(6, true)
         );
@@ -423,7 +423,7 @@ public class CharacterCreationManager : MonoBehaviour
         GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[6]));
         GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[7]));
         for (int i = 0; i < GameManager.Instance.PlayerManager.Storage.InventorySize; i++)
-            GameManager.Instance.PlayerManager.Storage.PlaceItemAtSlot(new InventoryItem(ResourceSystem.Instance.Items_Other[UnityEngine.Random.Range(0, ResourceSystem.Instance.Items_Other.Count)]), i);
+            GameManager.Instance.PlayerManager.Storage.PlaceItemAtSlot(new InventoryItem(ResourceSystem.Instance.Items_Loot[UnityEngine.Random.Range(0, ResourceSystem.Instance.Items_Loot.Count)]), i);
 
         GameManager.Instance.PlayerManager.PlayerHero.MenuSprite = GetSelectedCharacterPortrait();
         GameManager.Instance.PlayerManager.PlayerHero.SetLevelSystem(new LevelSystem(GenerateSkillSystem(stats), stats));
