@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using System;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using static UnityEditor.Progress;
 
 public class ItemInfoBox : MonoBehaviour
 {
@@ -39,6 +40,8 @@ public class ItemInfoBox : MonoBehaviour
     [SerializeField] GameObject Button_Unequip;
     [SerializeField] GameObject Button_Use;
     [SerializeField] GameObject Button_Split;
+    [SerializeField] GameObject Button_Buy;
+    [SerializeField] GameObject Button_Sell;
 
 
     #endregion UI References
@@ -142,24 +145,33 @@ public class ItemInfoBox : MonoBehaviour
             GameManager.Instance.PlayerManager.Runes.IsEquipped(ItemRef)
             :
             GameManager.Instance.PlayerManager.Equipment.IsEquipped(ItemRef);
-        bool inventoryHasFreeSpace = GameManager.Instance.PlayerManager.Inventory.FirstFreeSlotIndex() != -1;
+        bool playerInventoryHasFreeSpace = GameManager.Instance.PlayerManager.Inventory.FirstFreeSlotIndex() != -1;
+        bool currentInventoryHasFreeSpace = ItemRef?.Prefab?.GetComponent<ItemUI>()?.SlotRef.InventoryRef.FirstFreeSlotIndex() != -1;
         bool isInResidenceScene = SceneManager.GetActiveScene().buildIndex == (int)Scenes.Residence;
         bool isInShopScene = SceneManager.GetActiveScene().buildIndex == (int)Scenes.Shop;
 
         //equip is available for equipment items which arent equipped
         Button_Equip.SetActive(isEquipment && 
             !isEquipped && 
-            isInResidenceScene   //make sure we're in character UI   
+            isInResidenceScene   //make sure we're in character UI
         );
 
         //Unequip is available for equipped equipment items when there is free space in the inventory
-        Button_Unequip.SetActive(isEquipment && isEquipped && inventoryHasFreeSpace);
+        Button_Unequip.SetActive(isEquipment && isEquipped && playerInventoryHasFreeSpace);
 
         //Use button is available for usable item types
         Button_Use.SetActive(itemData.ItemType.In(ItemType.Potion)); //add more usable item types if necessary
 
         //Split stack button is available for item stacks above 1
-        Button_Split.SetActive(ItemRef.StackSize > 1);
+        Button_Split.SetActive(ItemRef.StackSize > 1 && (isInShopScene || isInResidenceScene));
+        Button_Split.GetComponent<Button>().interactable = currentInventoryHasFreeSpace;
+
+        //Show buy option on shop items
+        Button_Buy.SetActive(ItemRef.IsShopOwned);
+        Button_Buy.GetComponent<Button>().interactable = playerInventoryHasFreeSpace && ItemRef.CanAfford();
+
+        //show sell on all owned, non equipped items (only in storage or shop menus)
+        Button_Sell.SetActive(!ItemRef.IsShopOwned && !Button_Unequip.activeSelf && (isInShopScene || isInResidenceScene));
     }
 
     private string GetRarityText()
@@ -299,10 +311,87 @@ public class ItemInfoBox : MonoBehaviour
     } 
 
 
+    public void BuyClicked()
+    {
+        ItemSlotUI itemSlot = ItemRef?.Prefab?.GetComponent<ItemUI>()?.SlotRef;
+        ItemUI item = ItemRef?.Prefab?.GetComponent<ItemUI>();
+        ItemSlotUI freeSlot = itemSlot.ItemDragData.InventoryGrid.GetFirstFreeSlotOfInventory();
+
+        if (itemSlot == null || item == null)
+        {
+            Debug.LogWarning("Tried buying the item, but couldnt fetch its slot reference.");
+            return;
+        }
+
+        //move item from shop to the players inventory (also takes care of currency transaction)
+        var res = itemSlot.InventoryRef.MoveItemToTarget(
+            itemSlot.GetSlotPosition(),
+            GameManager.Instance.PlayerManager.Inventory,
+            freeSlot.GetSlotPosition()
+        );
+
+        if (res == ItemMoveResult.NoChange) return; //dont visually move the item
+
+        //need to reparent the item from the shop slot to the first free inventory slot
+        item.SlotInto(freeSlot);
+
+        //close ItemInfoBox
+        Destroy(Object_ItemInfoBox.gameObject);
+    }
+
+    public void SellClicked()
+    {
+        bool isInResidenceScene = SceneManager.GetActiveScene().buildIndex == (int)Scenes.Residence;
+        bool isInShopScene = SceneManager.GetActiveScene().buildIndex == (int)Scenes.Shop;
+        var item = ItemRef?.Prefab?.GetComponent<ItemUI>();
+        var itemSlot = item?.SlotRef;
+        var shopInv = GameManager.Instance.PlayerManager.ShopInventory;
+        ItemSlotUI freeShopSlot = itemSlot?.ItemDragData?.ShopGrid?.GetFirstFreeSlotOfInventory();
+
+        if (ItemRef.ItemData.ItemType == ItemType.Loot)
+        {   //no point in showing loot items as a buy-back option
+            GameManager.Instance.Currency += ItemRef.GetSellPrice();
+            itemSlot.InventoryRef.RemoveItemAt(itemSlot.GetSlotPosition());
+            Destroy(ItemRef.Prefab.gameObject);
+            Destroy(Object_ItemInfoBox.gameObject);
+            return;
+        }
+
+        if (shopInv.FirstFreeSlotIndex() != -1)
+        {
+            //move item to shop inventory
+            itemSlot.InventoryRef.MoveItemToTarget(
+                itemSlot.GetSlotPosition(),
+                shopInv,
+                shopInv.FirstFreeSlotIndex()
+            );
+        }
+        else
+        {
+            //if cant move, at least remove from the inventory
+            GameManager.Instance.Currency += ItemRef.GetSellPrice();
+            itemSlot.InventoryRef.RemoveItemAt(itemSlot.GetSlotPosition());
+        }
+
+        if (isInShopScene && freeShopSlot != null)
+        {
+            //need to reparent the item from the inventory slot to the shop slot 
+            item.SlotInto(freeShopSlot);
+        }
+        else
+        {
+            //get rid of the item prefab
+            Destroy(ItemRef.Prefab.gameObject); 
+        }
+        
+        //close ItemInfoBox
+        Destroy(Object_ItemInfoBox.gameObject);
+    }
+
+
     #endregion Buttons
 
 
-   
 
     #endregion METHODS
 }

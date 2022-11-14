@@ -133,6 +133,8 @@ public class InventorySystem
         var invItem = InventoryItems[itemIndex];
         var invItemTarget = targetInventory.InventoryItems[targetIndex];
 
+        Debug.Log($"Moving item [{itemIndex}: {invItem.ItemData.DisplayName}] to [{targetIndex}: {(invItemTarget == null ? "empty" : invItemTarget.ItemData.DisplayName)}]");
+
         if (itemIndex >= InventorySize || targetIndex >= targetInventory.InventorySize)
         {
             Debug.LogWarning($"Failed to move item from {itemIndex} to {targetIndex}. Index out of range (InventorySize: {targetInventory.InventorySize})");
@@ -156,6 +158,7 @@ public class InventorySystem
             return StackItemToTarget(itemIndex, targetInventory, targetIndex);
         }
 
+
         #region Shop
 
         //buying from shop
@@ -165,7 +168,7 @@ public class InventorySystem
             if (!invItem.CanAfford())
                 return ItemMoveResult.NoChange;
 
-            GameManager.Instance.Currency -= invItem.ItemData.BuyPrice;
+            GameManager.Instance.Currency -= invItem.GetBuyPrice();
             invItem.IsShopOwned = false;
         }
         //selling to shop
@@ -191,10 +194,7 @@ public class InventorySystem
         else
             this.PlaceItemAtSlot(invItemTarget, itemIndex);
 
-        //already called in EquipItem/PlaceItemAtSlot
-        //OnInventoryChanged?.Invoke(this);
-        //if (targetInventory != this)
-        //    targetInventory.OnInventoryChanged.Invoke(targetInventory);
+        Debug.Log($"After MoveItemToTarget:\nPrev inventory list: {GetItemsDisplayString()}\nTarget inventory list: {targetInventory.GetItemsDisplayString()}");
 
         return hasSwapped ? ItemMoveResult.Swapped : ItemMoveResult.Moved;
     }
@@ -224,7 +224,7 @@ public class InventorySystem
         }
     }
 
-    private void RemoveItemAt(int itemIndex)
+    public void RemoveItemAt(int itemIndex)
     {
         if (itemIndex >= InventorySize)
             return;
@@ -270,5 +270,20 @@ public class InventorySystem
     public void SetInventoryItemList(List<InventoryItem> inventoryItems)
     {
         InventoryItems = inventoryItems;
+    }
+
+    public string GetItemsDisplayString()
+    {
+        string res = "[";
+
+        for (int i= 0; i < InventoryItems.Count; i++)
+        {
+            string name = InventoryItems[i]?.ItemData?.DisplayName;
+            res += $"{i}: {(name == null ? "empty" : name)}, ";
+        }
+
+        res += "]";
+
+        return res;
     }
 }

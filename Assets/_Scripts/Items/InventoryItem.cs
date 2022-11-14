@@ -86,6 +86,11 @@ public class InventoryItem
         return (ItemData.BuyPrice * StackSize * GameManager.Instance.PlayerManager.GetSellPriceModifier(ItemData.ItemType)).Round();
     }
 
+    public int GetBuyPrice()
+    {
+        return ItemData.BuyPrice * StackSize;
+    }
+
     public bool CanAfford()
     {
         return ItemData.BuyPrice <= GameManager.Instance.Currency;

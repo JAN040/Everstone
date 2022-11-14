@@ -10,7 +10,7 @@ public class DraggedItemData
     public float CanvasScaleFactor { get; private set; }
     public GameObject DraggedItemContainer { get; private set; }
     public ItemGrid InventoryGrid { get; set; }
-
+    public ItemGrid ShopGrid { get; set; }
 
     public ItemUI CurrentlyDraggedItem;
 
