@@ -16,6 +16,11 @@ public class AdventureManager : MonoBehaviour
 
     [Header("UI References")]
     [SerializeField] GameObject PauseMenu;
+    [SerializeField] GameObject SuccessMenu;
+    [SerializeField] GameObject GameOverMenu;
+    [SerializeField] Canvas UICanvas;
+
+    [Space]
     [SerializeField] GameObject UnitPrefab;
     [SerializeField] GameObject AllyStatusBar;
     [SerializeField] GameObject EnemyStatusBar;
@@ -48,11 +53,15 @@ public class AdventureManager : MonoBehaviour
     [SerializeField] bool IsPaused = false;
     [SerializeField] float gameSpeed;
 
+    
+
     [SerializeField] ScriptableAdventureLocation CurrentLocation;
 
     private ScriptableHero PlayerHero;
     [SerializeField] List<ScriptableUnitBase> AlliedUnitsList;
     [SerializeField] List<ScriptableNpcUnit> EnemyUnitsList;
+
+    private InventorySystem LootInventory;
 
     private UnitGrid UnitGrid = new UnitGrid();
 
@@ -142,11 +151,11 @@ public class AdventureManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        CurrentLocation = GameManager.Instance?.CurrentLocation;
+        CurrentLocation = GameManager.Instance?.CurrentAdventureLocation;
         Sprite currLocationSprite = CurrentLocation?.background;
 
         if (currLocationSprite != null)
-            background.sprite = GameManager.Instance?.CurrentLocation?.background;
+            background.sprite = GameManager.Instance?.CurrentAdventureLocation?.background;
 
         InitStage(true, true);
 
@@ -168,6 +177,11 @@ public class AdventureManager : MonoBehaviour
     private void OnDestroy()
     {
         ResetTimeScale();
+
+        //handled in GameManager
+        ////if the game was exited prematurely, it counts as a loss
+        //if (GameState == BattleState.InBattle)
+        //    HandleGameOver();
 
         foreach (var ability in AllPlayerAbilities)
         {
@@ -233,11 +247,22 @@ public class AdventureManager : MonoBehaviour
         GameSpeed = tempSpeed;
     }
 
+    private void OnStageSuccess()
+    {
+        Pause(true);
+        CurrentLocation.PlayerProgress++;
+
+        //show success menu
+        var menu = InstantiatePrefab(SuccessMenu, UICanvas.transform);
+        menu.GetComponent<SuccessMenu>().Init(this, LootInventory);
+    }
+
     private void InitStage(bool isFirstTime, bool initAllies)
     {
         //reset logger & timer
         Logger_Text.text = "";
         Timer = 0;
+        LootInventory = new InventorySystem(7); //up to 7 loot items can be displayed
 
         //get encounter type
         EncounterType encounter = CurrentLocation.GetNextEncounter();
@@ -295,6 +320,7 @@ public class AdventureManager : MonoBehaviour
         //TODO: notify about stage number (current progress)
 
         GameSpeed = GameManager.Instance.BattleGameSpeed;
+        GameManager.Instance.GameState = BattleState.InBattle;
     }
 
     private void ResetPlayerStatusEffects()
@@ -395,6 +421,18 @@ public class AdventureManager : MonoBehaviour
         }
         EnemyUnitsList.Clear();
         UnitGrid.Clear(Faction.Enemies);
+    }
+
+    public void ContinueToNextStage()
+    {
+        ResetEnemies();
+        InitStage(false, false);
+    }
+
+    public void EndAdventure()
+    {
+        GameManager.Instance.GameState = BattleState.None;
+        SceneManagementSystem.Instance.LoadScene(Scenes.Outskirts);
     }
 
 
@@ -499,6 +537,19 @@ public class AdventureManager : MonoBehaviour
 
     #endregion Unit Spawning
 
+    private GameObject InstantiatePrefab(GameObject prefab, Transform parentTransform)
+    {
+        var obj = Instantiate(prefab, new Vector3(0, 0, 0), Quaternion.identity);
+        
+        if (parentTransform != null)
+            obj.transform.SetParent(parentTransform, true);
+        
+        obj.transform.localScale = Vector3.one;
+        obj.transform.localPosition = Vector3.zero;
+
+        return obj;
+    }
+
     /// <summary>
     /// Needs faction parameter for when the unit is null
     /// </summary>
@@ -533,19 +584,35 @@ public class AdventureManager : MonoBehaviour
 
     private void HandleUnitDeath(ScriptableUnitBase unit)
     {
+        Destroy(unit.Prefab);
+        UnitGrid.Remove(unit);
+
         if (unit == PlayerHero)
         {
-            //TODO: game over
+            GameManager.Instance.GameState = BattleState.GameOver;
             Debug.Log("Hero died. Game over.");
+            HandleGameOver();
         }
 
         if (unit.Faction == Faction.Enemies)
         {
-            //TODO: handle loot 
-        }
+            EnemyUnitsList.Remove(unit as ScriptableNpcUnit);
 
-        Destroy(unit.Prefab);
-        UnitGrid.Remove(unit);
+            if (TargetedEnemy == unit)
+                TargetedEnemy = null;
+            else if (EnemyStatusBar.GetComponent<UnitStatusBar>().UnitRef == unit)
+                SetStatusBarUnit(UnitGrid.GetRandomUnit(Faction.Enemies, false), Faction.Enemies);
+
+            //TODO: handle loot
+
+            //handle stage clear if all enemies are defeated
+            if (EnemyUnitsList.Count == 0)
+            {
+                GameManager.Instance.GameState = BattleState.Success;
+                Debug.Log("Stage success.");
+                OnStageSuccess();
+            }
+        }
 
         if (unit.Faction == Faction.Allies)
         {
@@ -561,15 +628,34 @@ public class AdventureManager : MonoBehaviour
                     SelectedAlly = null;
             }
         }
-        else
-        {
-            EnemyUnitsList.Remove(unit as ScriptableNpcUnit);
+    }
 
-            if (TargetedEnemy == unit)
-                TargetedEnemy = null;
-            else if (EnemyStatusBar.GetComponent<UnitStatusBar>().UnitRef == unit)
-                SetStatusBarUnit(UnitGrid.GetRandomUnit(Faction.Enemies, false), Faction.Enemies);
+    private void HandleGameOver()
+    {
+        Pause(true);    //pause the game in the background
+
+        bool isHardcore = GameManager.Instance.IsHardcore;
+        bool keepInventory = GameManager.Instance.KeepInventory;
+        string message = keepInventory ?
+            $"Keep inventory: No items lost."
+            :
+            $"Lost all items...";
+
+        if (!keepInventory)
+        {
+            //TODO: lose all items :skadiDaijobu:
+
         }
+
+        if (isHardcore)
+        {
+            message += Environment.NewLine + "Hardcore mode: Save deleted!";
+
+            GameManager.Instance.DeleteCurrentSave();
+        }
+
+        var menu = InstantiatePrefab(GameOverMenu, UICanvas.transform);
+        menu.GetComponent<GameOverMenu>().Init(message, isHardcore);
     }
 
     private void SetStatusBarUnit(ScriptableUnitBase unit, Faction faction)

@@ -116,6 +116,8 @@ public class CharacterCreationManager : MonoBehaviour
 
     [Header("Other")]
     [SerializeField] Toggle HardcoreCheckbox;
+    [SerializeField] Toggle KeepInventoryCheckbox;
+    
 
     [SerializeField] Sprite MageBasicAtkImage;
 
@@ -342,7 +344,8 @@ public class CharacterCreationManager : MonoBehaviour
         heroClassDropdown.value      = UnityEngine.Random.Range(0, heroClassDropdown.options.Count);
         heroBackgroundDropdown.value = UnityEngine.Random.Range(1, heroBackgroundDropdown.options.Count);
         difficultyDropdown.value     = UnityEngine.Random.Range(1, difficultyDropdown.options.Count);
-        HardcoreCheckbox.isOn = Helper.DiceRoll(0.25f);
+        KeepInventoryCheckbox.isOn = Helper.DiceRoll(0.5f);
+        HardcoreCheckbox     .isOn = Helper.DiceRoll(0.25f);
 
         iconDropdown.RefreshShownValue();
         heroClassDropdown.RefreshShownValue();
@@ -443,7 +446,11 @@ public class CharacterCreationManager : MonoBehaviour
         }
 
         GameManager.Instance.Currency = GetSelectedBackground().startingCurrencyAmount;
-        GameManager.Instance.SetGameDifficulty((Difficulty)difficultyDropdown.value, HardcoreCheckbox.isOn);
+        GameManager.Instance.SetGameDifficulty(
+            (Difficulty)difficultyDropdown.value, 
+            KeepInventoryCheckbox.isOn,
+            HardcoreCheckbox.isOn
+        );
 
         //leave character creation scene
         SceneManagementSystem.Instance.LoadScene(Scenes.Outskirts);

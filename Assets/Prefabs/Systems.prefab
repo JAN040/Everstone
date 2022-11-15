@@ -428,9 +428,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7efb1ae7a61b254489a4d92a2d5a7065, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GameOverMenu: {fileID: 860153665553252337, guid: 4a1ab1922100d8a42b6bd1bee11af6a4, type: 3}
   currency: 0
   gameDifficulty: 0
-  InitialCampStorageSpace: 70
+  GameState: 0
+  CampStorageSpace: 70
+  PlayerInventorySpace: 10
   BattleGameSpeed: 1
   NumOfCopperForOneSilver: 10
   NumOfSilverForOneGold: 100

@@ -7,6 +7,7 @@ public class DraggedItemData
     #region VARIABLES
 
 
+    public bool AreItemsDraggable = true;
     public float CanvasScaleFactor { get; private set; }
     public GameObject DraggedItemContainer { get; private set; }
     public ItemGrid InventoryGrid { get; set; }

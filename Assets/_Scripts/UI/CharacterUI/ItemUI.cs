@@ -102,7 +102,8 @@ public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEn
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        //Debug.Log("BeginDrag");
+        if (!ItemDragData.AreItemsDraggable)
+            return;
 
         IsBeingDragged = true;
         
@@ -111,6 +112,9 @@ public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEn
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (!ItemDragData.AreItemsDraggable)
+            return;
+
         var movement = eventData.delta / ItemDragData.CanvasScaleFactor;
 
         rectTransform.anchoredPosition += movement;
@@ -118,7 +122,8 @@ public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEn
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        //Debug.Log("EndDrag");
+        if (!ItemDragData.AreItemsDraggable)
+            return;
 
         IsBeingDragged = false;
 

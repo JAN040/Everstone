@@ -172,7 +172,7 @@ public class EquipmentSystem : InventorySystem
         switch (equipType)
         {
             case EquipmentType.Rune:
-                int index = GetEmptySpaceIndex();
+                int index = FirstFreeSlotIndex();
                 if (index == -1)
                     index = 0;  //if all slots are taken equip to the first slot by default
                 return index;

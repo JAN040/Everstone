@@ -81,6 +81,9 @@ public class SceneManagementSystem : Singleton<SceneManagementSystem>
     {
         IsSwitchingLocation = true;
 
+        if (Time.timeScale == 0f)   //reset timescale cause 0 can literally hardlock the game
+            Time.timeScale = 1f;
+
         //Debug.Log($"Loading scene: {sc}, ID: {(int)sc}");
 
         //play transition "Start" animation

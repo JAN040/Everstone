@@ -328,3 +328,11 @@ public enum EffectDisplayValue
     EffectValue,
     Custom
 }
+
+public enum BattleState
+{
+    None,
+    InBattle,
+    Success,
+    GameOver
+}

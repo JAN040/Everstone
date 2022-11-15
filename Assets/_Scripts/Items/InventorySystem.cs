@@ -48,7 +48,7 @@ public class InventorySystem
         }
 
         //no such stack exists, try to create a new stack if there is space (null means empty)
-        int emptySpace = GetEmptySpaceIndex();
+        int emptySpace = FirstFreeSlotIndex();
 
         if (emptySpace == -1)   //no space for the new item
             return false;
@@ -74,21 +74,6 @@ public class InventorySystem
         OnInventoryChanged?.Invoke(this);
 
         return prevItem;
-    }
-
-    /// <summary>
-    /// Finds an empty space and returns its index
-    /// </summary>
-    /// <returns>Index of the first empty space. Or -1 if all spaces are taken.</returns>
-    protected int GetEmptySpaceIndex()
-    {
-        for (int i = 0; i < InventoryItems.Count; i++)
-        {
-            if (InventoryItems[i] == null)
-                return i;
-        }
-
-        return -1;
     }
 
     /// <returns>The amount of items the inventory is currently holding</returns>
@@ -285,5 +270,10 @@ public class InventorySystem
         res += "]";
 
         return res;
+    }
+
+    public bool HasFreeSpace()
+    {
+        return FirstFreeSlotIndex() != -1;
     }
 }

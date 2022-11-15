@@ -145,8 +145,8 @@ public class ItemInfoBox : MonoBehaviour
             GameManager.Instance.PlayerManager.Runes.IsEquipped(ItemRef)
             :
             GameManager.Instance.PlayerManager.Equipment.IsEquipped(ItemRef);
-        bool playerInventoryHasFreeSpace = GameManager.Instance.PlayerManager.Inventory.FirstFreeSlotIndex() != -1;
-        bool currentInventoryHasFreeSpace = ItemRef?.Prefab?.GetComponent<ItemUI>()?.SlotRef.InventoryRef.FirstFreeSlotIndex() != -1;
+        bool playerInventoryHasFreeSpace = GameManager.Instance.PlayerManager.Inventory.HasFreeSpace();
+        bool currentInventoryHasFreeSpace = (bool)ItemRef?.Prefab?.GetComponent<ItemUI>()?.SlotRef.InventoryRef.HasFreeSpace();
         bool isInResidenceScene = SceneManager.GetActiveScene().buildIndex == (int)Scenes.Residence;
         bool isInShopScene = SceneManager.GetActiveScene().buildIndex == (int)Scenes.Shop;
 
@@ -357,7 +357,7 @@ public class ItemInfoBox : MonoBehaviour
             return;
         }
 
-        if (shopInv.FirstFreeSlotIndex() != -1)
+        if (shopInv.HasFreeSpace())
         {
             //move item to shop inventory
             itemSlot.InventoryRef.MoveItemToTarget(

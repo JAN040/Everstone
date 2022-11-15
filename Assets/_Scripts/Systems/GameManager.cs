@@ -8,8 +8,21 @@ public class GameManager : Singleton<GameManager>
     #region VARIABLES
 
 
+    #region UI References
+
+
+    [Header("UI References")]
+    [SerializeField] GameObject GameOverMenu;
+
+
+    #endregion UI References
+
+
+    [Header("Variables")]
+
     [SerializeField] private int currency;
     [SerializeField] private Difficulty gameDifficulty;
+    public BattleState GameState = BattleState.None;
 
     private PlayerManager playerManager;
     /// <summary>
@@ -39,7 +52,7 @@ public class GameManager : Singleton<GameManager>
     /// <summary>
     /// Stores the reference to the adventure location the player is currently in (null if not in adventure)
     /// </summary>
-    public ScriptableAdventureLocation CurrentLocation { get; private set; }
+    public ScriptableAdventureLocation CurrentAdventureLocation { get; private set; }
     public List<ScriptableAdventureLocation> AdventureLocationData { get; set; } = null;
 
     public int Currency
@@ -58,9 +71,11 @@ public class GameManager : Singleton<GameManager>
     public Difficulty GameDifficulty { get => gameDifficulty; private set => gameDifficulty = value; }
 
     public bool IsHardcore { get; private set; }
+    public bool KeepInventory { get; private set; }
 
     public int CampStorageSpace = 70;
     public int PlayerInventorySpace = 10;
+    private bool ShowGameOverScreenOnSaveLoad = false;
 
 
     #region Player prefs
@@ -106,21 +121,31 @@ public class GameManager : Singleton<GameManager>
         UnitData = new UnitData();
     }
 
+    private void OnDestroy()
+    {
+        if (GameState == BattleState.InBattle)
+        {
+            //time to punish for leaving in middle of combat >:)
+            ShowGameOverScreenOnSaveLoad = true;
+        }
+    }
+
     #endregion UNITY METHODS
 
 
     #region METHODS
 
 
-    public void SetGameDifficulty(Difficulty newDifficulty, bool isHardcore)
+    public void SetGameDifficulty(Difficulty newDifficulty, bool keepInventory, bool isHardcore)
     {
         GameDifficulty = newDifficulty;
+        KeepInventory = keepInventory;
         IsHardcore = isHardcore;
     }
 
     public void SetCurrentLocation(ScriptableAdventureLocation location)
     {
-        CurrentLocation = location;
+        CurrentAdventureLocation = location;
     }
 
     public void SaveGame()
@@ -132,9 +157,19 @@ public class GameManager : Singleton<GameManager>
         //Serialize(data, location);
     }
 
+    public void DeleteCurrentSave()
+    {
+
+    }
+
     public void LoadGame()
     {
         //GameData data = Deserialize(location);
+        
+        if (ShowGameOverScreenOnSaveLoad)
+        {
+            InstantiatePrefab(GameOverMenu, null);
+        }
     }
 
     /// <summary>
@@ -160,6 +195,19 @@ public class GameManager : Singleton<GameManager>
             return $"{(goldAmnt > 0 ? $"{goldIcon} {goldAmnt}" : "")}{(silverAmnt > 0 ? $"{silverIcon}{silverAmnt}" : "")}{copperIcon}{copperAmnt}";
         else
             return $"{(goldAmnt > 0 ? $"{goldIcon} {goldAmnt}  " : "")}{(silverAmnt > 0 ? $"{silverIcon} {silverAmnt}  " : "")}{copperIcon} {copperAmnt}";
+    }
+
+    private GameObject InstantiatePrefab(GameObject prefab, Transform parentTransform)
+    {
+        var obj = Instantiate(prefab, new Vector3(0, 0, 0), Quaternion.identity);
+
+        if (parentTransform != null)
+            obj.transform.SetParent(parentTransform, true);
+
+        obj.transform.localScale = Vector3.one;
+        obj.transform.localPosition = Vector3.zero;
+
+        return obj;
     }
 
     #endregion METHODS

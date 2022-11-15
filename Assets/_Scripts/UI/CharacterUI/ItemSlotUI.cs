@@ -56,7 +56,8 @@ public class ItemSlotUI : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPo
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (ItemDragData?.CurrentlyDraggedItem == null)
+        if (ItemDragData?.CurrentlyDraggedItem == null ||
+            ItemDragData.AreItemsDraggable == false)
             return;
 
         bool showEff = true;
