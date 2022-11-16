@@ -136,4 +136,6 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
   Class: 10
-  Abilities: []
+  Race: 1
+  GuaranteedDrop: {fileID: 0}
+  PossibleDropsList: []

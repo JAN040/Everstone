@@ -136,4 +136,8 @@ MonoBehaviour:
         PowerMultiplier: 0
         DivisionMultiplier: 0
   Class: 4
-  Abilities: []
+  Race: 1
+  GuaranteedDrop: {fileID: 0}
+  PossibleDropsList:
+  - Drop: {fileID: 11400000, guid: 455f48a5f3b5c9d4abf2cad722bff2b8, type: 2}
+    Chance: 0.296

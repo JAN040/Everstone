@@ -64,6 +64,14 @@ public enum UnitClass
     Warrior     //  normal,     normal,     normal     
 }
 
+public enum UnitRace
+{
+    Animal,     //can only drop hides
+    Humanoid,   //drops hides & can rarely drop equip,
+    Human,      //can only drop equipment and currency
+    Monster     //kindof "other", idk
+}
+
 public enum StatScaling
 {
     VeryLow,

@@ -154,7 +154,7 @@ public class PlayerManager
         for (int i = 0; i < ShopItemAmount; i++)
         {
             ItemType itemType = RollItemType(chance_equip, chance_potion);
-            ItemDataBase itemData = ResourceSystem.Instance.GetRandomItemByType(itemType);
+            ItemDataBase itemData = ResourceSystem.Instance.GetRandomItemByType(itemType, GameManager.Instance.UnitData.RollItemRarity());
             
             if (itemData == null)
                 continue;

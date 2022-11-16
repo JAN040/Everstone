@@ -11,6 +11,8 @@ using UnityEngine.U2D;
 public class ResourceSystem : Singleton<ResourceSystem> {
 
     [SerializeField] SpriteAtlas icon_sprite_atlas;
+    [SerializeField] Sprite CurrencyItemSprite;
+
 
     private List<ScriptableHero> Heroes { get; set; }
     private Dictionary<string, ScriptableHero> _HeroesDict;
@@ -339,8 +341,10 @@ public class ResourceSystem : Singleton<ResourceSystem> {
         return Instantiate(StatusEffects.FirstOrDefault(x => x.Effect == effect));
     }
 
-    public ItemDataBase GetRandomItemByType(ItemType itemType)
+    public ItemDataBase GetRandomItemByType(ItemType itemType, ItemRarity rarity)
     {
+        
+
         switch (itemType)
         {
             case ItemType.Equipment:
@@ -359,4 +363,25 @@ public class ResourceSystem : Singleton<ResourceSystem> {
 
         return null;
     }
+
+    //public List<ItemDataBase> GetAllItemsOfType(ItemType itemType)
+    //{
+    //    switch (itemType)
+    //    {
+    //        case ItemType.Equipment:
+    //            return new List<ItemDataBase>(Items_Equipment);
+
+    //        case ItemType.Loot:
+    //            return Items_Loot[Random.Range(0, Items_Loot.Count)];
+
+    //        case ItemType.Potion:
+    //            break;
+
+    //        case ItemType.None:
+    //        default:
+    //            return null;
+    //    }
+
+    //    return null;
+    //}
 }   

@@ -10,21 +10,41 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Scriptable/Units/New Enemy", fileName = "SO_Enemy_")]
 public class ScriptableNpcUnit : ScriptableUnitBase
 {
-
-    /// <summary>
-    /// defines stat distributions and available abilities
-    /// </summary>
+    [Tooltip("Defines stat distributions and available abilities")]
     public UnitClass Class;
 
+    [Tooltip("Shared drop pool is decided based on the race type")]
+    public UnitRace Race;
 
+    [Tooltip("When the unit is defeated, this item will always be dropped")]
+    public ItemDataBase GuaranteedDrop;
 
-    //TODO abilities list
+    [System.Serializable]
+    public struct PossibleDrops
+    {
+        public ItemDataBase Drop;
+        [Range(0,1)]
+        public float Chance;
+    }
+
+    [Tooltip("When the unit is defeated, these items might appear as drops, based on defined drop chances (0-1)")]
+    public List<PossibleDrops> PossibleDropsList;
+
+    /// <summary>
+    /// Decided based on Class
+    /// </summary>
+    [System.NonSerialized]
     public List<ScriptableAbility> Abilities;
+
 
     public ScriptableNpcUnit()
     {
         this.Faction = Faction.Enemies;
     }
+
+
+    #region METHODS
+
 
     public void InitStatsAndAbilities(Difficulty gameDiff, ScriptableAdventureLocation locData)
     {
@@ -39,4 +59,7 @@ public class ScriptableNpcUnit : ScriptableUnitBase
 
         return Abilities[Random.Range(0, Abilities.Count)];
     }
+
+
+    #endregion METHODS
 }

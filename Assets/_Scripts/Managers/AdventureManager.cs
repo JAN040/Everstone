@@ -539,10 +539,15 @@ public class AdventureManager : MonoBehaviour
 
     private GameObject InstantiatePrefab(GameObject prefab, Transform parentTransform)
     {
-        var obj = Instantiate(prefab, new Vector3(0, 0, 0), Quaternion.identity);
-        
-        if (parentTransform != null)
-            obj.transform.SetParent(parentTransform, true);
+        GameObject obj;
+
+        if (parentTransform == null)
+            obj = Instantiate(prefab, new Vector3(0, 0, 0), Quaternion.identity);
+        else
+            obj = Instantiate(prefab, new Vector3(0, 0, 0), Quaternion.identity, parentTransform);
+
+        //if (parentTransform != null)
+        //    obj.transform.SetParent(parentTransform, false);  //when manually setting the parent, in order for transform stretch to work, keepWorldSpace flag needs to be false...
         
         obj.transform.localScale = Vector3.one;
         obj.transform.localPosition = Vector3.zero;

@@ -256,6 +256,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   icon_sprite_atlas: {fileID: 4343727234628468602, guid: 7253bdb057264b14f98e47b02b42b0b9, type: 2}
+  CurrencyItemSprite: {fileID: 21300000, guid: 71e80489dc719d54aa96d216c13d8505, type: 3}
 --- !u!1 &802013815
 GameObject:
   m_ObjectHideFlags: 0

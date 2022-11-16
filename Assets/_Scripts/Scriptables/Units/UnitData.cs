@@ -121,6 +121,16 @@ public class UnitData
     public float SpeedRatioMultiplier = 15;
 
 
+    //loot drop parameters
+    private float HumanoidEquipDropChance = 0.3f;
+
+    //chance for common loot is 1 - (sum of chances for other rarities)
+    private readonly float RarityChance_Uncommon  = 0.3f;    //cca. 30%
+    private readonly float RarityChance_Rare      = 0.1f;    //cca. 10%
+    private readonly float RarityChance_Epic      = 0.01f;   //cca. 1%
+    private readonly float RarityChance_Legendary = 0.002f;  //cca. 0.2%
+
+
     public CharacterStats GetBaseStats(UnitClass @class, EnemyType enemyType, Difficulty gameDiff, ScriptableAdventureLocation locationData)
     {
         return GetEnemyStatsForClass(@class, CalculateStatModifier(enemyType, gameDiff, locationData));
@@ -232,6 +242,90 @@ public class UnitData
             default:
                 break;
         }
+    }
+
+    public List<InventoryItem> GenerateDropsForUnit(ScriptableNpcUnit unit)
+    {
+        List<InventoryItem> res = new List<InventoryItem>();
+
+        //add guaranteed drops if any
+        if (unit.GuaranteedDrop != null)
+            res.Add(new InventoryItem(unit.GuaranteedDrop));
+
+        //roll for special drops
+        if (unit.PossibleDropsList != null && unit.PossibleDropsList.Count > 0)
+        {
+            foreach (var possibleDrop in unit.PossibleDropsList)
+            {
+                if (Helper.DiceRoll(possibleDrop.Chance))
+                {
+                    res.Add(new InventoryItem(possibleDrop.Drop));
+                }
+            }
+        }
+
+        //roll the general pool based on unit race (if there are not already 3 drops or more)
+        if (res.Count > 2)
+            return res;
+
+        res.Add(GetDropByUnitRace(unit.Race));
+
+
+        return res;
+    }
+
+    private InventoryItem GetDropByUnitRace(UnitRace race)
+    {
+        InventoryItem res = null;
+
+        switch (race)
+        {
+            case UnitRace.Animal:
+                //can only drop hides
+                res = RollDropByItemType(ItemType.Loot);
+                break;
+
+            case UnitRace.Humanoid:
+                //drops hides & can rarely drop equip
+                var lootType = Helper.DiceRoll(HumanoidEquipDropChance) ? ItemType.Equipment : ItemType.Loot;
+                res = RollDropByItemType(lootType);
+                break;
+
+            case UnitRace.Human:
+                //can only drop equipment and currency
+                break;
+
+            case UnitRace.Monster:
+                break;
+            default:
+                break;
+        }
+
+        return res;
+    }
+
+    private InventoryItem RollDropByItemType(ItemType itemType)
+    {
+        var itemData = ResourceSystem.Instance.GetRandomItemByType(itemType, RollItemRarity());
+        
+        return new InventoryItem(itemData);
+    }
+
+    public ItemRarity RollItemRarity()
+    {
+        if (Helper.DiceRoll(RarityChance_Legendary))
+            return ItemRarity.Legendary;
+
+        if (Helper.DiceRoll(RarityChance_Epic))
+            return ItemRarity.Epic;
+
+        if (Helper.DiceRoll(RarityChance_Rare))
+            return ItemRarity.Rare;
+
+        if (Helper.DiceRoll(RarityChance_Uncommon))
+            return ItemRarity.Uncommon;
+
+        return ItemRarity.Common;
     }
 
 }
