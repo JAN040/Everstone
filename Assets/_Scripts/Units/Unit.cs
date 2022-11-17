@@ -228,10 +228,15 @@ public class Unit : MonoBehaviour
         Stats.OnEnergyChanged       -= OnUnitEnergyChanged;
 
         if (UnitDataRef == HeroRef)
+        {
             foreach (var skill in HeroRef.LevelSystem.Skills.Values)
             {
                 skill.OnLevelChanged -= LevelChanged;
             }
+
+            Stats.ClearEventSubscriptions();    //additional clear cause fuck me some bug keeps happening
+            OnUnitStatusEffectAdded = null;
+        }
 
         RemoveAllStatusEffects();
     }

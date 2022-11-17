@@ -31,9 +31,9 @@ public enum Difficulty
 public enum LocationDifficulty
 {
     Easy = 0,
-    Normal = 2,
-    Advanced = 5,
-    Hard = 10,
+    Normal = 5,
+    Advanced = 10,
+    Hard = 25,
     Expert = 50
 }
 
@@ -139,6 +139,7 @@ public enum ItemType
     Equipment,  //view stats, equippable in equipment UI
     Potion,     //usable
     Loot,       //sell price viewable
+    Currency,
 }
 
 public enum ItemRarity

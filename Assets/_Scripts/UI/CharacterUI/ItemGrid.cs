@@ -45,6 +45,11 @@ public class ItemGrid : MonoBehaviour
         ItemDragData = draggedItemData;
         ItemSource = itemSource;
         ItemSource.OnInventoryChanged += RefreshInventory;
+
+        //if has stuff from before
+        if (ItemContainerList != null && ItemContainerList.Count > 0)
+            ItemContainerList.ForEach(x => Destroy(x.gameObject));
+
         ItemContainerList = new List<GameObject>();
         List<InventoryItem> itemList = ItemSource.GetItems();
 

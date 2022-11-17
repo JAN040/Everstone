@@ -331,6 +331,9 @@ public class ResourceSystem : Singleton<ResourceSystem> {
         return Instantiate(UnitClassAbilities.FirstOrDefault(x => x.Name.Equals(name)));
     }
 
+    /// <summary>
+    /// Returns a list of ordered (cloned) ScriptableAdventureLocation objects 
+    /// </summary>
     public List<ScriptableAdventureLocation> GetAdventureLocations()
     {
         return AdventureLocations.OrderBy(x => x.name).OrderBy(x => x.difficulty).ToList();
@@ -343,17 +346,20 @@ public class ResourceSystem : Singleton<ResourceSystem> {
 
     public ItemDataBase GetRandomItemByType(ItemType itemType, ItemRarity rarity)
     {
-        
+        List<ItemDataBase> itemCandidates = null;
 
         switch (itemType)
         {
             case ItemType.Equipment:
-                return Items_Equipment[Random.Range(0, Items_Equipment.Count)];
+                itemCandidates = GetCastedEquipmentItems().Where(x => x.Rarity == rarity).ToList();
+                break;
 
             case ItemType.Loot:
-                return Items_Loot[Random.Range(0, Items_Loot.Count)];
+                itemCandidates = Items_Loot.Where(x => x.Rarity == rarity).ToList();
+                break;
 
             case ItemType.Potion:
+                //TODO
                 break;
 
             case ItemType.None:
@@ -361,7 +367,37 @@ public class ResourceSystem : Singleton<ResourceSystem> {
                 return null;
         }
 
-        return null;
+        if (itemCandidates == null || itemCandidates.Count == 0)
+            return null;
+        else
+            return itemCandidates[Random.Range(0, itemCandidates.Count)];
+    }
+
+
+    private List<ItemDataBase> GetCastedEquipmentItems()
+    {
+        List<ItemDataBase> res = new List<ItemDataBase>();
+
+        Items_Equipment.ForEach(x => res.Add(x));
+
+        return res;
+    }
+
+
+    public ItemDataBase GetCurrencyItem()
+    {
+        var res = ScriptableObject.CreateInstance("ItemDataBase") as ItemDataBase;
+        res.Init("Item_Currency", 
+            "Money", 
+            "A pile of money.", 
+            CurrencyItemSprite,
+            1,
+            999999999,
+            ItemType.Currency,
+            ItemRarity.Uncommon
+        );
+
+        return res;
     }
 
     //public List<ItemDataBase> GetAllItemsOfType(ItemType itemType)

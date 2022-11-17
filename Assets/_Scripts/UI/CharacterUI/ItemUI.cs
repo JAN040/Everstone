@@ -211,9 +211,8 @@ public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEn
     private void UpdateStackSizeText()
     {
         //non-stackable items dont show the stack size
-        this.StackSizeText.text = ItemRef.ItemData.MaxStackSize == 1 ? "" : ItemRef.StackSize.ToString();
+        this.StackSizeText.text = ItemRef.ItemData.MaxStackSize == 1 ? "" : ItemRef.StackSize.ToKiloString();
     }
-
 
     /// <summary>
     /// Sets the parent of this gameObject

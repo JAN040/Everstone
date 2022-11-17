@@ -28,15 +28,16 @@ public class GameManager : Singleton<GameManager>
     /// <summary>
     /// Reference to the PlayerManager script
     /// </summary>
-    public PlayerManager PlayerManager {
-        get 
+    public PlayerManager PlayerManager
+    {
+        get
         {
             if (playerManager == null)
                 playerManager = new PlayerManager();
 
-            return playerManager; 
+            return playerManager;
         }
-        private set => playerManager = value; 
+        private set => playerManager = value;
     }
 
     /// <summary>
@@ -53,7 +54,18 @@ public class GameManager : Singleton<GameManager>
     /// Stores the reference to the adventure location the player is currently in (null if not in adventure)
     /// </summary>
     public ScriptableAdventureLocation CurrentAdventureLocation { get; private set; }
-    public List<ScriptableAdventureLocation> AdventureLocationData { get; set; } = null;
+    public List<ScriptableAdventureLocation> AdventureLocationData { 
+        get 
+        { 
+            if (adventureLocationData == null)
+                adventureLocationData = ResourceSystem.Instance.GetAdventureLocations();
+
+            return adventureLocationData; 
+        } 
+        set => adventureLocationData = value; 
+    }
+    private List<ScriptableAdventureLocation> adventureLocationData = null;
+
 
     public int Currency
     {
@@ -165,7 +177,7 @@ public class GameManager : Singleton<GameManager>
     public void LoadGame()
     {
         //GameData data = Deserialize(location);
-        
+
         if (ShowGameOverScreenOnSaveLoad)
         {
             InstantiatePrefab(GameOverMenu, null);
@@ -180,7 +192,7 @@ public class GameManager : Singleton<GameManager>
     public string CurrencyToDisplayString(int amount, bool compactMode = false)
     {
         int copperAmnt = amount % NumOfCopperForOneSilver;
-        
+
         //convert all u can to silver
         int tempAmnt = amount / NumOfCopperForOneSilver;
 
@@ -189,7 +201,7 @@ public class GameManager : Singleton<GameManager>
 
         string copperIcon = ResourceSystem.GetIconTag(Icon.Coin_Copper);
         string silverIcon = ResourceSystem.GetIconTag(Icon.Coin_Silver);
-        string goldIcon   = ResourceSystem.GetIconTag(Icon.Coin_Gold);
+        string goldIcon = ResourceSystem.GetIconTag(Icon.Coin_Gold);
 
         if (compactMode)    //no spaces
             return $"{(goldAmnt > 0 ? $"{goldIcon} {goldAmnt}" : "")}{(silverAmnt > 0 ? $"{silverIcon}{silverAmnt}" : "")}{copperIcon}{copperAmnt}";
@@ -208,6 +220,19 @@ public class GameManager : Singleton<GameManager>
         obj.transform.localPosition = Vector3.zero;
 
         return obj;
+    }
+
+    public ScriptableAdventureLocation HighestClearedAdventureLocation()
+    {
+        ScriptableAdventureLocation highestCleared = null;
+
+        foreach (var location in AdventureLocationData)
+        {
+            if (location.PlayerProgress == location.stageAmount)
+                highestCleared = location;
+        }
+
+        return highestCleared;
     }
 
     #endregion METHODS

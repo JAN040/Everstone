@@ -170,8 +170,8 @@ public class ItemInfoBox : MonoBehaviour
         Button_Buy.SetActive(ItemRef.IsShopOwned);
         Button_Buy.GetComponent<Button>().interactable = playerInventoryHasFreeSpace && ItemRef.CanAfford();
 
-        //show sell on all owned, non equipped items (only in storage or shop menus)
-        Button_Sell.SetActive(!ItemRef.IsShopOwned && !Button_Unequip.activeSelf && (isInShopScene || isInResidenceScene));
+        //show sell on all owned, non equipped items (only in storage or shop menus, except money that can be "sold" anywhere)
+        Button_Sell.SetActive(!ItemRef.IsShopOwned && !Button_Unequip.activeSelf && (isInShopScene || isInResidenceScene || ItemRef.ItemData.ItemType == ItemType.Currency));
     }
 
     private string GetRarityText()

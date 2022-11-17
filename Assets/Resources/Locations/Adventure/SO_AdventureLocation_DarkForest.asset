@@ -15,8 +15,7 @@ MonoBehaviour:
   locationName: Dark Forest
   icon: {fileID: 21300000, guid: c56ebbe2f75a1df46bc1ab2d75654e14, type: 3}
   background: {fileID: 21300000, guid: df0760e3454dc0a488eb659bb138f846, type: 3}
-  difficulty: 2
+  difficulty: 5
   stageAmount: 25
   playerProgress: 0
   _hasPlayerClearedFirstBoss: 0
-  enemyPool: []

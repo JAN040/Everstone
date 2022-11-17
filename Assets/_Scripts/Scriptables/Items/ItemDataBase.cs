@@ -23,6 +23,22 @@ public class ItemDataBase : ScriptableObject
     public ItemRarity Rarity;
 
 
+    /// <summary>
+    /// Used when creating an instance through ScriptableObject.CreateInstance
+    /// </summary>
+    public void Init(string id, string displayName, string description, Sprite menuIcon, int buyPrice, int maxStackSize, ItemType itemType, ItemRarity rarity)
+    {
+        Id = id;
+        DisplayName = displayName;
+        Description = description;
+        MenuIcon = menuIcon;
+        BuyPrice = buyPrice;
+        MaxStackSize = maxStackSize;
+        ItemType = itemType;
+        Rarity = rarity;
+    }
+
+
     public ItemDataBase Clone()
     {
         ItemDataBase clone = CreateInstance<ItemDataBase>();

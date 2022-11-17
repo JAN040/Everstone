@@ -45,10 +45,27 @@ public class InventoryItem
     #region METHODS
 
 
-    public void AddToStack(int amount = 1)
+    /// <summary>
+    /// Tries to add amount to stack. If stack cant take the entire amount (gets full), returns the remainder
+    /// </summary>
+    /// <param name="amount"></param>
+    /// <returns></returns>
+    public int AddToStack(int amount = 1)
     {
-        StackSize += amount;
+        int remainder = 0;
+        int amountCanAdd = amount;
+
+        //if adding everything would cause the stack to overflow
+        if (StackSize + amount > ItemData.MaxStackSize)
+        {
+            amountCanAdd = ItemData.MaxStackSize - StackSize;
+            remainder = amount - amountCanAdd;
+        }
+
+        StackSize += amountCanAdd;
         OnStackSizeChanged?.Invoke();
+
+        return remainder;
     }
 
     public void RemoveFromStack(int amount = 1)
@@ -83,7 +100,9 @@ public class InventoryItem
 
     public int GetSellPrice()
     {
-        return (ItemData.BuyPrice * StackSize * GameManager.Instance.PlayerManager.GetSellPriceModifier(ItemData.ItemType)).Round();
+        float sellModifier = GameManager.Instance.PlayerManager.GetSellPriceModifier(ItemData.ItemType);
+
+        return (ItemData.BuyPrice * StackSize * sellModifier).Round();
     }
 
     public int GetBuyPrice()

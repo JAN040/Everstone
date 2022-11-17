@@ -140,6 +140,9 @@ public class ItemSlotUI : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPo
 
     public void OnDrop(PointerEventData eventData)
     {
+        if (!ItemDragData.AreItemsDraggable)
+            return;
+
         HoverImage.gameObject.SetActive(false);
 
         var droppedObj = eventData.pointerDrag;

@@ -86,21 +86,13 @@ public class AdventureSelectManager : MonoBehaviour
         var managerLocations = GameManager.Instance.AdventureLocationData;
         var resLocations = ResourceSystem.Instance.GetAdventureLocations();
 
-        if (managerLocations == null)
+        //in the case new locations were added since last visit update managerLocations
+        foreach (var location in resLocations)
         {
-            //entering adventure select for the first time this will be empty
-            managerLocations = resLocations;
-        }
-        else
-        {
-            //in the case new locations were added since last visit update managerLocations
-            foreach (var location in resLocations)
+            var match = managerLocations.FirstOrDefault(x => x.locationName == location.locationName);
+            if (match == null)
             {
-                var match = managerLocations.FirstOrDefault(x => x.locationName == location.locationName);
-                if (match == null)
-                {
-                    managerLocations.Add(location);
-                }
+                managerLocations.Add(location);
             }
         }
 

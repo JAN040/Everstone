@@ -121,14 +121,25 @@ public class UnitData
     public float SpeedRatioMultiplier = 15;
 
 
-    //loot drop parameters
+
+    #region Loot drop parameters
+
+
     private float HumanoidEquipDropChance = 0.3f;
 
     //chance for common loot is 1 - (sum of chances for other rarities)
-    private readonly float RarityChance_Uncommon  = 0.3f;    //cca. 30%
-    private readonly float RarityChance_Rare      = 0.1f;    //cca. 10%
-    private readonly float RarityChance_Epic      = 0.01f;   //cca. 1%
+    private readonly float RarityChance_Uncommon = 0.3f;    //cca. 30%
+    private readonly float RarityChance_Rare = 0.1f;    //cca. 10%
+    private readonly float RarityChance_Epic = 0.01f;   //cca. 1%
     private readonly float RarityChance_Legendary = 0.002f;  //cca. 0.2%
+
+    private readonly float LocationDiffChanceQuotient = 1000;
+
+    private readonly int CurrencyMinDrop = 1;
+    private readonly int CurrencyMaxDrop = 1000;
+
+
+    #endregion Loot drop parameters
 
 
     public CharacterStats GetBaseStats(UnitClass @class, EnemyType enemyType, Difficulty gameDiff, ScriptableAdventureLocation locationData)
@@ -248,6 +259,8 @@ public class UnitData
     {
         List<InventoryItem> res = new List<InventoryItem>();
 
+        if (unit == null) return res;
+
         //add guaranteed drops if any
         if (unit.GuaranteedDrop != null)
             res.Add(new InventoryItem(unit.GuaranteedDrop));
@@ -270,13 +283,13 @@ public class UnitData
 
         res.Add(GetDropByUnitRace(unit.Race));
 
-
         return res;
     }
 
     private InventoryItem GetDropByUnitRace(UnitRace race)
     {
         InventoryItem res = null;
+        ItemType lootType;
 
         switch (race)
         {
@@ -287,12 +300,14 @@ public class UnitData
 
             case UnitRace.Humanoid:
                 //drops hides & can rarely drop equip
-                var lootType = Helper.DiceRoll(HumanoidEquipDropChance) ? ItemType.Equipment : ItemType.Loot;
+                lootType = Helper.DiceRoll(HumanoidEquipDropChance) ? ItemType.Equipment : ItemType.Loot;
                 res = RollDropByItemType(lootType);
                 break;
 
             case UnitRace.Human:
                 //can only drop equipment and currency
+                lootType = Helper.DiceRoll(HumanoidEquipDropChance) ? ItemType.Equipment : ItemType.Currency;
+                res = RollDropByItemType(lootType);
                 break;
 
             case UnitRace.Monster:
@@ -306,26 +321,79 @@ public class UnitData
 
     private InventoryItem RollDropByItemType(ItemType itemType)
     {
-        var itemData = ResourceSystem.Instance.GetRandomItemByType(itemType, RollItemRarity());
+        ItemDataBase itemData;
+        var adventureLocation = GameManager.Instance.CurrentAdventureLocation;
+        var locDifficulty = adventureLocation != null ? adventureLocation.difficulty : LocationDifficulty.Easy;
+
+        if (itemType == ItemType.Currency)
+        {
+            itemData = ResourceSystem.Instance.GetCurrencyItem();
+            var item = new InventoryItem(itemData);
+            item.StackSize = RollCurrencyAmount(locDifficulty);
+
+            return item;
+        }
+
+        itemData = ResourceSystem.Instance.GetRandomItemByType(itemType, RollItemRarity(locDifficulty));
         
         return new InventoryItem(itemData);
     }
 
-    public ItemRarity RollItemRarity()
+    private int RollCurrencyAmount(LocationDifficulty locationDifficulty)
     {
-        if (Helper.DiceRoll(RarityChance_Legendary))
+        int amount = Random.Range(CurrencyMinDrop, CurrencyMaxDrop);
+        var rarity = RollItemRarity(locationDifficulty);
+
+        switch (rarity)
+        {
+            case ItemRarity.Uncommon:
+                amount *= 2;
+                break;
+
+            case ItemRarity.Rare:
+                amount *= 4;
+                break;
+
+            case ItemRarity.Epic:
+                amount *= 8;
+                break;
+
+            case ItemRarity.Legendary:
+                amount *= 16;
+                break;
+
+            case ItemRarity.Common:
+            case ItemRarity.None:
+            case ItemRarity.Quest:
+            default:
+                break;
+        }
+
+        return amount;
+    }
+
+    public ItemRarity RollItemRarity(LocationDifficulty difficulty)
+    {
+        float chanceMod = 0;
+        chanceMod = GetChanceModifier(difficulty);
+
+        if (Helper.DiceRoll(RarityChance_Legendary + chanceMod))
             return ItemRarity.Legendary;
 
-        if (Helper.DiceRoll(RarityChance_Epic))
+        if (Helper.DiceRoll(RarityChance_Epic      + chanceMod * 2))
             return ItemRarity.Epic;
 
-        if (Helper.DiceRoll(RarityChance_Rare))
+        if (Helper.DiceRoll(RarityChance_Rare      + chanceMod * 4))
             return ItemRarity.Rare;
 
-        if (Helper.DiceRoll(RarityChance_Uncommon))
+        if (Helper.DiceRoll(RarityChance_Uncommon  + chanceMod * 8))
             return ItemRarity.Uncommon;
 
         return ItemRarity.Common;
     }
 
+    private float GetChanceModifier(LocationDifficulty difficulty)
+    {
+        return (int)difficulty / LocationDiffChanceQuotient;
+    }
 }

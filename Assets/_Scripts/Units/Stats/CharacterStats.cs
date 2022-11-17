@@ -368,4 +368,12 @@ public class CharacterStats
     {
         OnStatChanged?.Invoke(stat);
     }
+
+    public void ClearEventSubscriptions()
+    {
+        OnHealthPointsChanged = null;
+        OnStatChanged = null;
+        OnManaChanged = null;
+        OnEnergyChanged = null;
+    }
 }

@@ -51,15 +51,37 @@ public static class Extensions
     //round down and convert to kilo format, ie. 1345 = 1.34K
     public static string ToKiloString(this float num)
     {
+        if (num > 1000000f)
+        {
+            num /= 1000000f;
+            return $"{num:0}M";
+        }
+
         if (num > 1000f)
         {
             num /= 1000f;
-            return $"{num:0.00}K";
+            return $"{num:0}k";
         }
 
         return ((int)num).ToString();
     }
 
+    public static string ToKiloString(this int num)
+    {
+        if (num > 1000000)
+        {
+            num /= 1000000;
+            return $"{num:0}M";
+        }
+
+        if (num > 1000)
+        {
+            num /= 1000;
+            return $"{num:0}k";
+        }
+
+        return num.ToString();
+    }
 
     /// <summary>
     /// Gets the next value of the enum (numerically)

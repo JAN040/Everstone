@@ -36,24 +36,38 @@ public class InventorySystem
     /// <returns>True on success, false on failure (inventory is full)</returns>
     public bool AddItem(InventoryItem newItem)
     {
-        var existingItemStack = InventoryItems.FirstOrDefault(x => x != null && x.ItemData.Id == newItem.ItemData.Id);
-        
-        //if a stack for the item already exists and is not yet full, add the new item to that stack
-        if (existingItemStack != null && existingItemStack.ItemData.MaxStackSize > existingItemStack.StackSize)
+        if (newItem == null)
         {
-            existingItemStack.AddToStack(newItem.StackSize);
-            OnInventoryChanged?.Invoke(this);
-
-            return true;
+            Debug.LogWarning("Tried adding a null item to inventory... Possible semantic error");
+            return false;
         }
 
-        //no such stack exists, try to create a new stack if there is space (null means empty)
-        int emptySpace = FirstFreeSlotIndex();
+        //try to stack the item to existing stacks
+        foreach (var item in InventoryItems)
+        {
+            if (item != null &&
+                item.ItemData.Id.Equals(newItem.ItemData.Id) &&
+                item.ItemData.MaxStackSize > item.StackSize)
+            {   //found an item we can stack to
+                int remainder = item.AddToStack(newItem.StackSize);
+                newItem.StackSize = remainder;
+                
+                if (remainder == 0) //if we stacked the entirety of the item break, else search for another stack
+                    break;
+            }
+        }
 
-        if (emptySpace == -1)   //no space for the new item
-            return false;
+        if (newItem.StackSize != 0)
+        {
+            //if we havent stacked the entire item, try to create a new stack if there is space (null means empty)
+            int emptySpace = FirstFreeSlotIndex();
 
-        InventoryItems[emptySpace] = newItem;
+            if (emptySpace == -1)   //no space for the new item
+                return false;
+
+            InventoryItems[emptySpace] = newItem;
+        }
+
         OnInventoryChanged?.Invoke(this);
 
         return true;
@@ -102,6 +116,18 @@ public class InventorySystem
             return InventoryItems[index];
 
         return null;
+    }
+
+    /// <returns>Returns the index of the item in parameter, or -1 if no such item exists in this inventory</returns>
+    public int GetItemIndex(InventoryItem item)
+    {
+        for (int i = 0; i < InventoryItems.Count; i++)
+        {
+            if (InventoryItems[i] == item)
+                return i;
+        }
+
+        return -1;
     }
 
     public List<InventoryItem> GetItems()
@@ -275,5 +301,26 @@ public class InventorySystem
     public bool HasFreeSpace()
     {
         return FirstFreeSlotIndex() != -1;
+    }
+
+    public void MoveItemsToFront()
+    {
+        //loop through all items
+        for (int i = 0; i < InventoryItems.Count; i++)
+        {
+            if (InventoryItems[i] == null)  //skip empty spots
+                continue;
+
+            //search for empty spots from the front
+            for (int j = 0; j < InventoryItems.Count; j++)
+            {
+                //if found an empty spot that is more to the front than current spot, move the item
+                if (InventoryItems[j] == null && j < i)
+                {
+                    InventoryItems[j] = InventoryItems[i];
+                    InventoryItems[i] = null;
+                }
+            }
+        }
     }
 }

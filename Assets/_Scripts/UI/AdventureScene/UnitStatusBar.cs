@@ -81,7 +81,7 @@ public class UnitStatusBar : MonoBehaviour
         get => unitRef;
         set
         {
-            if (unitRef != null && unitRef.GetUnit() != null)
+            if (unitRef?.GetUnit() != null)
             {
                 RemoveUnitEvents(unitRef.GetUnit());
             }

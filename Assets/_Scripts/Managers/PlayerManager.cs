@@ -147,6 +147,9 @@ public class PlayerManager
     {
         List<InventoryItem> shopItemList = new List<InventoryItem>(ShopItemAmount + GameManager.Instance.PlayerInventorySpace);
 
+        //item generation uses probabilities for one higher than the max cleared adventure.
+        LocationDifficulty locationDiff = GetItemGenerationDifficulty();
+
         float chance_equip = 1f;
         float chance_potion = 0f; //no potions atm
         //float chance_loot = 0.4f; loot items shouldnt be sold
@@ -154,8 +157,8 @@ public class PlayerManager
         for (int i = 0; i < ShopItemAmount; i++)
         {
             ItemType itemType = RollItemType(chance_equip, chance_potion);
-            ItemDataBase itemData = ResourceSystem.Instance.GetRandomItemByType(itemType, GameManager.Instance.UnitData.RollItemRarity());
-            
+            ItemDataBase itemData = ResourceSystem.Instance.GetRandomItemByType(itemType, GameManager.Instance.UnitData.RollItemRarity(locationDiff));
+
             if (itemData == null)
                 continue;
 
@@ -169,6 +172,19 @@ public class PlayerManager
         }
 
         ShopInventory.SetInventoryItemList(shopItemList);
+    }
+
+    private LocationDifficulty GetItemGenerationDifficulty()
+    {
+        LocationDifficulty locDiff = LocationDifficulty.Easy;
+        var highestClearedAdventure = GameManager.Instance.HighestClearedAdventureLocation();
+        
+        if (highestClearedAdventure != null)
+            locDiff = highestClearedAdventure.difficulty;
+        
+        locDiff = locDiff.NextOrSame();
+
+        return locDiff;
     }
 
     private ItemType RollItemType(float chance_equip, float chance_potion)
@@ -187,6 +203,10 @@ public class PlayerManager
 
     public float GetSellPriceModifier(ItemType itemType)
     {
+        //this makes it so that the currency stack always has its correct value displayed
+        if (itemType == ItemType.Currency)
+            return 1;
+
         return itemType == ItemType.Loot ?
             SellPriceModifier_Loot
             :

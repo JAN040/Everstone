@@ -254,7 +254,7 @@ public class AdventureManager : MonoBehaviour
 
         //show success menu
         var menu = InstantiatePrefab(SuccessMenu, UICanvas.transform);
-        menu.GetComponent<SuccessMenu>().Init(this, LootInventory);
+        menu.GetComponent<SuccessMenu>().Init(this, LootInventory, UICanvas.scaleFactor);
     }
 
     private void InitStage(bool isFirstTime, bool initAllies)
@@ -608,7 +608,26 @@ public class AdventureManager : MonoBehaviour
             else if (EnemyStatusBar.GetComponent<UnitStatusBar>().UnitRef == unit)
                 SetStatusBarUnit(UnitGrid.GetRandomUnit(Faction.Enemies, false), Faction.Enemies);
 
-            //TODO: handle loot
+            //handle loot
+            var items = GameManager.Instance.UnitData.GenerateDropsForUnit(unit as ScriptableNpcUnit);
+
+            //TODO: remove, test only
+            if (EnemyUnitsList.Count == 0)
+            {
+                while (items.Count < 30)
+                    items.AddRange(GameManager.Instance.UnitData.GenerateDropsForUnit(unit as ScriptableNpcUnit));
+            }
+
+            if (items != null && items.Count > 0)
+            {
+                items.ForEach(x =>
+                {
+                    if (!LootInventory.HasFreeSpace())
+                        LootInventory.AddSpace(7);
+
+                    LootInventory.AddItem(x);
+                });
+            }
 
             //handle stage clear if all enemies are defeated
             if (EnemyUnitsList.Count == 0)

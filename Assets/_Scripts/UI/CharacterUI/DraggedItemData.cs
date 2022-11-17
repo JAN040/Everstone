@@ -21,11 +21,11 @@ public class DraggedItemData
     #endregion VARIABLES
 
 
-    public DraggedItemData(float scaleFactor, GameObject draggedItemContainer, ItemGrid itemGrid)
+    public DraggedItemData(float scaleFactor, GameObject draggedItemContainer, ItemGrid playerInventoryGridRef)
     {
         CanvasScaleFactor = scaleFactor;
         DraggedItemContainer = draggedItemContainer;
-        InventoryGrid = itemGrid;
+        InventoryGrid = playerInventoryGridRef;
 
         CurrentlyDraggedItem = null;
     }
