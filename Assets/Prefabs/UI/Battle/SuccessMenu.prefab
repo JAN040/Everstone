@@ -1540,7 +1540,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -50}
-  m_SizeDelta: {x: 400, y: 50}
+  m_SizeDelta: {x: 1150, y: 50}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &385671680736577415
 CanvasRenderer:
@@ -1692,6 +1692,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SuccessMenu_Object: {fileID: 8263505089572102244}
+  StageDescText: {fileID: 5209477556206727517}
   LootGrid: {fileID: 6367171819753736683}
   LootScroll: {fileID: 3262456728667461993}
   Button_TakeAll: {fileID: 5327741657064899349}

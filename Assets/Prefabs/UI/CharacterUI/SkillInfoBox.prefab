@@ -158,7 +158,7 @@ GameObject:
   - component: {fileID: 8377522264260309046}
   - component: {fileID: 8377522264260309045}
   - component: {fileID: 8377522264260309044}
-  - component: {fileID: 1569835877013403374}
+  - component: {fileID: 9210649744277122695}
   m_Layer: 0
   m_Name: SkillInfoBox
   m_TagString: Untagged
@@ -248,7 +248,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &1569835877013403374
+--- !u!114 &9210649744277122695
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -257,7 +257,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8377522264260309042}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58fd6804e781a044181f866764524c3e, type: 3}
+  m_Script: {fileID: 11500000, guid: 106a08032279f63409d82d7e4bf99f5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Object_SkillInfoBox: {fileID: 8377522264260309042}
@@ -2348,7 +2348,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1569835877013403374}
+      - m_Target: {fileID: 9210649744277122695}
         m_TargetAssemblyTypeName: SkillInfoBox, Assembly-CSharp
         m_MethodName: CloseClicked
         m_Mode: 1

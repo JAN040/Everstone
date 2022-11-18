@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Linq;
 
 public class SuccessMenu : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class SuccessMenu : MonoBehaviour
     [Header("UI References")]
     [SerializeField] GameObject SuccessMenu_Object;
 
+    [SerializeField] TextMeshProUGUI StageDescText;
     [SerializeField] ItemGrid LootGrid;
     [SerializeField] ScrollRect LootScroll;
 
@@ -74,11 +76,16 @@ public class SuccessMenu : MonoBehaviour
         ManagerRef = manager;
         LootInventory = lootInventory;
         CanvasScaleFactor = canvasScaleFactor;
-        
+
+        int currProgress = GameManager.Instance.CurrentAdventureLocation.PlayerProgress;
+        bool gotAnyLoot = lootInventory.GetItems().Any(x => x != null);
+        string lootText = gotAnyLoot ? "Obtained loot:" : "No loot obtained.";
+        StageDescText.text = $"Cleared stage {currProgress}. {lootText}";
+
         RefreshLootGrid();
 
         //if there are no items to take it would make sense to disable the take button
-        if (lootInventory.GetItems().TrueForAll(x => x == null))
+        if (!gotAnyLoot)
             Button_TakeAll.interactable = false;
 
         //manage inventory form starts hidden
@@ -170,7 +177,7 @@ public class SuccessMenu : MonoBehaviour
         //close the menu
         Destroy(SuccessMenu_Object.gameObject);
 
-        ManagerRef.EndAdventure();
+        GameManager.Instance.EndAdventure();
     }
 
     public void Continue_Clicked()

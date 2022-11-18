@@ -209,6 +209,30 @@ public class GameManager : Singleton<GameManager>
             return $"{(goldAmnt > 0 ? $"{goldIcon} {goldAmnt}  " : "")}{(silverAmnt > 0 ? $"{silverIcon} {silverAmnt}  " : "")}{copperIcon} {copperAmnt}";
     }
 
+    public void EndAdventure()
+    {
+        //leave battle
+        GameState = BattleState.None;
+        SceneManagementSystem.Instance.LoadScene(Scenes.Outskirts);
+
+        //handle shop reset
+        PlayerManager.RefreshShopInventory();
+
+        //handle stage progress detoriation
+        DetoriateOtherStageProgress();
+
+        CurrentAdventureLocation = null;
+    }
+
+    private void DetoriateOtherStageProgress()
+    {
+        foreach (var location in AdventureLocationData)
+        {
+            if (location != CurrentAdventureLocation && location.PlayerProgress > 0)
+                location.PlayerProgress--;
+        }
+    }
+
     private GameObject InstantiatePrefab(GameObject prefab, Transform parentTransform)
     {
         var obj = Instantiate(prefab, new Vector3(0, 0, 0), Quaternion.identity);
@@ -228,7 +252,7 @@ public class GameManager : Singleton<GameManager>
 
         foreach (var location in AdventureLocationData)
         {
-            if (location.PlayerProgress == location.stageAmount)
+            if (location.HasPlayerClearedFirstBoss)
                 highestCleared = location;
         }
 

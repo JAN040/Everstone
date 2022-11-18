@@ -60,12 +60,11 @@ public class StatusEffect
     {
         if (EffectType == StatusEffectType.DealDamage)
         {
-            string dmgAmounts = GetDamageAmounts();
+            string dmgAmounts = GetDamageDisplayAmounts();
             bool multipleTarget = Target.In(TargetType.MultipleAllies, TargetType.MultipleEnemies);
 
             return $"Deal {dmgAmounts} to {Target}{(multipleTarget ? $" ({MultipleTargetCount})" : "")}";
         }
-
 
         var res = string.Empty;
         var data = ResourceSystem.Instance.GetStatusEffect(this.EffectType);
@@ -78,28 +77,64 @@ public class StatusEffect
         return data.GetEffectDescription(isAbilityMaxLevel, PerLevelValueChange, PerLevelDurationChange);
     }
 
-    private string GetDamageAmounts()
+    private string GetDamageDisplayAmounts()
     {
         string res = string.Empty;
         foreach (var damage in DamageList)
         {
-            switch (damage.Type)
-            {
-                case DamageType.Physical:
-                    res += $"{damage.Amount * 100}% of PhysAtk\n";
-                    break;
-                case DamageType.Arts:
-                    res += $"{damage.Amount * 100}% of ArtsAtk\n";
-                    break;
-                case DamageType.True:
-                    res += $"{damage.Amount} True damage"; 
-                    break;
-                case DamageType.Elemental:
-                    res += $"{damage.Amount} {damage.ElementType} element damage"; 
-                    break;
-                default:
-                    break;
-            }
+            res += GetDamageDisplayValue(damage);
+            res += GetDamagePerLevelDisplayValue(damage);
+            res += Environment.NewLine;
+        }
+
+        return res;
+    }
+
+    public string GetDamageDisplayValue(Damage damage)
+    {
+        string res = string.Empty;
+
+        switch (damage.Type)
+        {
+            case DamageType.Physical:
+                res += $"{damage.Amount * 100}% of PhysAtk";
+                break;
+            case DamageType.Arts:
+                res += $"{damage.Amount * 100}% of ArtsAtk";
+                break;
+            case DamageType.True:
+                res += $"{damage.Amount} True damage";
+                break;
+            case DamageType.Elemental:
+                res += $"{damage.Amount} {damage.ElementType} element damage";
+                break;
+            default:
+                break;
+        }
+
+        return res;
+    }
+
+    public string GetDamagePerLevelDisplayValue(Damage damage)
+    {
+        string res = string.Empty;
+
+        switch (damage.Type)
+        {
+            case DamageType.Physical:
+                res += $" (+{damage.PerLevelDamageChange * 100}%)";
+                break;
+            case DamageType.Arts:
+                res += $" (+{damage.PerLevelDamageChange * 100}%)";
+                break;
+            case DamageType.True:
+                res += $" (+{damage.PerLevelDamageChange})";
+                break;
+            case DamageType.Elemental:
+                res += $" (+{damage.PerLevelDamageChange})";
+                break;
+            default:
+                break;
         }
 
         return res;

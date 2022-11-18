@@ -248,17 +248,22 @@ public class ScriptableAbility : ScriptableObject
         //increase effect values
         if (OnActivedEffects != null)
             foreach (var effect  in OnActivedEffects)
-            {
-                effect.EffectValue += effect.PerLevelValueChange;
-                effect.Duration    += effect.PerLevelDurationChange;
-            }
+                LevelUpEffect(effect);
 
         if (OnDeactivatedEffects != null)
             foreach (var effect in OnDeactivatedEffects)
-            {
-                effect.EffectValue += effect.PerLevelValueChange;
-                effect.Duration += effect.PerLevelDurationChange;
-            }
+                LevelUpEffect(effect);
+    }
+
+    private void LevelUpEffect(StatusEffect effect)
+    {
+        //for damaging abilities
+        if (effect.DamageList != null && effect.DamageList.Count > 0)
+            foreach (var damage in effect.DamageList)
+                damage.Amount += damage.PerLevelDamageChange;
+
+        effect.EffectValue += effect.PerLevelValueChange;
+        effect.Duration += effect.PerLevelDurationChange;
     }
 
     public string GetDescription()

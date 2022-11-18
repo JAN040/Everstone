@@ -275,12 +275,19 @@ public class InventorySystem
                 UnityEngine.Object.Destroy(item.Prefab.gameObject);
                 InventoryItems[i] = null;
             }
+
+            if (this.IsShop && item.ItemData.ItemType == ItemType.Loot)
+            {
+                UnityEngine.Object.Destroy(item.Prefab.gameObject);
+                InventoryItems[i] = null;
+            }
         }
     }
 
     public void SetInventoryItemList(List<InventoryItem> inventoryItems)
     {
         InventoryItems = inventoryItems;
+        OnInventoryChanged?.Invoke(this);
     }
 
     public string GetItemsDisplayString()
@@ -322,5 +329,7 @@ public class InventorySystem
                 }
             }
         }
+
+        OnInventoryChanged?.Invoke(this);
     }
 }

@@ -27,7 +27,7 @@ public class Damage
     /// <summary>
     /// for when Damage is used in ScriptableAbility
     /// </summary>
-    [SerializeField] float PerLevelDamageChange = 0f;
+    public float PerLevelDamageChange = 0f;
 
     public bool CanBeEvaded = true;
     public bool CanBeBlocked = true;

@@ -429,12 +429,6 @@ public class AdventureManager : MonoBehaviour
         InitStage(false, false);
     }
 
-    public void EndAdventure()
-    {
-        GameManager.Instance.GameState = BattleState.None;
-        SceneManagementSystem.Instance.LoadScene(Scenes.Outskirts);
-    }
-
 
     #region Unit Spawning
 
