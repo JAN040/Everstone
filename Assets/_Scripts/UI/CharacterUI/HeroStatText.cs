@@ -52,7 +52,7 @@ public class HeroStatText : MonoBehaviour
         if (TextField == null)
             return;
 
-        StatRef = GameManager.Instance.PlayerManager.PlayerHero.BaseStats.GetStatFromStatType(StatType);
+        StatRef = GameManager.Instance.PlayerManager.PlayerHero.Stats.GetStatFromStatType(StatType);
         if (StatRef == null)
             return;
         

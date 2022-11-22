@@ -152,6 +152,11 @@ public class AdventureManager : MonoBehaviour
     void Start()
     {
         CurrentLocation = GameManager.Instance?.CurrentAdventureLocation;
+
+        // if the location doesnt have its enemy pool set, set it now
+        if (CurrentLocation.EnemyPool == null || CurrentLocation.EnemyPool.Count == 0)
+            CurrentLocation.SetEnemyPool(ResourceSystem.Instance.GetAdventureLocationEnemyPool(CurrentLocation.locationName));
+
         Sprite currLocationSprite = CurrentLocation?.background;
 
         if (currLocationSprite != null)
@@ -476,7 +481,7 @@ public class AdventureManager : MonoBehaviour
         if (unitScript == null)
             return;
 
-        unitScript.Initialize(unit.BaseStats, unit, UnitGrid, this, PlayerHero);
+        unitScript.Initialize(unit.Stats, unit, UnitGrid, this, PlayerHero);
         unitScript.OnSetTarget += SetTarget;
         unitScript.OnUnitDeath += HandleUnitDeath;
     }
@@ -669,7 +674,7 @@ public class AdventureManager : MonoBehaviour
         {
             message += Environment.NewLine + "Hardcore mode: Save deleted!";
 
-            GameManager.Instance.DeleteCurrentSave();
+            SaveSystem.DeleteCurrentSave();
         }
 
         var menu = InstantiatePrefab(GameOverMenu, UICanvas.transform);

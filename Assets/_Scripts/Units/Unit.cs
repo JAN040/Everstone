@@ -782,7 +782,7 @@ public class Unit : MonoBehaviour
         float MAX_SPEED_RATIO = 10f;
         float MIN_SPEED_RATIO = 0.1f;
 
-        float heroSpeed = GameManager.Instance.PlayerManager.PlayerHero.BaseStats.Speed.GetValue();
+        float heroSpeed = GameManager.Instance.PlayerManager.PlayerHero.Stats.Speed.GetValue();
         float mySpeed = Stats.Speed.GetValue();
 
         float ratio = heroSpeed == 0 ? MAX_SPEED_RATIO : mySpeed / heroSpeed;
@@ -1075,7 +1075,7 @@ public class Unit : MonoBehaviour
 
     public void ApplyTakeDamageEffect(List<Damage> damageList, ScriptableUnitBase origin)
     {
-        var origStats = origin.BaseStats;
+        var origStats = origin.Stats;
         var correctedDmgList = new List<Damage>(damageList);
 
         foreach (var damage in correctedDmgList)

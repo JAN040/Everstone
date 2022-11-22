@@ -262,8 +262,8 @@ public class SkillLevel
     {
         var playerMng = GameManager.Instance.PlayerManager;
 
-        playerMng.SellPriceModifier += playerMng.SellPriceModPerLevelIncrease;
-        playerMng.SellPriceModifier_Loot += playerMng.SellPriceModPerLevelIncrease;
+        playerMng.SellPriceModifier += PlayerManager.SELLPRICEMOD_PER_LEVEL_INCREASE;
+        playerMng.SellPriceModifier_Loot += PlayerManager.SELLPRICEMOD_PER_LEVEL_INCREASE;
         playerMng.ShopItemAmount++;
     }
 
@@ -272,12 +272,12 @@ public class SkillLevel
         var playerMng = GameManager.Instance.PlayerManager;
 
         //every MoreMaxPetsEveryNLevels Taming levels +1 MaxPets count up to 5
-        if (Level % playerMng.MoreMaxPetsPerNLevels == 0)
+        if (Level % PlayerManager.MOREMAXPETS_PER_N_LEVELS == 0)
         {
             playerMng.MaxPets++;
         }
 
-        playerMng.PetXpBonus += playerMng.PetXpBonusPerLevel;
+        playerMng.PetXpBonus += PlayerManager.PET_XP_BONUS_PER_LEVEL;
     }
 
     public string GetSkillDescription()
@@ -371,20 +371,20 @@ public class SkillLevel
 
             case Skill.Taming:
                 res += Environment.NewLine;
-                res += $"Pet xp bonus: {plrMng.PetXpBonus * 100f}% / {(plrMng.PetXpBonus + plrMng.PetXpBonusPerLevel) * 100f}%";
+                res += $"Pet xp bonus: {plrMng.PetXpBonus * 100f}% / {(plrMng.PetXpBonus + PlayerManager.PET_XP_BONUS_PER_LEVEL) * 100f}%";
                 res += Environment.NewLine;
-                res += $"Max pets: {plrMng.MaxPets} / {((this.Level + 1) % plrMng.MoreMaxPetsPerNLevels == 0 ? plrMng.MaxPets + 1 : plrMng.MaxPets)}";
+                res += $"Max pets: {plrMng.MaxPets} / {((this.Level + 1) % PlayerManager.MOREMAXPETS_PER_N_LEVELS == 0 ? plrMng.MaxPets + 1 : plrMng.MaxPets)}";
                 break;
 
             case Skill.Trading:
-                float nextLvlSellMod = plrMng.SellPriceModifier + plrMng.SellPriceModPerLevelIncrease;
+                float nextLvlSellMod = plrMng.SellPriceModifier + PlayerManager.SELLPRICEMOD_PER_LEVEL_INCREASE;
                 if (nextLvlSellMod > 0.99f)
                     nextLvlSellMod = 0.99f;
 
                 res += Environment.NewLine;
                 res += $"Sell modifier: {plrMng.SellPriceModifier} / {nextLvlSellMod}";
                 res += Environment.NewLine;
-                res += $"Sell modifier (loot): {plrMng.SellPriceModifier_Loot} / {plrMng.SellPriceModifier_Loot + plrMng.SellPriceModPerLevelIncrease}";
+                res += $"Sell modifier (loot): {plrMng.SellPriceModifier_Loot} / {plrMng.SellPriceModifier_Loot + PlayerManager.SELLPRICEMOD_PER_LEVEL_INCREASE}";
                 break;
 
             case Skill.Equipment_Skill:

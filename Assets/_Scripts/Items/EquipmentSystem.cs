@@ -11,54 +11,55 @@ public class EquipmentSystem : InventorySystem
 {
     #region VARIABLES
 
+
     //hardcoded equipment slots cause fuck it
-    private InventoryItem EquipmentSlot_Helmet {
+    InventoryItem EquipmentSlot_Helmet {
         get { return InventoryItems[(int)EquipmentSlot.Helmet]; }
         set { InventoryItems[(int)EquipmentSlot.Helmet] = value; }
     }
-    private InventoryItem EquipmentSlot_Shoulder {
+    InventoryItem EquipmentSlot_Shoulder {
         get { return InventoryItems[(int)EquipmentSlot.Shoulder]; }
         set { InventoryItems[(int)EquipmentSlot.Shoulder] = value; }
     }
-    private InventoryItem EquipmentSlot_Chestplate {
+    InventoryItem EquipmentSlot_Chestplate {
         get { return InventoryItems[(int)EquipmentSlot.Chestplate]; }
         set { InventoryItems[(int)EquipmentSlot.Chestplate] = value; }
     }
-    private InventoryItem EquipmentSlot_Pants {
+    InventoryItem EquipmentSlot_Pants {
         get { return InventoryItems[(int)EquipmentSlot.Pants]; }
         set { InventoryItems[(int)EquipmentSlot.Pants] = value; }
     }
-    private InventoryItem EquipmentSlot_Boots {
+    InventoryItem EquipmentSlot_Boots {
         get { return InventoryItems[(int)EquipmentSlot.Boots]; }
         set { InventoryItems[(int)EquipmentSlot.Boots] = value; }
     }
 
-    private InventoryItem EquipmentSlot_Necklace {
+    InventoryItem EquipmentSlot_Necklace {
         get { return InventoryItems[(int)EquipmentSlot.Necklace]; }
         set { InventoryItems[(int)EquipmentSlot.Necklace] = value; }
     }
-    private InventoryItem EquipmentSlot_Cape {
+    InventoryItem EquipmentSlot_Cape {
         get { return InventoryItems[(int)EquipmentSlot.Cape]; }
         set { InventoryItems[(int)EquipmentSlot.Cape] = value; }
     }
-    private InventoryItem EquipmentSlot_Gloves {
+    InventoryItem EquipmentSlot_Gloves {
         get { return InventoryItems[(int)EquipmentSlot.Gloves]; }
         set { InventoryItems[(int)EquipmentSlot.Gloves] = value; }
     }
-    private InventoryItem EquipmentSlot_Ring1 {
+    InventoryItem EquipmentSlot_Ring1 {
         get { return InventoryItems[(int)EquipmentSlot.Ring1]; }
         set { InventoryItems[(int)EquipmentSlot.Ring1] = value; }
     }
-    private InventoryItem EquipmentSlot_Ring2 {
+    InventoryItem EquipmentSlot_Ring2 {
         get { return InventoryItems[(int)EquipmentSlot.Ring2]; }
         set { InventoryItems[(int)EquipmentSlot.Ring2] = value; }
     }
 
-    private InventoryItem EquipmentSlot_RightArm {
+    InventoryItem EquipmentSlot_RightArm {
         get { return InventoryItems[(int)EquipmentSlot.RightArm]; }
         set { InventoryItems[(int)EquipmentSlot.RightArm] = value; }
     }
-    private InventoryItem EquipmentSlot_LeftArm {
+    InventoryItem EquipmentSlot_LeftArm {
         get { return InventoryItems[(int)EquipmentSlot.LeftArm]; }
         set { InventoryItems[(int)EquipmentSlot.LeftArm] = value; }
     }
@@ -92,6 +93,7 @@ public class EquipmentSystem : InventorySystem
 
     public bool IsRuneSystem;
 
+
     #endregion VARIABLES
 
 
@@ -119,6 +121,10 @@ public class EquipmentSystem : InventorySystem
     public EquipmentSystem(int capacity, bool isRuneSystem) : base(capacity)
     {
         IsRuneSystem = isRuneSystem;
+    }
+
+    public EquipmentSystem(InventorySystemSaveData data) : base(data)
+    {
     }
 
 
@@ -226,7 +232,7 @@ public class EquipmentSystem : InventorySystem
 
     private void HandleModifiersOnEquipmentChange(InventoryItem unequippedItem, InventoryItem equippedItem)
     {
-        var heroStats = GameManager.Instance.PlayerManager.PlayerHero.BaseStats;
+        var heroStats = GameManager.Instance.PlayerManager.PlayerHero.Stats;
 
         heroStats.RemoveModifiers((unequippedItem?.ItemData as ItemDataEquipment)?.StatModifiers);
         heroStats.AddModifiers((equippedItem?.ItemData as ItemDataEquipment)?.StatModifiers);

@@ -48,7 +48,7 @@ public class ScriptableNpcUnit : ScriptableUnitBase
 
     public void InitStatsAndAbilities(Difficulty gameDiff, ScriptableAdventureLocation locData)
     {
-        _baseStats = GameManager.Instance.UnitData.GetBaseStats(Class, Type, gameDiff, locData);
+        _stats = GameManager.Instance.UnitData.GetBaseStats(Class, Type, gameDiff, locData);
         Abilities = ResourceSystem.Instance.GetUnitClassAbilities(Class);
     }
 

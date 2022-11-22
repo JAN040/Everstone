@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 [System.Serializable]
@@ -24,7 +25,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private Difficulty gameDifficulty;
     public BattleState GameState = BattleState.None;
 
-    private PlayerManager playerManager;
+    [SerializeField] PlayerManager playerManager;
     /// <summary>
     /// Reference to the PlayerManager script
     /// </summary>
@@ -48,7 +49,7 @@ public class GameManager : Singleton<GameManager>
     /// <summary>
     /// List of all player allies (pets, mercs, mission teammates etc.)
     /// </summary>
-    public List<ScriptableUnitBase> Allies { get; set; }
+    public List<ScriptableNpcUnit> Allies { get; set; }
 
     /// <summary>
     /// Stores the reference to the adventure location the player is currently in (null if not in adventure)
@@ -87,7 +88,9 @@ public class GameManager : Singleton<GameManager>
 
     public int CampStorageSpace = 70;
     public int PlayerInventorySpace = 10;
-    private bool ShowGameOverScreenOnSaveLoad = false;
+    public bool ShowGameOverScreenOnSaveLoad { get; private set; } = false;
+
+    public Scenes CurrentScene;
 
 
     #region Player prefs
@@ -96,6 +99,8 @@ public class GameManager : Singleton<GameManager>
     public float BattleGameSpeed = 1f;
     public int NumOfCopperForOneSilver = 10;
     public int NumOfSilverForOneGold = 100;
+
+    
 
 
     #endregion Player prefs
@@ -114,7 +119,7 @@ public class GameManager : Singleton<GameManager>
 
         return Instance.Currency >= amountToCompare;
     }
-
+   
 
     #endregion STATIC METHODS
 
@@ -123,6 +128,9 @@ public class GameManager : Singleton<GameManager>
     /// Fires when Currency amount changes. Data: old amount, new amount
     /// </summary>
     public event Action<int, int> OnCurrencyChanged;
+
+
+   
 
 
     #region UNITY METHODS
@@ -160,29 +168,101 @@ public class GameManager : Singleton<GameManager>
         CurrentAdventureLocation = location;
     }
 
-    public void SaveGame()
-    {
-        GameData data = new GameData()
-        {
 
-        };
-        //Serialize(data, location);
+    #region SAVE/LOAD
+
+    public static void SaveGame()
+    {
+        GameData data = new GameData(Instance.GetSaveData());
+        
+        SaveSystem.SaveGame(data);
     }
 
-    public void DeleteCurrentSave()
-    {
-
-    }
-
+   
     public void LoadGame()
     {
-        //GameData data = Deserialize(location);
+        LoadSaveData(SaveSystem.LoadGame()?.GameManagerData);
 
-        if (ShowGameOverScreenOnSaveLoad)
+        //load the scene where the player left the game
+        SceneManagementSystem.Instance.LoadScene(Instance.CurrentScene);
+
+        if (Instance.ShowGameOverScreenOnSaveLoad)
         {
-            InstantiatePrefab(GameOverMenu, null);
+            InstantiatePrefab(Instance.GameOverMenu, null);
         }
     }
+
+    /// <summary>
+    /// Save system helper method
+    /// </summary>
+    public GameManagerSaveData GetSaveData()
+    {
+        List<AdventureLocationSaveData> locDataList = new List<AdventureLocationSaveData>();
+        foreach (var location in AdventureLocationData)
+        {
+            locDataList.Add(location.GetSaveData());
+        }
+
+        GameManagerSaveData data = new GameManagerSaveData(
+            currency,
+            gameDifficulty,
+            GameState,
+
+            PlayerManager.GetSaveData(),
+            null,
+            CurrentAdventureLocation.GetSaveData(),
+            locDataList,
+            
+            IsHardcore,
+            KeepInventory,
+            CampStorageSpace,
+            PlayerInventorySpace,
+            ShowGameOverScreenOnSaveLoad,
+            CurrentScene,
+            BattleGameSpeed,
+            NumOfCopperForOneSilver,
+            NumOfSilverForOneGold    
+        );
+
+        return data;
+    }
+
+    /// <summary>
+    /// Save system helper method
+    /// </summary>
+    public void LoadSaveData(GameManagerSaveData data)
+    {
+        List<ScriptableAdventureLocation> adventureLocations = new List<ScriptableAdventureLocation>();
+        foreach (var locData in data.adventureLocationData)
+        {
+            adventureLocations.Add(ScriptableAdventureLocation.GetAdventureLocationFromSaveData(locData));
+        }
+
+        PlayerManager = new PlayerManager(data.playerManagerData);
+        
+        //TODO: after pets/merc are implemented
+        //Allies = data.allies;
+        Allies = null;
+
+        CurrentAdventureLocation = ScriptableAdventureLocation.GetAdventureLocationFromSaveData(data.currentAdventureLocation);
+        AdventureLocationData = adventureLocations;
+
+        this.currency = data.currency;
+        this.gameDifficulty = data.gameDifficulty;
+        GameState = data.gameState;
+        IsHardcore = data.isHardcore;
+        KeepInventory = data.keepInventory;
+        CampStorageSpace = data.campStorageSpace;
+        PlayerInventorySpace = data.playerInventorySpace;
+        ShowGameOverScreenOnSaveLoad = data.showGameOverScreenOnSaveLoad;
+        CurrentScene = data.currentScene;
+        BattleGameSpeed = data.battleGameSpeed;
+        NumOfCopperForOneSilver = data.numOfCopperForOneSilver;
+        NumOfSilverForOneGold = data.numOfSilverForOneGold;
+    }
+
+    #endregion SAVE/LOAD
+
 
     /// <summary>
     /// Convert currency amount to a pretty display string with coin icons

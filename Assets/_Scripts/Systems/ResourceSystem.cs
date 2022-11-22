@@ -95,6 +95,17 @@ public class ResourceSystem : Singleton<ResourceSystem> {
         return GetIconTag(GetStatIcon(statType));
     }
 
+    public ScriptableAbility GetAbilityByName(string name)
+    {
+        foreach (var ability in PlayerAbilities)
+        {
+            if (ability.Name.Equals(name))
+                return Instantiate(ability);
+        }
+
+        return null;
+    }
+
     private static Icon GetStatIcon(StatType statType)
     {
         switch (statType)
@@ -235,13 +246,6 @@ public class ResourceSystem : Singleton<ResourceSystem> {
             
         _AdventureLocationsDict = AdventureLocations.ToDictionary(x => x.locationName, x => x);
 
-
-        //load enemies
-        foreach (var location in AdventureLocations)
-        {
-            location.SetEnemyPool(Resources.LoadAll<ScriptableNpcUnit>($"Enemies/{location.locationName}").ToList());
-        }
-
         CommonEnemies = Resources.LoadAll<ScriptableNpcUnit>("Enemies/_Common").ToList();
 
         //load items
@@ -250,8 +254,8 @@ public class ResourceSystem : Singleton<ResourceSystem> {
     }
 
   
-    public ScriptableHero GetHero(string t) => Instantiate(_HeroesDict[t]);
-    public List<string> GetHeroClasses() => _HeroesDict.Keys.OrderBy(x => x).ToList();
+    public ScriptableHero GetHeroByName(string t) => Instantiate(_HeroesDict[t]);
+    public List<string> GetHeroClassNames() => _HeroesDict.Keys.OrderBy(x => x).ToList();
     //public ScriptableHero GetRandomHero() => Instantiate(Heroes[Random.Range(0, Heroes.Count)]);
 
     public ScriptableBackground GetBackground(string t) => Instantiate(_HeroBackgroundsDict[t]);
@@ -339,6 +343,17 @@ public class ResourceSystem : Singleton<ResourceSystem> {
         return AdventureLocations.OrderBy(x => x.name).OrderBy(x => x.difficulty).ToList();
     }
 
+    public ScriptableAdventureLocation GetAdventureLocationByName(string name)
+    {
+        foreach (var location in AdventureLocations)
+        {
+            if (location.locationName.Equals(name))
+                return location;
+        }
+
+        return null;
+    }
+
     public ScriptableStatusEffect GetStatusEffect(StatusEffectType effect)
     {
         return Instantiate(StatusEffects.FirstOrDefault(x => x.Effect == effect));
@@ -383,6 +398,22 @@ public class ResourceSystem : Singleton<ResourceSystem> {
         return res;
     }
 
+    public ItemDataBase GetItemById(string itemId)
+    {
+        if (string.IsNullOrEmpty(itemId))
+            return null;
+
+        foreach (var item in Items_Loot)
+            if (item.Id.Equals(itemId))
+                return item;
+
+        foreach (var item in Items_Equipment)
+            if (item.Id.Equals(itemId))
+                return item;
+
+        Debug.LogWarning($"Couldnt find item by Id! ({itemId})");
+        return null;
+    }
 
     public ItemDataBase GetCurrencyItem()
     {
@@ -420,4 +451,14 @@ public class ResourceSystem : Singleton<ResourceSystem> {
 
     //    return null;
     //}
+
+    public List<ScriptableNpcUnit> GetAdventureLocationEnemyPool(string locationName)
+    {
+        List<ScriptableNpcUnit> res = new List<ScriptableNpcUnit>();
+        
+        var tempList = Resources.LoadAll<ScriptableNpcUnit>($"Enemies/{locationName}").ToList();
+        tempList.ForEach(x => res.Add(Instantiate(x)));
+
+        return res;
+    }
 }   

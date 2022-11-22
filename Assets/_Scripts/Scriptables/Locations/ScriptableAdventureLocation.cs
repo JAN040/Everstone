@@ -54,13 +54,43 @@ public class ScriptableAdventureLocation : ScriptableObject
 
 
     public List<ScriptableNpcUnit> EnemyPool { get; private set; }
+
+
     //TODO eventPool ?
     //TODO boss ?
     //TODO nestSetup ?
-    
+
+
+    #region STATIC METHODS
+
+    /// <summary>
+    /// Save load helper methods
+    /// </summary>
+    public static ScriptableAdventureLocation GetAdventureLocationFromSaveData(AdventureLocationSaveData data)
+    {
+        var location = ResourceSystem.Instance.GetAdventureLocationByName(data.locationName);
+        location.PlayerProgress = data.playerProgress;
+        location.HasPlayerClearedFirstBoss = data.HasPlayerClearedFirstBoss;
+
+        return location;
+    } 
+
+    #endregion STATIC METHODS
+
 
 
     #region METHODS
+
+    public AdventureLocationSaveData GetSaveData()
+    {
+        AdventureLocationSaveData data = new AdventureLocationSaveData(
+            locationName,
+            playerProgress,
+            HasPlayerClearedFirstBoss
+        );
+
+        return data;
+    }
 
     public void SetEnemyPool(List<ScriptableNpcUnit> pool)
     {

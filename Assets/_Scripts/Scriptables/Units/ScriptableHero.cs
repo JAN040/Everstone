@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 /// <summary>
 /// Used to store hero class base data
@@ -9,7 +10,6 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Scriptable/Units/New Hero Class", fileName = "SO_HeroClass_")]
 public class ScriptableHero : ScriptableUnitBase
 {
-
     //inherited: public UnitBase Prefab;
 
 
@@ -39,12 +39,36 @@ public class ScriptableHero : ScriptableUnitBase
         this.FaceDirection = FacingDirection.Right;
     }
 
+
+    public static ScriptableHero GetHeroFromSaveData(PlayerHeroSaveData data)
+    {
+        var hero = ResourceSystem.Instance.GetHeroByName(data.className);
+        hero.Name = data.playerName;
+        hero.Background = data.background;
+        hero._stats = data.stats;
+        hero.levelSystem = data.levelSystem;
+
+        return hero;
+    }
+
+    public PlayerHeroSaveData GetSaveData()
+    {
+        PlayerHeroSaveData data = new PlayerHeroSaveData(
+            ClassName,
+            Name,
+            Background,
+            Stats,
+            LevelSystem
+        );
+
+        return data;
+    }
+
+
     public void SetLevelSystem(LevelSystem levelSystem)
     {
         LevelSystem = levelSystem;
     }
-
-    //TODO: ability system
 }
 
 

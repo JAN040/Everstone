@@ -41,8 +41,24 @@ public class InventoryItem
         this.IsShopOwned = isShopOwned;
     }
 
+    /// <summary>
+    /// Save system constructor
+    /// </summary>
+    public InventoryItem(InventoryItemSaveData data)
+    {
+        this.ItemData = ResourceSystem.Instance.GetItemById(data.itemId);
+        this.IsShopOwned = data.isShopOwned;
+        this.StackSize = data.stackSize;
+    }
+
 
     #region METHODS
+
+
+    public InventoryItemSaveData GetSaveData()
+    {
+        return new InventoryItemSaveData(ItemData.Id, IsShopOwned, StackSize);
+    }
 
 
     /// <summary>

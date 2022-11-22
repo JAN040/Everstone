@@ -127,6 +127,38 @@ public class ScriptableAbility : ScriptableObject
     public event Action<ScriptableAbility, bool> OnAbilityToggled;
 
 
+    #region STATIC METHODS
+
+    public static ScriptableAbility GetAbilityFromSaveData(AbilitySaveData data)
+    {
+        var ability = ResourceSystem.Instance.GetAbilityByName(data.abilityName);
+        ability.Level = data.level;
+        ability.UpgradeCost = data.upgradeCost;
+        ability.IsSelected = data.isSelected;
+
+        return ability;
+    } 
+
+    #endregion STATIC METHODS
+
+
+
+    #region METHODS
+
+
+    public AbilitySaveData GetSaveData()
+    {
+        AbilitySaveData data = new AbilitySaveData(
+            Name,
+            Level,
+            UpgradeCost,
+            IsSelected
+        );
+
+        return data;
+    }
+
+
     public void Activate()
     {
         if (ToggleMode != ToggleMode.None)
@@ -137,14 +169,14 @@ public class ScriptableAbility : ScriptableObject
                 ToggleMode = ToggleMode.Toggled;
 
             Debug.Log($"Toggled ability '{this.Name}'. It is now {ToggleMode}");
-            
+
             OnAbilityToggled?.Invoke(this, ToggleMode == ToggleMode.Toggled);
 
             return;
         }
         else
             Debug.Log($"Activated ability '{this.Name}'");
-        
+
         OnAbilityActivated?.Invoke(this);
     }
 
@@ -204,7 +236,7 @@ public class ScriptableAbility : ScriptableObject
                 return res;
             }
         }
-        
+
         if (mCost > 0f)
             res += $"<color=#27A3FD>{mCost}</color> {ResourceSystem.GetIconTag(Icon.Mana)}";
 
@@ -247,7 +279,7 @@ public class ScriptableAbility : ScriptableObject
 
         //increase effect values
         if (OnActivedEffects != null)
-            foreach (var effect  in OnActivedEffects)
+            foreach (var effect in OnActivedEffects)
                 LevelUpEffect(effect);
 
         if (OnDeactivatedEffects != null)
@@ -302,6 +334,8 @@ public class ScriptableAbility : ScriptableObject
     public bool IsMaxed()
     {
         return Level == MaxLevel;
-    }
+    } 
+
+    #endregion METHODS
 }
 

@@ -15,7 +15,7 @@ public class SceneManagementSystem : Singleton<SceneManagementSystem>
     //  and starting multiple transition coroutines
     public bool IsSwitchingLocation = false;
 
-    public Scenes CurrentScene;
+    //public Scenes CurrentScene;
 
     #endregion
 
@@ -95,13 +95,15 @@ public class SceneManagementSystem : Singleton<SceneManagementSystem>
         //allow the new scene to show
         SceneManager.LoadScene((int)sc);
 
-        CurrentScene = sc;
+        GameManager.Instance.CurrentScene = sc;
+
+        //dont save game when switching to hero select; this would overwrite game data immediately...
+        if (!sc.In(Scenes.HeroSelect, Scenes.MainMenu))
+            GameManager.SaveGame();
 
         transition.SetTrigger("End");
         
         IsSwitchingLocation = false;
-
-        //TODO: save game
     }
 }
 

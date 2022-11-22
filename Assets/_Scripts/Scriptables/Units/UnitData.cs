@@ -239,7 +239,7 @@ public class UnitData
 
             case "Bruiser Buff":
                 eff = ability.OnActivedEffects.FirstOrDefault(x => x.EffectType == StatusEffectType.RegenerateHp);
-                eff.EffectValue = unit.BaseStats.MaxHP.GetValue() / 50f;    //aka recover 2% of MaxHP every tick
+                eff.EffectValue = unit.Stats.MaxHP.GetValue() / 50f;    //aka recover 2% of MaxHP every tick
                 break;
 
             case "Shield Self":
@@ -247,7 +247,7 @@ public class UnitData
 
             case "Heal All":
                 eff = ability.OnActivedEffects.FirstOrDefault(x => x.EffectType == StatusEffectType.RegenerateHp);
-                eff.EffectValue = unit.BaseStats.PhysicalDamage.GetValue();    //aka recover 100% of atk HP to every unit per tick
+                eff.EffectValue = unit.Stats.PhysicalDamage.GetValue();    //aka recover 100% of atk HP to every unit per tick
                 break;
 
             default:

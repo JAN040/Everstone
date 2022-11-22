@@ -4,7 +4,7 @@ using Unity.Mathematics;
 using UnityEngine;
 
 /// <summary>
-/// A struct containing the base character stats
+/// A class containing the base character stats
 /// </summary>
 [System.Serializable]
 public class CharacterStats

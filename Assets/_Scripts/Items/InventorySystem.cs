@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System;
+using Newtonsoft.Json;
 
 [Serializable]
 public class InventorySystem
 {
-    protected List<InventoryItem> InventoryItems;
-    //private Dictionary<ItemDataBase, InventoryItem> ItemDict;
+    [SerializeField] protected List<InventoryItem> InventoryItems;
+    
 
     /// <summary>
     /// Max amount of items the inventory can hold
     /// </summary>
+    
+    [JsonIgnore]
     public int InventorySize { get { return InventoryItems.Count; } }
 
     public bool IsShop;
@@ -27,6 +30,50 @@ public class InventorySystem
         
         for (int i = 0; i < size; i++)
             InventoryItems.Add(null);
+    }
+
+
+    public InventorySystem(InventorySystemSaveData data)
+    {
+        InventoryItems = new List<InventoryItem>();
+
+        foreach (var itemData in data.itemDataList)
+        {
+            InventoryItems.Add(new InventoryItem(itemData));
+        }
+
+        IsShop = data.isShop;
+
+        if (this is EquipmentSystem)
+        {
+            (this as EquipmentSystem).IsRuneSystem = data.isRuneSystem;
+        }
+    }
+
+
+    public InventorySystemSaveData GetSaveData()
+    {
+        List<InventoryItemSaveData> itemData = new List<InventoryItemSaveData>();
+        foreach (var item in InventoryItems)
+        {
+            if (item == null)
+                itemData.Add(null);
+            else
+                itemData.Add(item.GetSaveData());
+        }
+
+        bool isRuneSystem = this is EquipmentSystem ?
+            (this as EquipmentSystem).IsRuneSystem
+            :
+            false;
+
+        InventorySystemSaveData data = new InventorySystemSaveData(
+            itemData,
+            IsShop,
+            isRuneSystem
+        );
+
+        return data;
     }
 
 

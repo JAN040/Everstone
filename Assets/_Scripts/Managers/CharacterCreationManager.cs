@@ -155,7 +155,7 @@ public class CharacterCreationManager : MonoBehaviour
         iconDropdown.AddOptions(playerIconList);
 
         heroClassDropdown.ClearOptions();
-        heroClassDropdown.AddOptions(ResourceSystem.Instance.GetHeroClasses());
+        heroClassDropdown.AddOptions(ResourceSystem.Instance.GetHeroClassNames());
         heroClassDropdown.onValueChanged.AddListener(call: delegate { OnCharacterClassChanged(); });
         //setup base points
         OnCharacterClassChanged();
@@ -383,7 +383,7 @@ public class CharacterCreationManager : MonoBehaviour
 
     private ScriptableHero GetSelectedHero()
     {
-        return ResourceSystem.Instance.GetHero(heroClassDropdown.options[heroClassDropdown.value].text);
+        return ResourceSystem.Instance.GetHeroByName(heroClassDropdown.options[heroClassDropdown.value].text);
     }
 
     private ScriptableBackground GetSelectedBackground()
@@ -399,7 +399,7 @@ public class CharacterCreationManager : MonoBehaviour
     public void OnFinishCreation()
     {
         var hero = GetSelectedHero();
-        var stats = hero.BaseStats;
+        var stats = hero.Stats;
 
         hero.Name = heroName.text;
         hero.Background = GetSelectedBackground().backgroundName;

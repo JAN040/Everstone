@@ -14,8 +14,8 @@ public class PlayerManager
     public ScriptableHero PlayerHero { get; private set; }
 
     public List<ScriptableAbility> Abilities { get; private set; }
-    public List<ScriptableAbility> EquippedAbilities;
-    private const int AbilitySlotAmount = 7;
+    public List<ScriptableAbility> EquippedAbilities;   //tracks the order of selected abilities
+    private const int ABILITY_SLOT_AMOUNT = 7;
 
     public InventorySystem Inventory;
     public InventorySystem Storage;
@@ -46,7 +46,7 @@ public class PlayerManager
     /// </summary>
     public float SellPriceModifier_Loot { get; set; }
 
-    public readonly float SellPriceModPerLevelIncrease = 0.01f;
+    public const float SELLPRICEMOD_PER_LEVEL_INCREASE = 0.01f;
 
     /// <summary>
     /// The amount of items available in the shop. Increases with Trading skill level.
@@ -78,23 +78,70 @@ public class PlayerManager
         }
     }
     [SerializeField] private int maxPets;
-    private int shopItemAmount = 10;
+    [SerializeField] int shopItemAmount = 10;
 
     /// <summary>
     /// Every MoreMaxPetsEveryNLevels amount of Taming levels, MaxPets is increased by one.
     /// </summary>
-    public float MoreMaxPetsPerNLevels { get; private set; }
+    public const float MOREMAXPETS_PER_N_LEVELS = 10;
 
     /// <summary>
     /// Bonus XP pets gain when attacking; based on player Taming skill level
     /// </summary>
     public float PetXpBonus { get; set; }
 
-    public readonly float PetXpBonusPerLevel = 0.03f;
+    public const float PET_XP_BONUS_PER_LEVEL = 0.03f;
 
+
+    // IMPORTANT: dont forget to include any new fields to the save system!
 
 
     #endregion VARIABLES
+
+
+    public PlayerManager()
+    {
+    }
+
+    /// <summary>
+    /// Save system helper method
+    /// </summary>
+    public PlayerManager(PlayerManagerSaveData data)
+    {
+        Abilities = new List<ScriptableAbility>();
+        EquippedAbilities = new List<ScriptableAbility>();
+
+        foreach (var abilityData in data.abilities)
+        {
+            if (abilityData == null)
+                Abilities.Add(null);
+            else
+                Abilities.Add(ScriptableAbility.GetAbilityFromSaveData(abilityData));
+        }
+
+        foreach (var abilityData in data.equippedAbilities)
+        {
+            if (abilityData == null)
+                EquippedAbilities.Add(null);
+            else
+                EquippedAbilities.Add(ScriptableAbility.GetAbilityFromSaveData(abilityData));
+        }
+
+        PlayerHero = ScriptableHero.GetHeroFromSaveData(data.playerHero);
+        //Abilities = data.abilities;
+        //EquippedAbilities = data.equippedAbilities;
+        Inventory = new InventorySystem(data.inventory);
+        Storage = new InventorySystem(data.storage);
+        ShopInventory = new InventorySystem(data.shopInventory);
+        Equipment = new EquipmentSystem(data.equipment);
+        Runes = new EquipmentSystem(data.runes);
+
+        SellPriceModifier = data.sellPriceModifier;
+        SellPriceModifier_Loot = data.sellPriceModifier_Loot;
+        ShopItemAmount = data.shopItemAmount;
+        MaxPets = data.maxPets;
+        PetXpBonus = data.petXpBonus;
+    }
 
 
     #region METHODS
@@ -106,7 +153,6 @@ public class PlayerManager
         SellPriceModifier_Loot = 0.75f;
 
         MaxPets = 1;
-        MoreMaxPetsPerNLevels = 10;
         PetXpBonus = 0f;
     }
 
@@ -115,8 +161,8 @@ public class PlayerManager
         Abilities = new List<ScriptableAbility>();
         Abilities.AddRange(abilities);
 
-        EquippedAbilities = new List<ScriptableAbility>(AbilitySlotAmount);
-        for (int i = 0; i < AbilitySlotAmount; i++)
+        EquippedAbilities = new List<ScriptableAbility>(ABILITY_SLOT_AMOUNT);
+        for (int i = 0; i < ABILITY_SLOT_AMOUNT; i++)
             EquippedAbilities.Add(null);
     }
 
@@ -227,6 +273,49 @@ public class PlayerManager
         }
     }
 
+    /// <summary>
+    /// Save system helper method
+    /// </summary>
+    public PlayerManagerSaveData GetSaveData()
+    {
+        List<AbilitySaveData> abilitySaveDatas = new List<AbilitySaveData>();
+        List<AbilitySaveData> equippedAbilitySaveDatas = new List<AbilitySaveData>();
+
+        foreach (var ability in Abilities)
+        {
+            if (ability == null) 
+                abilitySaveDatas.Add(null);
+            else
+                abilitySaveDatas.Add(ability.GetSaveData());
+        }
+
+        foreach (var ability in EquippedAbilities)
+        {
+            if (ability == null)
+                equippedAbilitySaveDatas.Add(null);
+            else
+                equippedAbilitySaveDatas.Add(ability.GetSaveData());
+        }
+
+        PlayerManagerSaveData data = new PlayerManagerSaveData(
+            PlayerHero.GetSaveData(),
+            abilitySaveDatas,
+            equippedAbilitySaveDatas,
+            Inventory.GetSaveData(),
+            Storage.GetSaveData(),
+            ShopInventory.GetSaveData(),
+            Equipment.GetSaveData(),
+            Runes.GetSaveData(),
+
+            SellPriceModifier,
+            SellPriceModifier_Loot,
+            ShopItemAmount,
+            MaxPets,
+            PetXpBonus
+        );
+
+        return data;
+    }
 
     #endregion METHODS
 
