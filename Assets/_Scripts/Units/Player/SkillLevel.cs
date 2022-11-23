@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
+
 
 [Serializable]
 public class SkillLevel
@@ -58,8 +60,6 @@ public class SkillLevel
     /// </summary>
     public bool IsWeaponSkill { get; private set; }
 
-    protected CharacterStats _statsReference;
-
     protected int _level = STARTING_LEVEL;
     public int Level
     {
@@ -95,6 +95,8 @@ public class SkillLevel
     ///     value 0.22 is 22% xp bonus
     /// </summary>
     public Stat Proficiency { get; private set; }
+    protected CharacterStats _statsReference { get { return GameManager.Instance.PlayerManager.PlayerHero.Stats; } }
+
 
     #endregion PROPERTIES
 
@@ -104,18 +106,32 @@ public class SkillLevel
     /// </summary>
     public event Action<int, int, SkillLevel> OnLevelChanged;
 
+
+    /// <summary>
+    /// Json deserializer constructor
+    /// </summary>
+    [JsonConstructor]
+    public SkillLevel(Skill skillType, bool isWeaponSkill, int level, int experience, int expToNextLevel, Stat proficiency)
+    {
+        SkillType = skillType;
+        IsWeaponSkill = isWeaponSkill;
+        _level = level;
+        Experience = experience;
+        ExpToNextLevel = expToNextLevel;
+        Proficiency = proficiency;
+    }
+
     /// <param name="type">Which skill this level system is for</param>
     /// <param name="type">Which stats this level system will modify</param>
     /// <param name="level">Starting level</param>
     /// <param name="experience">Starting experience</param>
     /// <param name="proficiency">Percentage modifier that applies to gained xp, instantiates a Stat object</param>
-    public SkillLevel(Skill type, CharacterStats stats, int level = 1, int experience = 0, 
+    public SkillLevel(Skill type, int level = 1, int experience = 0, 
                             float proficiency = 0, bool isWeaponSkill = false)
     {
         SkillType = type;
         IsWeaponSkill = isWeaponSkill;
         
-        _statsReference = stats;
         Proficiency = new Stat(proficiency, StatType.Proficiency, true);
 
         if (IsWeaponSkill) //assign level in child class

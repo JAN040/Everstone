@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Newtonsoft.Json;
 
 /// <summary>
 /// Used to store hero class base data
@@ -31,7 +32,7 @@ public class ScriptableHero : ScriptableUnitBase
 
     //data about character levels
     private LevelSystem levelSystem;
-    public LevelSystem LevelSystem { get => levelSystem; private set => levelSystem = value; }
+    [JsonProperty] public LevelSystem LevelSystem { get => levelSystem; private set => levelSystem = value; }
 
     public ScriptableHero()
     {

@@ -3,19 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System;
-using Newtonsoft.Json;
 
 [Serializable]
 public class InventorySystem
 {
-    [SerializeField] protected List<InventoryItem> InventoryItems;
-    
+    protected List<InventoryItem> InventoryItems;
 
     /// <summary>
     /// Max amount of items the inventory can hold
     /// </summary>
     
-    [JsonIgnore]
     public int InventorySize { get { return InventoryItems.Count; } }
 
     public bool IsShop;
@@ -39,7 +36,10 @@ public class InventorySystem
 
         foreach (var itemData in data.itemDataList)
         {
-            InventoryItems.Add(new InventoryItem(itemData));
+            if (itemData == null)
+                InventoryItems.Add(null);
+            else
+                InventoryItems.Add(new InventoryItem(itemData));
         }
 
         IsShop = data.isShop;
@@ -54,13 +54,17 @@ public class InventorySystem
     public InventorySystemSaveData GetSaveData()
     {
         List<InventoryItemSaveData> itemData = new List<InventoryItemSaveData>();
-        foreach (var item in InventoryItems)
-        {
-            if (item == null)
-                itemData.Add(null);
-            else
-                itemData.Add(item.GetSaveData());
-        }
+
+        if (InventoryItems == null)
+            itemData = null;
+        else
+            foreach (var item in InventoryItems)
+            {
+                if (item == null)
+                    itemData.Add(null);
+                else
+                    itemData.Add(item.GetSaveData());
+            }
 
         bool isRuneSystem = this is EquipmentSystem ?
             (this as EquipmentSystem).IsRuneSystem

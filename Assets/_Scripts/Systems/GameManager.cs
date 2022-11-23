@@ -137,7 +137,7 @@ public class GameManager : Singleton<GameManager>
 
     void Start()
     {
-        PlayerManager = new PlayerManager();
+        //PlayerManager = new PlayerManager();
         UnitData = new UnitData();
     }
 
@@ -174,7 +174,7 @@ public class GameManager : Singleton<GameManager>
     public static void SaveGame()
     {
         GameData data = new GameData(Instance.GetSaveData());
-        
+
         SaveSystem.SaveGame(data);
     }
 
@@ -210,7 +210,7 @@ public class GameManager : Singleton<GameManager>
 
             PlayerManager.GetSaveData(),
             null,
-            CurrentAdventureLocation.GetSaveData(),
+            CurrentAdventureLocation?.GetSaveData(),
             locDataList,
             
             IsHardcore,

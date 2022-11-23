@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Newtonsoft.Json;
 
 //holds all player related data
 [System.Serializable]
@@ -19,7 +20,7 @@ public class PlayerManager
 
     public InventorySystem Inventory;
     public InventorySystem Storage;
-    public InventorySystem ShopInventory;
+    public InventorySystem ShopInventory { get; private set; }
     public EquipmentSystem Equipment;
     public EquipmentSystem Runes;
 
@@ -77,8 +78,8 @@ public class PlayerManager
             maxPets = Math.Clamp(value, 1, 5);
         }
     }
-    [SerializeField] private int maxPets;
-    [SerializeField] int shopItemAmount = 10;
+    [JsonProperty] private int maxPets;
+    [JsonProperty] int shopItemAmount = 10;
 
     /// <summary>
     /// Every MoreMaxPetsEveryNLevels amount of Taming levels, MaxPets is increased by one.
@@ -179,7 +180,7 @@ public class PlayerManager
         if (runes != null)
             Runes = runes;
 
-        if (ShopInventory == null)
+        if (ShopInventory == null || ShopInventory.GetItems() == null)
         {
             ShopInventory = new InventorySystem(ShopItemAmount, true);
             RefreshShopInventory();

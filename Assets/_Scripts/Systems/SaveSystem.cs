@@ -35,7 +35,8 @@ public static class SaveSystem
         string path = GetSave1Path();
 
         //JsonSerializer serializer = new JsonSerializer();
-        
+
+        //string jsonData = JsonConvert.SerializeObject(GameManager.Instance.PlayerManager.PlayerHero.Stats, Formatting.Indented);
         string jsonData = JsonConvert.SerializeObject(data, Formatting.Indented);
 
         File.WriteAllText(path, jsonData);
@@ -62,12 +63,15 @@ public static class SaveSystem
         string jsonData = File.ReadAllText(path);
 
         //JsonUtility.FromJsonOverwrite(jsonData, GameManager.Instance);
-        GameData data = JsonConvert.DeserializeObject<GameData>(jsonData);
         //var data = JsonUtility.FromJson<GameData>(path);
-        
+
+        //var data = JsonConvert.DeserializeObject<CharacterStats>(jsonData);
+        GameData data = JsonConvert.DeserializeObject<GameData>(jsonData);
+
         if (data == null)
             Debug.LogError("LoadGame returned NULL GameData");
 
+        //return null;
         return data;
     }
 

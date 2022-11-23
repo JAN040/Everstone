@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
+using Newtonsoft.Json;
 
 
 /// <summary>
@@ -17,17 +18,22 @@ public class Stat
 
     #region VARIABLES
 
-    private List<StatModifier> statModifiers;
-
-    [SerializeField] private float baseValue;
+    [JsonProperty] private List<StatModifier> statModifiers = new List<StatModifier>();
+    
     /// <summary> Tracks how many times this stat has grown </summary>
-    private float growthLevel;
-    [SerializeField] private StatType type;
-    [SerializeField] private bool canBeNegative;
-    [SerializeField] private StatGrowthParameters growthParameters;
+    [JsonProperty] private float growthLevel;
+    
+    [JsonIgnore][SerializeField] private StatGrowthParameters growthParameters;
 
     public StatType Type { get => type; private set => type = value; }
+    [JsonIgnore][SerializeField] private StatType type;
+    
     public bool CanBeNegative { get => canBeNegative; private set => canBeNegative = value; }
+    [JsonIgnore][SerializeField] private bool canBeNegative;
+
+    /// <summary>
+    /// Not used yet.. should be used to fine tune the stat growth function
+    /// </summary>
     public StatGrowthParameters GrowthParameters { get => growthParameters; private set => growthParameters = value; }
     public float BaseValue
     {
@@ -41,6 +47,7 @@ public class Stat
             OnStatChanged?.Invoke(this, isPositive);
         }
     }
+    [JsonIgnore] [SerializeField] private float baseValue;
 
     /// <summary>
     /// Fires when Stat gets changed. Carries params:
@@ -60,8 +67,8 @@ public class Stat
 
         growthLevel = 1f;
         GrowthParameters = growthParams;
-        //if (GrowthParameters == null)
-        //    GrowthParameters = new StatGrowthParameters();
+        if (GrowthParameters == null)
+            GrowthParameters = new StatGrowthParameters();
     }
 
 

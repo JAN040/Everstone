@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using Newtonsoft.Json;
 
 /// <summary>
 /// A class containing the base character stats
@@ -15,7 +16,7 @@ public class CharacterStats
     [Space]
 
     [SerializeField] private float _healthPoints;
-    public float HealthPoints
+    [JsonIgnore] public float HealthPoints
     {
         get
         {
@@ -34,7 +35,7 @@ public class CharacterStats
     }
 
     [SerializeField] private float _energy = 0;
-    public float Energy
+    [JsonIgnore] public float Energy
     {
         get
         {
@@ -52,7 +53,7 @@ public class CharacterStats
     }
 
     [SerializeField] private float _mana;
-    public float Mana
+    [JsonIgnore] public float Mana
     {
         get
         {
@@ -98,6 +99,77 @@ public class CharacterStats
     #endregion STAT FIELDS
 
 
+
+    #region BASE STATS
+
+    
+    [JsonProperty]
+    public Stat PhysicalDamage { get => physicalDamage; private set => physicalDamage = value; }
+    
+    [JsonProperty]
+    public Stat Armor { get => armor; private set => armor = value; }
+    
+    [JsonProperty]
+    public Stat ArtsDamage { get => artsDamage; private set => artsDamage = value; }
+    
+    [JsonProperty]
+    public Stat ArtsResist { get => artsResist; private set => artsResist = value; }
+    
+    [JsonProperty]
+    public Stat MaxHP { get => maxHP; private set => maxHP = value; }
+    
+    [JsonProperty]
+    public Stat MaxEnergy { get => maxEnergy; private set => maxEnergy = value; }
+    
+    [JsonProperty]
+    public Stat Speed { get => speed; private set => speed = value; }
+
+
+    #endregion BASE STATS
+
+
+    #region HERO STATS
+
+
+    [JsonProperty]
+    public Stat DodgeChance { get => dodgeChance; private set => dodgeChance = value; }
+    
+    [JsonProperty]
+    public Stat HealEfficiency { get => healEfficiency; private set => healEfficiency = value; }
+
+    /// <summary>
+    /// Recovery of 1 means 1 energy recovered per second while in battle till full.
+    /// </summary>
+    [JsonProperty]
+    public Stat EnergyRecovery { get => energyRecovery; private set => energyRecovery = value; }
+
+    [JsonProperty]
+    public Stat MaxMana { get => maxMana; private set => maxMana = value; }
+    /// <summary>
+    /// Recovery of 1 means 1 mana recovered at the end of each encounter.
+    /// </summary>
+    
+    [JsonProperty]
+    public Stat ManaRecovery { get => manaRecovery; private set => manaRecovery = value; }
+
+    [JsonProperty]
+    public Stat BlockChance { get => blockChance; private set => blockChance = value; }
+
+    /// <summary>
+    /// Additional CDR from items/potions
+    /// </summary>
+    [JsonProperty]
+    public Stat CooldownReduction { get => cooldownReduction; private set => cooldownReduction = value; }
+
+    //public Stat BaseAccuracy { get => baseAccuracy; private set => baseAccuracy = value; }
+
+    //public Dictionary<WeaponType, WeaponProficiency> WeaponProficiencies { get; private set; }
+
+
+    #endregion HERO STATS
+
+
+
     #region EVENTS
 
     /// <summary> Takes two float paramaters, indicating the new and the old HP amount </summary>
@@ -112,49 +184,13 @@ public class CharacterStats
     #endregion EVENTS
 
 
-    #region BASE STATS
-
-    public Stat PhysicalDamage { get => physicalDamage; private set => physicalDamage = value; }
-    public Stat Armor { get => armor; private set => armor = value; }
-    public Stat ArtsDamage { get => artsDamage; private set => artsDamage = value; }
-    public Stat ArtsResist { get => artsResist; private set => artsResist = value; }
-    public Stat MaxHP { get => maxHP; private set => maxHP = value; }
-    public Stat MaxEnergy { get => maxEnergy; private set => maxEnergy = value; }
-    public Stat Speed { get => speed; private set => speed = value; }
-
-
-    #endregion BASE STATS
-
-
-    #region HERO STATS
-
-    public Stat DodgeChance { get => dodgeChance; private set => dodgeChance = value; }
-    public Stat HealEfficiency { get => healEfficiency; private set => healEfficiency = value; }
-
     /// <summary>
-    /// Recovery of 1 means 1 energy recovered per second while in battle till full.
+    /// A hack that tricks the Json deserializer to ignore the other constructor, which would result in an error
     /// </summary>
-    public Stat EnergyRecovery { get => energyRecovery; private set => energyRecovery = value; }
-
-    public Stat MaxMana { get => maxMana; private set => maxMana = value; }
-    /// <summary>
-    /// Recovery of 1 means 1 mana recovered at the end of each encounter.
-    /// </summary>
-    public Stat ManaRecovery { get => manaRecovery; private set => manaRecovery = value; }
-
-    public Stat BlockChance { get => blockChance; private set => blockChance = value; }
-
-    /// <summary>
-    /// Additional CDR from items/potions
-    /// </summary>
-    public Stat CooldownReduction { get => cooldownReduction; private set => cooldownReduction = value; }
-
-    //public Stat BaseAccuracy { get => baseAccuracy; private set => baseAccuracy = value; }
-
-    //public Dictionary<WeaponType, WeaponProficiency> WeaponProficiencies { get; private set; }
-
-    #endregion HERO STATS
-
+    [JsonConstructor]
+    public CharacterStats()
+    {
+    }
 
     public CharacterStats(float physicalDamage, float artsDamage, float maxHP, float defense, float artsResist,
                           float maxEnergy, float speed, float dodgeChance,
@@ -187,7 +223,7 @@ public class CharacterStats
 
         SetStatEvents();
     }
-
+    
     private void SetStatEvents()
     {
         PhysicalDamage.OnStatChanged    += StatChanged;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using Newtonsoft.Json;
 
 
 /// <summary>
@@ -25,6 +26,15 @@ public class LevelSystem
     #endregion PROPERTIES
 
 
+    /// <summary>
+    /// Json deserializer constructor
+    /// </summary>
+    [JsonConstructor]
+    public LevelSystem(Dictionary<string, SkillLevel> skills)
+    {
+        Skills = skills;
+    }
+
     public LevelSystem(Dictionary<string, SkillLevel> skills, CharacterStats stats)
     {
         if (skills == null || stats == null)
@@ -35,7 +45,11 @@ public class LevelSystem
         Skills = skills;
         Stats = stats;
     }
-    
+
+
+    #region METHODS
+
+
     public void AddExperienceToSkill(int amount, Skill skill)
     {
         Skills[skill.ToString()].AddExperience(amount);
@@ -60,5 +74,8 @@ public class LevelSystem
     //{
     //    Skills[weaponType.ToString()].AddExperience(amount);
     //}
+
+
+    #endregion METHODS
 }
 

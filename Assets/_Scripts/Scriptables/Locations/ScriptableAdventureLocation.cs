@@ -68,6 +68,9 @@ public class ScriptableAdventureLocation : ScriptableObject
     /// </summary>
     public static ScriptableAdventureLocation GetAdventureLocationFromSaveData(AdventureLocationSaveData data)
     {
+        if (data == null)
+            return null;
+
         var location = ResourceSystem.Instance.GetAdventureLocationByName(data.locationName);
         location.PlayerProgress = data.playerProgress;
         location.HasPlayerClearedFirstBoss = data.HasPlayerClearedFirstBoss;

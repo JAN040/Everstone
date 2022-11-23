@@ -8,15 +8,16 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Scriptable/Item/New Item", fileName = "SO_ItemBase_")]
 public class ItemDataBase : ScriptableObject
 {
-    public string Id { 
+    public string Id
+    {
         get
         {
             if (!string.IsNullOrEmpty(id))
                 return id;
 
             return this.name;
-        } 
-        set => id = value; 
+        }
+        set => id = value;
     }
     private string id;
 

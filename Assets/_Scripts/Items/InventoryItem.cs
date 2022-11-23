@@ -9,7 +9,7 @@ public class InventoryItem
     #region Variables
 
 
-    public ItemDataBase ItemData;
+    public ItemDataBase ItemData { get; private set; }
     public GameObject Prefab;
 
     /// <summary>
@@ -37,6 +37,9 @@ public class InventoryItem
 
     public InventoryItem(ItemDataBase itemData, bool isShopOwned = false)
     {
+        if (itemData == null)
+            Debug.LogWarning("Trying to create an item with null data!");
+
         this.ItemData = itemData;
         this.IsShopOwned = isShopOwned;
     }
@@ -57,6 +60,9 @@ public class InventoryItem
 
     public InventoryItemSaveData GetSaveData()
     {
+        if (ItemData == null)
+            return null;
+
         return new InventoryItemSaveData(ItemData.Id, IsShopOwned, StackSize);
     }
 

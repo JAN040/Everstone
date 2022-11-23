@@ -403,6 +403,9 @@ public class ResourceSystem : Singleton<ResourceSystem> {
         if (string.IsNullOrEmpty(itemId))
             return null;
 
+        if (itemId.Equals("Item_Currency"))
+            return GetCurrencyItem();
+
         foreach (var item in Items_Loot)
             if (item.Id.Equals(itemId))
                 return item;

@@ -481,39 +481,39 @@ public class CharacterCreationManager : MonoBehaviour
         {
             {
                 Skill.Constitution.ToString(),
-                new SkillLevel(Skill.Constitution, stats, PointsAmount_Constitution,
+                new SkillLevel(Skill.Constitution, PointsAmount_Constitution,
                     proficiency:PointsAmount_Constitution/10f)
             },
             {
                 Skill.Strength.ToString(),
-                new SkillLevel(Skill.Strength, stats, PointsAmount_Strength,
+                new SkillLevel(Skill.Strength, PointsAmount_Strength,
                     proficiency:PointsAmount_Strength/10f)
             },
             {
                 Skill.Agility.ToString(),
-                new SkillLevel(Skill.Agility, stats, PointsAmount_Agility,
+                new SkillLevel(Skill.Agility, PointsAmount_Agility,
                     proficiency:PointsAmount_Agility/10f)
             },
             {
                 Skill.Arts.ToString(),
-                new SkillLevel(Skill.Arts, stats, PointsAmount_Arts,
+                new SkillLevel(Skill.Arts, PointsAmount_Arts,
                     proficiency:PointsAmount_Arts/10f)
             },
 
             //Misc. skills
             {
                 Skill.Lockpicking.ToString(),
-                new SkillLevel(Skill.Lockpicking, stats, points_Lockpicking,
+                new SkillLevel(Skill.Lockpicking, points_Lockpicking,
                     proficiency:points_Lockpicking/10f)
             },
             {
                 Skill.Taming.ToString(),
-                new SkillLevel(Skill.Taming, stats, points_Taming,
+                new SkillLevel(Skill.Taming, points_Taming,
                     proficiency:points_Taming/10f)
             },
             {
                 Skill.Trading.ToString(),
-                new SkillLevel(Skill.Trading, stats, points_Trading,
+                new SkillLevel(Skill.Trading, points_Trading,
                     proficiency:points_Trading/10f)
             },
 

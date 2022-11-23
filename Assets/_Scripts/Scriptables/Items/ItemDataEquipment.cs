@@ -19,7 +19,6 @@ public class ItemDataEquipment : ItemDataBase
         ItemType = ItemType.Equipment;
         MaxStackSize = 1; //aka non stackable
         CanBeSold = true;
-        Id = "Equip_";
     }
 
     public new ItemDataEquipment Clone()
