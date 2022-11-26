@@ -345,3 +345,10 @@ public enum BattleState
     Success,
     GameOver
 }
+
+public enum Gender
+{
+    Male,
+    Female,
+    Unknown
+}

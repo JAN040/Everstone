@@ -24,117 +24,117 @@ MonoBehaviour:
     _energy: 0
     _mana: 0
     physicalDamage:
-      baseValue: 11
+      growthParameters:
+        AdditionMultiplier: 300
+        PowerMultiplier: 2
+        DivisionMultiplier: 7
       type: 0
       canBeNegative: 0
+      baseValue: 11
+    armor:
       growthParameters:
         AdditionMultiplier: 300
         PowerMultiplier: 2
         DivisionMultiplier: 7
-    armor:
-      baseValue: 0
       type: 1
       canBeNegative: 0
+      baseValue: 0
+    artsDamage:
       growthParameters:
         AdditionMultiplier: 300
         PowerMultiplier: 2
         DivisionMultiplier: 7
-    artsDamage:
-      baseValue: 5
       type: 2
       canBeNegative: 0
+      baseValue: 5
+    artsResist:
       growthParameters:
         AdditionMultiplier: 300
         PowerMultiplier: 2
         DivisionMultiplier: 7
-    artsResist:
-      baseValue: 5
       type: 3
       canBeNegative: 1
+      baseValue: 0.05
+    maxHP:
       growthParameters:
         AdditionMultiplier: 300
         PowerMultiplier: 2
         DivisionMultiplier: 7
-    maxHP:
-      baseValue: 90
       type: 4
       canBeNegative: 0
+      baseValue: 90
+    maxEnergy:
       growthParameters:
         AdditionMultiplier: 300
         PowerMultiplier: 2
         DivisionMultiplier: 7
-    maxEnergy:
-      baseValue: 11
       type: 5
       canBeNegative: 0
+      baseValue: 11
+    energyRecovery:
       growthParameters:
         AdditionMultiplier: 300
         PowerMultiplier: 2
         DivisionMultiplier: 7
-    energyRecovery:
-      baseValue: 1
       type: 6
       canBeNegative: 1
+      baseValue: 1
+    speed:
       growthParameters:
         AdditionMultiplier: 300
         PowerMultiplier: 2
         DivisionMultiplier: 7
-    speed:
-      baseValue: 11
       type: 10
       canBeNegative: 0
+      baseValue: 11
+    dodgeChance:
       growthParameters:
         AdditionMultiplier: 300
         PowerMultiplier: 2
         DivisionMultiplier: 7
-    dodgeChance:
-      baseValue: 8
       type: 12
       canBeNegative: 0
+      baseValue: 0.08
+    healEfficiency:
       growthParameters:
         AdditionMultiplier: 300
         PowerMultiplier: 2
         DivisionMultiplier: 7
-    healEfficiency:
-      baseValue: 1
       type: 14
       canBeNegative: 1
+      baseValue: 1
+    maxMana:
       growthParameters:
         AdditionMultiplier: 300
         PowerMultiplier: 2
         DivisionMultiplier: 7
-    maxMana:
-      baseValue: 5
       type: 7
       canBeNegative: 0
+      baseValue: 5
+    manaRecovery:
       growthParameters:
         AdditionMultiplier: 300
         PowerMultiplier: 2
         DivisionMultiplier: 7
-    manaRecovery:
-      baseValue: 1
       type: 8
       canBeNegative: 1
+      baseValue: 1
+    blockChance:
       growthParameters:
         AdditionMultiplier: 300
         PowerMultiplier: 2
         DivisionMultiplier: 7
-    blockChance:
-      baseValue: 0
       type: 15
       canBeNegative: 0
+      baseValue: 0
+    cooldownReduction:
       growthParameters:
         AdditionMultiplier: 300
         PowerMultiplier: 2
         DivisionMultiplier: 7
-    cooldownReduction:
-      baseValue: 0
       type: 9
       canBeNegative: 1
-      growthParameters:
-        AdditionMultiplier: 300
-        PowerMultiplier: 2
-        DivisionMultiplier: 7
+      baseValue: 0
   ClassName: Rogue
   Background: 
   pointAllocationData:

@@ -24,6 +24,7 @@ public class ScriptableHero : ScriptableUnitBase
     [HideInInspector]
     public string Background;
 
+
     public PointAllocationData pointAllocationData = new PointAllocationData();
 
     [Space]
@@ -33,6 +34,17 @@ public class ScriptableHero : ScriptableUnitBase
     //data about character levels
     private LevelSystem levelSystem;
     [JsonProperty] public LevelSystem LevelSystem { get => levelSystem; private set => levelSystem = value; }
+    
+    public string PortraitName
+    {
+        get => portraitName; 
+        set
+        {
+            portraitName = value;
+            RefreshPortraitData();
+        }
+    }
+    private string portraitName;
 
     public ScriptableHero()
     {
@@ -46,6 +58,7 @@ public class ScriptableHero : ScriptableUnitBase
         var hero = ResourceSystem.Instance.GetHeroByName(data.className);
         hero.Name = data.playerName;
         hero.Background = data.background;
+        hero.PortraitName = data.portraitName;
         hero._stats = data.stats;
         hero.levelSystem = data.levelSystem;
 
@@ -58,6 +71,7 @@ public class ScriptableHero : ScriptableUnitBase
             ClassName,
             Name,
             Background,
+            PortraitName,
             Stats,
             LevelSystem
         );
@@ -69,6 +83,27 @@ public class ScriptableHero : ScriptableUnitBase
     public void SetLevelSystem(LevelSystem levelSystem)
     {
         LevelSystem = levelSystem;
+    }
+
+    private HeroPortrait GetPortrait()
+    {
+        return ResourceSystem.Instance.GetHeroPortraitByName(PortraitName);
+    }
+
+    public void RefreshPortraitData()
+    {
+        HeroPortrait portrait = GetPortrait();
+
+        this.MenuSprite = portrait.PortraitImage;
+        this.FaceDirection = portrait.FaceDirection;
+    }
+
+
+    public Gender GetGender()
+    {
+        HeroPortrait portrait = GetPortrait();
+
+        return portrait.Gender;
     }
 }
 

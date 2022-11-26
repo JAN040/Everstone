@@ -181,8 +181,7 @@ public class CharacterUI : MonoBehaviour
         var hero = GameManager.Instance.PlayerManager.PlayerHero;
 
         //silhoutte
-        bool isMalePfp = hero.MenuSprite.name.ToUpper().EndsWith("M");
-        SetSilhoutte(hero.ClassName, isMalePfp);
+        SetSilhoutte(hero.ClassName, hero.GetGender() == Gender.Male);
 
         //equipment items
         var equipment = GameManager.Instance.PlayerManager.Equipment;

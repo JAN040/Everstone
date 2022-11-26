@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using Newtonsoft.Json;
-
+using System.Linq;
 
 /// <summary>
 /// A float wrapper, adding functionality like:
@@ -293,15 +293,18 @@ public class Stat
 
         var oldValue = GetValue();
 
-        if (!statModifiers.Remove(modifier))
+        //find this modifier (or an equal one) in the modifier list if it exists
+        var modifierMatch = statModifiers.FirstOrDefault(x => x.IsEqual(modifier));
+
+        if (modifierMatch == null || !statModifiers.Remove(modifierMatch))
         {
             Debug.LogError($"Failed to remove modifier {modifier.Value}, {modifier.Type}, for statType {modifier.ModifyingStatType}");
             return false;
         }
 
-        Debug.Log($"Removed {modifier.Type} modifier of '{modifier.Value}' to Stat '{modifier.ModifyingStatType}'. Prev. val: '{oldValue}', New val: '{GetValue()}");
+        Debug.Log($"Removed {modifierMatch.Type} modifier of '{modifierMatch.Value}' to Stat '{modifierMatch.ModifyingStatType}'. Prev. val: '{oldValue}', New val: '{GetValue()}");
         
-        OnStatChanged?.Invoke(this, !modifier.IsPositive()); //removing a positive modifier is bad
+        OnStatChanged?.Invoke(this, !modifierMatch.IsPositive()); //removing a positive modifier is bad
 
         return true;
     }

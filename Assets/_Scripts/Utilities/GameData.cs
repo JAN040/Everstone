@@ -143,14 +143,16 @@ public class PlayerHeroSaveData
     public string className;
     public string playerName;
     public string background;
+    public string portraitName;
     public CharacterStats stats;
     public LevelSystem levelSystem;
 
-    public PlayerHeroSaveData(string className, string playerName, string background, CharacterStats stats, LevelSystem levelSystem)
+    public PlayerHeroSaveData(string className, string playerName, string background, string portraitName, CharacterStats stats, LevelSystem levelSystem)
     {
         this.className = className;
         this.playerName = playerName;
         this.background = background;
+        this.portraitName = portraitName;
         this.stats = stats;
         this.levelSystem = levelSystem;
     }

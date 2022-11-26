@@ -30,6 +30,13 @@ public class StatModifier
     {
         return this.Value > 0;
     }
+
+    public bool IsEqual(StatModifier modifier)
+    {
+        return this.Value == modifier.Value &&
+               this.ModifyingStatType == modifier.ModifyingStatType &&
+               this.Type == modifier.Type;
+    }
 }
 
 

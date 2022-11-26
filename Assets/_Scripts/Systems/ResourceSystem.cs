@@ -17,6 +17,8 @@ public class ResourceSystem : Singleton<ResourceSystem> {
     private List<ScriptableHero> Heroes { get; set; }
     private Dictionary<string, ScriptableHero> _HeroesDict;
 
+    private List<HeroPortrait> HeroPortraits { get; set; } 
+
     private List<ScriptableAbility> PlayerAbilities { get; set; }
     private List<ScriptableStatusEffect> StatusEffects { get; set; }
 
@@ -228,7 +230,9 @@ public class ResourceSystem : Singleton<ResourceSystem> {
     private void AssembleResources() {
         Heroes = Resources.LoadAll<ScriptableHero>("Heroes/Classes").ToList();
         _HeroesDict = Heroes.ToDictionary(r => r.ClassName, r => r);
-        
+
+        HeroPortraits = Resources.LoadAll<HeroPortrait>("Heroes/Portraits").ToList();
+
         HeroBackgrounds = Resources.LoadAll<ScriptableBackground>("Heroes/Backgrounds").ToList();
         _HeroBackgroundsDict = HeroBackgrounds.ToDictionary(x => x.backgroundName, x => x);
 
@@ -463,5 +467,24 @@ public class ResourceSystem : Singleton<ResourceSystem> {
         tempList.ForEach(x => res.Add(Instantiate(x)));
 
         return res;
+    }
+
+    public List<HeroPortrait> GetHeroPortraits()
+    {
+        return HeroPortraits;
+    }
+
+    public HeroPortrait GetHeroPortraitByName(string name)
+    {
+        if (string.IsNullOrEmpty(name))
+            return null;
+
+        foreach (var portrait in HeroPortraits)
+        {
+            if (portrait.name.Equals(name))
+                return portrait;
+        }
+
+        return null;
     }
 }   

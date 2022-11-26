@@ -56,6 +56,8 @@ public class CharacterCreationManager : MonoBehaviour
     private int PointsAmount_Arts => basePointsAmount_Arts + bgPointsAmount_Arts + allocatedPointsAmount_Arts;
 
 
+    private Dictionary<Sprite, HeroPortrait> SpritePortraitDict;
+
 
     #region UI References
 
@@ -76,9 +78,9 @@ public class CharacterCreationManager : MonoBehaviour
     [SerializeField]
     [Tooltip("Reference to the dropdown menu the player uses to select their picture.")]
     TMP_Dropdown iconDropdown;
-    [SerializeField]
-    [Tooltip("List of available avatar icons")]
-    public List<Sprite> playerIconList;
+    //[SerializeField]
+    //[Tooltip("List of available avatar icons")]
+    //public List<Sprite> playerIconList;
 
     [Space]
     [Header("Dropdown controls")]
@@ -149,8 +151,15 @@ public class CharacterCreationManager : MonoBehaviour
 
     private void SetupCharacterCreation()
     {
-        //setup dropdowns
+        var heroPortraitList = ResourceSystem.Instance.GetHeroPortraits();
+        
+        SpritePortraitDict = new Dictionary<Sprite, HeroPortrait>();
+        foreach (var portrait in heroPortraitList)
+            SpritePortraitDict.Add(portrait.PortraitImage, portrait);
+        
+        var playerIconList = SpritePortraitDict.Keys.ToList();
 
+        //setup dropdowns
         iconDropdown.ClearOptions();
         iconDropdown.AddOptions(playerIconList);
 
@@ -391,9 +400,12 @@ public class CharacterCreationManager : MonoBehaviour
         return ResourceSystem.Instance.GetBackground(heroBackgroundDropdown.options[heroBackgroundDropdown.value].text);
     }
 
-    private Sprite GetSelectedCharacterPortrait()
+    private void FillCharacterPortraitData(ScriptableHero hero)
     {
-        return iconDropdown.options[iconDropdown.value].image;
+        var selectedImage = iconDropdown.options[iconDropdown.value].image;
+        var portraitData = SpritePortraitDict[selectedImage];
+
+        hero.PortraitName = portraitData.name;
     }
 
     public void OnFinishCreation()
@@ -404,11 +416,14 @@ public class CharacterCreationManager : MonoBehaviour
         hero.Name = heroName.text;
         hero.Background = GetSelectedBackground().backgroundName;
 
+        var playerMngRef = GameManager.Instance.PlayerManager;
+        var resSysRef = ResourceSystem.Instance;
+
         //hero instantiation
-        GameManager.Instance.PlayerManager.Init(hero);
+        playerMngRef.Init(hero);
 
         //inventory setup
-        GameManager.Instance.PlayerManager.SetInventory(
+        playerMngRef.SetInventory(
             new InventorySystem(GameManager.Instance.PlayerInventorySpace),
             new InventorySystem(GameManager.Instance.CampStorageSpace),
             new EquipmentSystem((int)Enum.GetValues(typeof(EquipmentSlot)).Cast<EquipmentSlot>().Max() + 1, false),
@@ -416,30 +431,30 @@ public class CharacterCreationManager : MonoBehaviour
         );
 
         //test items
-        GameManager.Instance.PlayerManager.Equipment.EquipItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[0]));
-        GameManager.Instance.PlayerManager.Equipment.EquipItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[2]));
-        GameManager.Instance.PlayerManager.Runes.EquipItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[4]));
-        GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[4]));
-        GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[1]));
-        GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[3]));
-        GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[5]));
-        GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[6]));
-        GameManager.Instance.PlayerManager.Inventory.AddItem(new InventoryItem(ResourceSystem.Instance.Items_Equipment[7]));
-        for (int i = 0; i < GameManager.Instance.PlayerManager.Storage.InventorySize; i++)
-            GameManager.Instance.PlayerManager.Storage.PlaceItemAtSlot(new InventoryItem(ResourceSystem.Instance.Items_Loot[UnityEngine.Random.Range(0, ResourceSystem.Instance.Items_Loot.Count)]), i);
+        playerMngRef.Equipment.EquipItem(new InventoryItem(resSysRef.Items_Equipment[0]));
+        playerMngRef.Equipment.EquipItem(new InventoryItem(resSysRef.Items_Equipment[2]));
+        playerMngRef.Runes.EquipItem(new InventoryItem(resSysRef.Items_Equipment[4]));
+        playerMngRef.Inventory.AddItem(new InventoryItem(resSysRef.Items_Equipment[4]));
+        playerMngRef.Inventory.AddItem(new InventoryItem(resSysRef.Items_Equipment[1]));
+        playerMngRef.Inventory.AddItem(new InventoryItem(resSysRef.Items_Equipment[3]));
+        playerMngRef.Inventory.AddItem(new InventoryItem(resSysRef.Items_Equipment[5]));
+        playerMngRef.Inventory.AddItem(new InventoryItem(resSysRef.Items_Equipment[6]));
+        playerMngRef.Inventory.AddItem(new InventoryItem(resSysRef.Items_Equipment[7]));
+        for (int i = 0; i < playerMngRef.Storage.InventorySize; i++)
+            playerMngRef.Storage.PlaceItemAtSlot(new InventoryItem(resSysRef.Items_Loot[UnityEngine.Random.Range(0, resSysRef.Items_Loot.Count)]), i);
 
-        GameManager.Instance.PlayerManager.PlayerHero.MenuSprite = GetSelectedCharacterPortrait();
-        GameManager.Instance.PlayerManager.PlayerHero.SetLevelSystem(new LevelSystem(GenerateSkillSystem(stats), stats));
+        FillCharacterPortraitData(playerMngRef.PlayerHero);
+        playerMngRef.PlayerHero.SetLevelSystem(new LevelSystem(GenerateSkillSystem(stats), stats));
 
         //player abilities setup
-        GameManager.Instance.PlayerManager.SetAbilities(
-            ResourceSystem.Instance.GetPlayerAbilities()
+        playerMngRef.SetAbilities(
+            resSysRef.GetPlayerAbilities()
         );
 
         //change the default basic attack sprite for mage class
         if (hero.ClassName.ToUpper().Equals("MAGE"))
         {
-            var basicAtkAbility = GameManager.Instance.PlayerManager.Abilities.FirstOrDefault(x => x.Ability == Ability.BasicAttack);
+            var basicAtkAbility = playerMngRef.Abilities.FirstOrDefault(x => x.Ability == Ability.BasicAttack);
 
             if (basicAtkAbility != null)
                 basicAtkAbility.MenuImage = MageBasicAtkImage;
