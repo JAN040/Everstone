@@ -23,10 +23,12 @@ public abstract class ScriptableUnitBase : ScriptableObject {
     [Tooltip("Specify the direction the portrait is facing. This helps the game flip the sprite in the right direction")]
     public FacingDirection FaceDirection;
 
+    [NonSerialized]
     [TextArea(3,5)]
     public string Description;
 
     // Used in game
+    [NonSerialized]
     public GameObject Prefab;
 
     /// <summary>

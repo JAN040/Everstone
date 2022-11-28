@@ -55,15 +55,16 @@ public class GameManager : Singleton<GameManager>
     /// Stores the reference to the adventure location the player is currently in (null if not in adventure)
     /// </summary>
     public ScriptableAdventureLocation CurrentAdventureLocation { get; private set; }
-    public List<ScriptableAdventureLocation> AdventureLocationData { 
-        get 
-        { 
+    public List<ScriptableAdventureLocation> AdventureLocationData
+    {
+        get
+        {
             if (adventureLocationData == null)
                 adventureLocationData = ResourceSystem.Instance.GetAdventureLocations();
 
-            return adventureLocationData; 
-        } 
-        set => adventureLocationData = value; 
+            return adventureLocationData;
+        }
+        set => adventureLocationData = value;
     }
     private List<ScriptableAdventureLocation> adventureLocationData = null;
 
@@ -87,7 +88,21 @@ public class GameManager : Singleton<GameManager>
     public bool KeepInventory { get; private set; }
 
     public int CampStorageSpace = 70;
-    public int PlayerInventorySpace = 10;
+
+    public int PlayerInventorySpace
+    {
+        get => playerInventorySpace;
+        set
+        {
+            if (value > playerInventorySpace)
+            {
+                PlayerManager.Inventory.AddSpace(value - playerInventorySpace);
+            }
+
+            playerInventorySpace = value;
+        }
+    }
+
     public bool ShowGameOverScreenOnSaveLoad { get; private set; } = false;
 
     public Scenes CurrentScene;
@@ -99,8 +114,9 @@ public class GameManager : Singleton<GameManager>
     public float BattleGameSpeed = 1f;
     public int NumOfCopperForOneSilver = 10;
     public int NumOfSilverForOneGold = 100;
+    private int playerInventorySpace = 10;
 
-    
+
 
 
     #endregion Player prefs
@@ -119,7 +135,7 @@ public class GameManager : Singleton<GameManager>
 
         return Instance.Currency >= amountToCompare;
     }
-   
+
 
     #endregion STATIC METHODS
 
@@ -130,7 +146,7 @@ public class GameManager : Singleton<GameManager>
     public event Action<int, int> OnCurrencyChanged;
 
 
-   
+
 
 
     #region UNITY METHODS
@@ -178,7 +194,7 @@ public class GameManager : Singleton<GameManager>
         SaveSystem.SaveGame(data);
     }
 
-   
+
     public void LoadGame()
     {
         LoadSaveData(SaveSystem.LoadGame()?.GameManagerData);
@@ -212,7 +228,7 @@ public class GameManager : Singleton<GameManager>
             null,
             CurrentAdventureLocation?.GetSaveData(),
             locDataList,
-            
+
             IsHardcore,
             KeepInventory,
             CampStorageSpace,
@@ -221,7 +237,7 @@ public class GameManager : Singleton<GameManager>
             CurrentScene,
             BattleGameSpeed,
             NumOfCopperForOneSilver,
-            NumOfSilverForOneGold    
+            NumOfSilverForOneGold
         );
 
         return data;
@@ -239,7 +255,7 @@ public class GameManager : Singleton<GameManager>
         }
 
         PlayerManager = new PlayerManager(data.playerManagerData);
-        
+
         //TODO: after pets/merc are implemented
         //Allies = data.allies;
         Allies = null;

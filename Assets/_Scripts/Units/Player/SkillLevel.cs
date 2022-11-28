@@ -71,15 +71,12 @@ public class SkillLevel
             if (value <= _level)
                 return;
 
-            int tempLevel = _level;
-            _level = value;
-
             //handle jumping multiple levels cause its possible to start
             //  with level higher than 1
-            while (tempLevel < _level)
+            while (_level < value)
             {
+                _level++;
                 ModifyStatsOnLevelUp();
-                tempLevel++;
             }
 
             ExpToNextLevel = GetRequiredExpToNextLevel(_level);
@@ -222,6 +219,10 @@ public class SkillLevel
         {
             case Skill.Strength:
                 this._statsReference.PhysicalDamage.Grow();
+
+                //every other level increase inventory size
+                if (this.Level % 2 == 0)
+                    GameManager.Instance.PlayerInventorySpace++;
                 break;
 
             case Skill.Arts:

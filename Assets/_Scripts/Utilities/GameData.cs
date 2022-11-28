@@ -115,12 +115,14 @@ public class InventoryItemSaveData
     public string itemId;
     public bool isShopOwned;
     public int stackSize;
+    public bool wasTradedAlready;
 
-    public InventoryItemSaveData(string itemId, bool isShopOwned, int stackSize)
+    public InventoryItemSaveData(string itemId, bool isShopOwned, int stackSize, bool wasTradedAlready)
     {
         this.itemId = itemId;
         this.isShopOwned = isShopOwned;
         this.stackSize = stackSize;
+        this.wasTradedAlready = wasTradedAlready;
     }
 }
 

@@ -16,6 +16,8 @@ public class InventoryItem
     /// Indicates whether transfering this item from ShopInventory to the Players inventory system should charge BuyPrice
     /// </summary>
     [NonSerialized] public bool IsShopOwned = false;
+    public bool WasTradedAlready = false; //a flag that prevents gaining infinite merchant xp by reselling the same item
+
 
     private int stackSize = 1;
     public int StackSize
@@ -52,6 +54,7 @@ public class InventoryItem
         this.ItemData = ResourceSystem.Instance.GetItemById(data.itemId);
         this.IsShopOwned = data.isShopOwned;
         this.StackSize = data.stackSize;
+        this.WasTradedAlready = data.wasTradedAlready;
     }
 
 
@@ -63,7 +66,7 @@ public class InventoryItem
         if (ItemData == null)
             return null;
 
-        return new InventoryItemSaveData(ItemData.Id, IsShopOwned, StackSize);
+        return new InventoryItemSaveData(ItemData.Id, IsShopOwned, StackSize, WasTradedAlready);
     }
 
 

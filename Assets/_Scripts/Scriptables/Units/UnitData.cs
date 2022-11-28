@@ -247,7 +247,7 @@ public class UnitData
 
             case "Heal All":
                 eff = ability.OnActivedEffects.FirstOrDefault(x => x.EffectType == StatusEffectType.RegenerateHp);
-                eff.EffectValue = unit.Stats.PhysicalDamage.GetValue();    //aka recover 100% of atk HP to every unit per tick
+                eff.EffectValue = unit.Stats.PhysicalDamage.GetValue() / 2f;    //aka recover 50% of atk HP to every unit per tick
                 break;
 
             default:

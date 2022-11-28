@@ -440,8 +440,8 @@ public class CharacterCreationManager : MonoBehaviour
         playerMngRef.Inventory.AddItem(new InventoryItem(resSysRef.Items_Equipment[5]));
         playerMngRef.Inventory.AddItem(new InventoryItem(resSysRef.Items_Equipment[6]));
         playerMngRef.Inventory.AddItem(new InventoryItem(resSysRef.Items_Equipment[7]));
-        for (int i = 0; i < playerMngRef.Storage.InventorySize; i++)
-            playerMngRef.Storage.PlaceItemAtSlot(new InventoryItem(resSysRef.Items_Loot[UnityEngine.Random.Range(0, resSysRef.Items_Loot.Count)]), i);
+        //for (int i = 0; i < playerMngRef.Storage.InventorySize; i++)
+        //    playerMngRef.Storage.PlaceItemAtSlot(new InventoryItem(resSysRef.Items_Loot[UnityEngine.Random.Range(0, resSysRef.Items_Loot.Count)]), i);
 
         FillCharacterPortraitData(playerMngRef.PlayerHero);
         playerMngRef.PlayerHero.SetLevelSystem(new LevelSystem(GenerateSkillSystem(stats), stats));

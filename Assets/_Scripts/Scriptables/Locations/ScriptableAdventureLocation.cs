@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -128,6 +129,7 @@ public class ScriptableAdventureLocation : ScriptableObject
     public List<ScriptableNpcUnit> RollEnemies(EncounterType encounterType)
     {
         var result = new List<ScriptableNpcUnit>();
+
         switch (encounterType)
         {
             case EncounterType.SingleEnemy:
@@ -135,19 +137,26 @@ public class ScriptableAdventureLocation : ScriptableObject
                 break;
 
             case EncounterType.MultipleEnemy:
+
                 //for there to be multiple there have to be at least two
                 result.Add(GetRandomEnemy());
                 result.Add(GetRandomEnemy());
 
+                var multiEnemyChance = this.GetMultiEnemyChance();
+
                 //roll to see if we add even more (max 6 enemies)
-                while (Helper.DiceRoll(LocationData.MULTI_ENEMY_ADD_MORE_ENEMIES_CHANCE) && result.Count < 6)
+                while (Helper.DiceRoll(multiEnemyChance) && result.Count < 6)
+                {
                     result.Add(GetRandomEnemy());
+                    multiEnemyChance /= 2;
+                }
 
                 break;
 
             case EncounterType.BossEnemy:
-                Debug.Log("TODO: BossEnemy");
+                result.Add(GetRandomBoss());
                 break;
+
             case EncounterType.MonsterNest:
                 Debug.Log("TODO: MonsterNest");
                 break;
@@ -159,6 +168,14 @@ public class ScriptableAdventureLocation : ScriptableObject
         }
 
         return result;
+    }
+
+
+    private ScriptableNpcUnit GetRandomBoss()
+    {
+        List<ScriptableNpcUnit> effectivePool = EnemyPool.Where(x => x.Type == EnemyType.Boss).ToList();
+
+        return Instantiate(effectivePool[Random.Range(0, effectivePool.Count)]);
     }
 
     public ScriptableNpcUnit GetRandomEnemy()

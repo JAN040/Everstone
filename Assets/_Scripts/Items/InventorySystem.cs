@@ -232,12 +232,16 @@ public class InventorySystem
 
             GameManager.Instance.Currency -= invItem.GetBuyPrice();
             invItem.IsShopOwned = false;
+
+            HandleItemTrade(invItem);
         }
         //selling to shop
         if (this != targetInventory && targetInventory.IsShop)
         {
             GameManager.Instance.Currency += invItem.GetSellPrice();
             invItem.IsShopOwned = true;
+
+            HandleItemTrade(invItem);
         }
 
         #endregion Shop
@@ -259,6 +263,23 @@ public class InventorySystem
         Debug.Log($"After MoveItemToTarget:\nPrev inventory list: {GetItemsDisplayString()}\nTarget inventory list: {targetInventory.GetItemsDisplayString()}");
 
         return hasSwapped ? ItemMoveResult.Swapped : ItemMoveResult.Moved;
+    }
+
+    private void HandleItemTrade(InventoryItem invItem)
+    {
+        if (!invItem.WasTradedAlready)
+            AddXpOnItemTrade(invItem);
+
+        invItem.WasTradedAlready = true;
+    }
+
+    private void AddXpOnItemTrade(InventoryItem invItem)
+    {
+        GameManager.Instance.PlayerManager.PlayerHero.LevelSystem
+            .AddExperienceToSkill(
+                (int)(invItem.GetBuyPrice() * PlayerManager.SELLPRICE_TO_XP_RATE),
+                Skill.Trading
+            );
     }
 
     public ItemMoveResult StackItemToTarget(int itemIndex, InventorySystem targetInventory, int targetIndex)

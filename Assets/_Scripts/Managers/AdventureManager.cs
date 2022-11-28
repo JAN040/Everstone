@@ -284,16 +284,16 @@ public class AdventureManager : MonoBehaviour
             if (GameManager.Instance.Allies != null)
                 AlliedUnitsList.AddRange(GameManager.Instance.Allies);
 
-            //TODO: remove! this is testing only
-            var extraAllies = CurrentLocation.RollEnemies(encounter);
-            while (extraAllies.Count > 5) //make sure there arent too many
-                extraAllies.RemoveAt(0);
-            foreach (var extra in extraAllies)
-            {
-                extra.Faction = Faction.Allies;
-                extra.InitStatsAndAbilities(GameManager.Instance.GameDifficulty, CurrentLocation);
-            }
-            AlliedUnitsList.AddRange(extraAllies);
+            //TESTING ONLY - extra allies spawn code
+            //var extraAllies = CurrentLocation.RollEnemies(encounter);
+            //while (extraAllies.Count > 5) //make sure there arent too many
+            //    extraAllies.RemoveAt(0);
+            //foreach (var extra in extraAllies)
+            //{
+            //    extra.Faction = Faction.Allies;
+            //    extra.InitStatsAndAbilities(GameManager.Instance.GameDifficulty, CurrentLocation);
+            //}
+            //AlliedUnitsList.AddRange(extraAllies);
 
             SpawnAllies();
 
@@ -321,8 +321,6 @@ public class AdventureManager : MonoBehaviour
         SpawnEnemies();
 
         TargetedEnemy = null;
-
-        //TODO: notify about stage number (current progress)
 
         GameSpeed = GameManager.Instance.BattleGameSpeed;
         GameManager.Instance.GameState = BattleState.InBattle;
@@ -610,22 +608,18 @@ public class AdventureManager : MonoBehaviour
             //handle loot
             var items = GameManager.Instance.UnitData.GenerateDropsForUnit(unit as ScriptableNpcUnit);
 
-            //TODO: remove, test only
-            if (EnemyUnitsList.Count == 0)
-            {
-                while (items.Count < 30)
-                    items.AddRange(GameManager.Instance.UnitData.GenerateDropsForUnit(unit as ScriptableNpcUnit));
-            }
-
             if (items != null && items.Count > 0)
             {
-                items.ForEach(x =>
+                foreach(var item in items)
                 {
+                    if (item == null)
+                        continue;
+
                     if (!LootInventory.HasFreeSpace())
                         LootInventory.AddSpace(7);
 
-                    LootInventory.AddItem(x);
-                });
+                    LootInventory.AddItem(item);
+                };
             }
 
             //handle stage clear if all enemies are defeated

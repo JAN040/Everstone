@@ -28,10 +28,10 @@ public class ItemDataBase : ScriptableObject
 
     [Space]
     public int BuyPrice;
-    public bool CanBeSold = true; //key/quest items shouldnt be sellable
+    public bool CanBeSold = true;       //key/quest items shouldnt be sellable
 
     [Range(1, 999)]
-    public int MaxStackSize = 1;   //if MaxStackSize > 1 the item is stackable
+    public int MaxStackSize = 1;        //if MaxStackSize > 1 the item is stackable
     public ItemType ItemType = ItemType.Loot;
     public ItemRarity Rarity;
 
