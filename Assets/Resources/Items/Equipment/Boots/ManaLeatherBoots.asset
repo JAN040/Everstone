@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68a4d297ca894d74f8261e9687a50119, type: 3}
+  m_Name: ManaLeatherBoots
+  m_EditorClassIdentifier: 
+  DisplayName: Mana Leather Boots
+  Description: Basic boots made from mana leather..
+  MenuIcon: {fileID: 21300000, guid: de2319c213a51e44d9d0cc0f287a0e90, type: 3}
+  BuyPrice: 100
+  CanBeSold: 1
+  MaxStackSize: 1
+  ItemType: 1
+  Rarity: 1
+  EquipmentType: 10
+  StatModifiers:
+  - _type: 0
+    _value: 1
+    _modifyingStatType: 1
+  - _type: 0
+    _value: 0.04
+    _modifyingStatType: 1
+  - _type: 0
+    _value: 2
+    _modifyingStatType: 2

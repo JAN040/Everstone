@@ -10,19 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 68a4d297ca894d74f8261e9687a50119, type: 3}
-  m_Name: SO_ItemEquip_Ring2
+  m_Name: IronBoots
   m_EditorClassIdentifier: 
-  Id: Equip_Ring2
-  DisplayName: Silver Ring
-  Description: A silver ring. Somewhat expensive
-  MenuIcon: {fileID: 21300000, guid: 97240c83bd05bfb4380cf12f9b78928e, type: 3}
-  BuyPrice: 300
+  DisplayName: Iron Boots
+  Description: Basic boots. Fully plated in iron for more protection.
+  MenuIcon: {fileID: 21300000, guid: 5284711d856a34e408c2be48d89dc53c, type: 3}
+  BuyPrice: 180
   CanBeSold: 1
   MaxStackSize: 1
   ItemType: 1
   Rarity: 1
-  EquipmentType: 14
+  EquipmentType: 10
   StatModifiers:
-  - _type: 1
-    _value: 0.01
-    _modifyingStatType: 0
+  - _type: 0
+    _value: 6
+    _modifyingStatType: 1

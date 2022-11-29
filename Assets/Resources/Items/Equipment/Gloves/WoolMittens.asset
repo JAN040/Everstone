@@ -10,19 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 68a4d297ca894d74f8261e9687a50119, type: 3}
-  m_Name: SO_ItemEquip_Chestplate
+  m_Name: WoolMittens
   m_EditorClassIdentifier: 
-  Id: Equip_Chestplate
-  DisplayName: Chestplate
-  Description: The starting chestplate.
-  MenuIcon: {fileID: 21300000, guid: faf79d7f2c9728a4691b6a3bf453ecd5, type: 3}
-  BuyPrice: 25
+  DisplayName: Wool mittens
+  Description: Provide almost no protection. Are warm though.
+  MenuIcon: {fileID: 21300000, guid: 22222e576f30ee746bef308bf0e214b2, type: 3}
+  BuyPrice: 6
   CanBeSold: 1
   MaxStackSize: 1
   ItemType: 1
-  Rarity: 1
-  EquipmentType: 8
+  Rarity: 0
+  EquipmentType: 13
   StatModifiers:
   - _type: 0
-    _value: 2
+    _value: 0.5
     _modifyingStatType: 1

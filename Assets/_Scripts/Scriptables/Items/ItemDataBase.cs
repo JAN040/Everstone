@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
 [CreateAssetMenu(menuName = "Scriptable/Item/New Item", fileName = "SO_ItemBase_")]
 public class ItemDataBase : ScriptableObject
 {

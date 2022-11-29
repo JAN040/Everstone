@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68a4d297ca894d74f8261e9687a50119, type: 3}
+  m_Name: LeatherShirt
+  m_EditorClassIdentifier: 
+  DisplayName: Leather Shirt
+  Description: Now with detachable sleeves!
+  MenuIcon: {fileID: 21300000, guid: 06b03e6d5ba6c7c409eca39c76398142, type: 3}
+  BuyPrice: 86
+  CanBeSold: 1
+  MaxStackSize: 1
+  ItemType: 1
+  Rarity: 0
+  EquipmentType: 8
+  StatModifiers:
+  - _type: 0
+    _value: 1
+    _modifyingStatType: 1
+  - _type: 1
+    _value: 0.1
+    _modifyingStatType: 4
