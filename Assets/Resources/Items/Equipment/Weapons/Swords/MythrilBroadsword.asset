@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68a4d297ca894d74f8261e9687a50119, type: 3}
+  m_Name: MythrilBroadsword
+  m_EditorClassIdentifier: 
+  DisplayName: Mythril Broadsword
+  Description: Why is it good? Mythril of course.
+  MenuIcon: {fileID: 21300000, guid: b403d947140108b47873efd6192564ab, type: 3}
+  BuyPrice: 12000
+  CanBeSold: 1
+  MaxStackSize: 1
+  ItemType: 1
+  Rarity: 4
+  EquipmentType: 1
+  StatModifiers:
+  - _type: 0
+    _value: 10
+    _modifyingStatType: 0
+  - _type: 1
+    _value: 0.2
+    _modifyingStatType: 0
+  - _type: 0
+    _value: 10
+    _modifyingStatType: 2
+  - _type: 1
+    _value: 0.12
+    _modifyingStatType: 15

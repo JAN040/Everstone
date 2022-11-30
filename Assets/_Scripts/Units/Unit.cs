@@ -904,7 +904,7 @@ public class Unit : MonoBehaviour
                 {
                     case EquipmentType.Sword:
                     case EquipmentType.Dagger:
-                    case EquipmentType.Axe:
+                    case EquipmentType.Hammer:
                         damageList.Add(new Damage(Stats.PhysicalDamage.GetValue()));
                         break;
 

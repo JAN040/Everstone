@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68a4d297ca894d74f8261e9687a50119, type: 3}
+  m_Name: RustedDagger
+  m_EditorClassIdentifier: 
+  DisplayName: Rusted Dagger
+  Description: Rusted. Dagger.
+  MenuIcon: {fileID: 21300000, guid: ef0f9b5e7f66b8e4d8ed99a2c4352101, type: 3}
+  BuyPrice: 26
+  CanBeSold: 1
+  MaxStackSize: 1
+  ItemType: 1
+  Rarity: 0
+  EquipmentType: 2
+  StatModifiers:
+  - _type: 0
+    _value: 1
+    _modifyingStatType: 0
+  - _type: 1
+    _value: 0.05
+    _modifyingStatType: 0

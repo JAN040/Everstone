@@ -185,7 +185,7 @@ public class EquipmentSystem : InventorySystem
 
             case EquipmentType.Sword:
             case EquipmentType.Dagger:
-            case EquipmentType.Axe:
+            case EquipmentType.Hammer:
             case EquipmentType.Staff:
             case EquipmentType.Shield:
                 if (equipType == EquipmentType.Shield ||

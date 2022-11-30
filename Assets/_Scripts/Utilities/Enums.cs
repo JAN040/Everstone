@@ -161,7 +161,7 @@ public enum EquipmentType
     //weapons
     Sword,
     Dagger,
-    Axe,
+    Hammer,
     Staff,
     Shield,
 
