@@ -2,8 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
+using Photon.Realtime;
+using TMPro;
 
-public class MainMenuManager : MonoBehaviour
+public class MainMenuManager : MonoBehaviourPunCallbacks
 {
     #region VARIABLES
 
@@ -14,12 +17,17 @@ public class MainMenuManager : MonoBehaviour
     [Header("UI References")]
     [SerializeField] Button ContinueButton;
 
+    [SerializeField] GameObject MultiplayerInfoBox;
+    [SerializeField] TextMeshProUGUI MultiplayerInfoBoxText;
+
 
     #endregion UI References
 
 
     //[Space]
     //[Header("Variables")]
+    private const string CONNECTING_TEXT = "Connecting to the game server...";
+    private const string CONNECTION_FAILED_TEXT = "Connection to the server failed!";
 
 
     #endregion VARIABLES
@@ -44,6 +52,43 @@ public class MainMenuManager : MonoBehaviour
     {
         GameManager.Instance.LoadGame();
     }
+
+
+    #region Multiplayer
+
+
+    public void OnMultiplayerClicked()
+    {
+        MultiplayerInfoBox.gameObject.SetActive(true);
+        MultiplayerInfoBoxText.text = CONNECTING_TEXT;
+
+        PhotonNetwork.GameVersion = Application.version;
+        PhotonNetwork.ConnectUsingSettings();
+    }
+
+    public void InfoBoxCancelClicked()
+    {
+        MultiplayerInfoBox.gameObject.SetActive(false);
+    }
+
+    public override void OnConnectedToMaster()
+    {
+        PhotonNetwork.JoinLobby();
+    }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        MultiplayerInfoBox.gameObject.SetActive(true);
+        MultiplayerInfoBoxText.text = CONNECTION_FAILED_TEXT + $"\nReason:\n {cause}";
+    }
+
+    public override void OnJoinedLobby()
+    {
+        SceneManagementSystem.Instance.LoadScene(Scenes.MultiplayerLobby);
+    }
+
+
+    #endregion Multiplayer
 
 
     #endregion METHODS

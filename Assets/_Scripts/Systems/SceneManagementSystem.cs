@@ -98,7 +98,10 @@ public class SceneManagementSystem : Singleton<SceneManagementSystem>
         GameManager.Instance.CurrentScene = sc;
 
         //dont save game when switching to hero select; this would overwrite game data immediately...
-        if (!sc.In(Scenes.HeroSelect, Scenes.MainMenu))
+        if (!sc.In( Scenes.HeroSelect,
+                    Scenes.MainMenu,
+                    Scenes.MultiplayerLobby,
+                    Scenes.MultiplayerRoom))
             GameManager.SaveGame();
 
         transition.SetTrigger("End");
@@ -117,4 +120,6 @@ public enum Scenes
     AdventureSelect = 5,
     Residence = 6,
     Shop = 7,
+    MultiplayerLobby = 8,
+    MultiplayerRoom = 9,
 }
