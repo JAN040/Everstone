@@ -69,11 +69,12 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     public void InfoBoxCancelClicked()
     {
         MultiplayerInfoBox.gameObject.SetActive(false);
+        PhotonNetwork.Disconnect();
     }
 
     public override void OnConnectedToMaster()
     {
-        PhotonNetwork.JoinLobby();
+        SceneManagementSystem.Instance.LoadScene(Scenes.MultiplayerLobby);
     }
 
     public override void OnDisconnected(DisconnectCause cause)
@@ -82,10 +83,7 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
         MultiplayerInfoBoxText.text = CONNECTION_FAILED_TEXT + $"\nReason:\n {cause}";
     }
 
-    public override void OnJoinedLobby()
-    {
-        SceneManagementSystem.Instance.LoadScene(Scenes.MultiplayerLobby);
-    }
+    
 
 
     #endregion Multiplayer

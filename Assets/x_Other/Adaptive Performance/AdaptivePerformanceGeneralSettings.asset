@@ -27,7 +27,7 @@ MonoBehaviour:
   m_Name: Android Settings
   m_EditorClassIdentifier: 
   m_LoaderManagerInstance: {fileID: 2641079300241779625}
-  m_InitManagerOnStart: 1
+  m_InitManagerOnStart: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 2
@@ -74,8 +74,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AutomaticLoading: 0
   m_AutomaticRunning: 0
-  m_Loaders:
-  - {fileID: 11400000, guid: 9ad301dc1320dce408111810b454f0bb, type: 2}
+  m_Loaders: []
 --- !u!114 &2641079300241779625
 MonoBehaviour:
   m_ObjectHideFlags: 2
@@ -104,4 +103,4 @@ MonoBehaviour:
   m_Name: WebGL Settings
   m_EditorClassIdentifier: 
   m_LoaderManagerInstance: {fileID: 1949415698034846192}
-  m_InitManagerOnStart: 1
+  m_InitManagerOnStart: 0

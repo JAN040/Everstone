@@ -30,6 +30,12 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     [SerializeField] Button ListRoomsButton;
 
     [Space]
+    [Header("List rooms")]
+    [SerializeField] GameObject RoomListPanel;
+    [SerializeField] GameObject RoomListContainer;
+    [SerializeField] GameObject LobbyRoomPanelPrefab;
+
+    [Space]
     [Header("Info Box")]
     [SerializeField] GameObject InfoBox;
     [SerializeField] TextMeshProUGUI InfoBoxTitleText;
@@ -42,6 +48,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     [Space]
     [Header("Variables")]
     public List<RoomInfo> RoomList = new List<RoomInfo>();
+    private List<GameObject> RoomPanelObjectList = new List<GameObject>();
 
 
     #endregion VARIABLES
@@ -50,9 +57,15 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     #region UNITY METHODS
 
 
+
     // Start is called before the first frame update
     void Start()
     {
+        PhotonNetwork.JoinLobby();
+
+        if (PhotonNetwork.IsConnected && !string.IsNullOrEmpty(PhotonNetwork.NickName))
+            PlayerNameInput.text = PhotonNetwork.NickName;
+
         UpdateUI();
     }
 
@@ -72,6 +85,9 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         CreateRoomButton.interactable = isPlayerNameValid && isCreateRoomNameValid;
         JoinRoomButton.interactable = isPlayerNameValid && isJoinRoomNameValid;
         ListRoomsButton.interactable = isPlayerNameValid;
+
+        if (PhotonNetwork.IsConnected && isPlayerNameValid)
+            PhotonNetwork.NickName = PlayerNameInput.text;
     }
 
     private void ShowInfoBox(string title, string message)
@@ -90,10 +106,20 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     public void CreateRoom()
     {
+        if (!PhotonNetwork.IsConnected)
+            return;
+
         PhotonNetwork.NickName = PlayerNameInput.text;
-        PhotonNetwork.CreateRoom(CreateRoomNameInput.text);
+        RoomOptions options = new RoomOptions();
+        options.MaxPlayers = 10;
+        options.EmptyRoomTtl = 0;
+
+        PhotonNetwork.CreateRoom(CreateRoomNameInput.text, options);
     }
 
+    /// <summary>
+    /// Join room button click method
+    /// </summary>
     public void JoinRoom()
     {
         JoinRoom(JoinRoomNameInput.text);
@@ -104,13 +130,53 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     /// </summary>
     public void JoinRoom(string roomName)
     {
+        if (!PhotonNetwork.IsConnected)
+            return;
+
         PhotonNetwork.NickName = PlayerNameInput.text;
         PhotonNetwork.JoinRoom(roomName);
     }
 
+    /// <summary>
+    /// List all button click method
+    /// </summary>
     public void ListRooms()
     {
-        //TODO:
+        if (!PhotonNetwork.IsConnected)
+            return;
+
+        UpdateRoomListObject();
+        
+        RoomListPanel.gameObject.SetActive(true);
+    }
+
+    /// <summary>
+    /// loop through RoomList and instantiate objects, put them into RoomListContainer
+    /// </summary>
+    private void UpdateRoomListObject()
+    {
+        if (RoomPanelObjectList == null)
+            RoomPanelObjectList = new List<GameObject>();
+
+        //clean all the previous room panels
+        if (RoomPanelObjectList != null && RoomPanelObjectList.Count > 0)
+            foreach (var panelObj in RoomPanelObjectList)
+                Destroy(panelObj.gameObject);
+        
+        RoomPanelObjectList.Clear();
+
+
+        //add new panels from fresh data
+        foreach (var roomInfo in RoomList)
+        {
+            if (roomInfo.RemovedFromList)
+                continue;
+
+            var prefab = InstantiatePrefab(LobbyRoomPanelPrefab, RoomListContainer.transform);
+            prefab.GetComponent<LobbyRoomPanel>().Init(roomInfo);
+            
+            RoomPanelObjectList.Add(prefab);
+        }
     }
 
     public void ExitClicked()
@@ -119,9 +185,31 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         SceneManagementSystem.Instance.LoadScene(Scenes.MainMenu);
     }
 
+    private GameObject InstantiatePrefab(GameObject prefab, Transform parentTransform)
+    {
+        GameObject obj;
+
+        if (parentTransform == null)
+            obj = Instantiate(prefab, new Vector3(0, 0, 0), Quaternion.identity);
+        else
+            obj = Instantiate(prefab, new Vector3(0, 0, 0), Quaternion.identity, parentTransform);
+
+        //if (parentTransform != null)
+        //    obj.transform.SetParent(parentTransform, false);  //when manually setting the parent, in order for transform stretch to work, keepWorldSpace flag needs to be false...
+
+        obj.transform.localScale = Vector3.one;
+        obj.transform.localPosition = Vector3.zero;
+
+        return obj;
+    }
+
+
 
     #region PUN Callbacks
 
+    public override void OnJoinedLobby()
+    {
+    }
 
     public override void OnJoinedRoom()
     {
@@ -132,7 +220,8 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         RoomList = roomList;
 
-        //TODO: if list component is shown, update its contents
+        if(RoomListPanel.gameObject.activeInHierarchy)
+            UpdateRoomListObject();
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)
@@ -149,8 +238,14 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         ShowInfoBox("Failed to create the room", msg);
     }
 
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        Debug.LogWarning($"Player {PhotonNetwork.NickName} disconnected. Reason: {cause}");
+    }
+
 
     #endregion PUN Callbacks
+
 
 
     #endregion METHODS

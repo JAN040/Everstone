@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using System;
 using System.Linq;
 using UnityEngine.SceneManagement;
-using static UnityEditor.Progress;
+
 
 public class ItemInfoBox : MonoBehaviour
 {
