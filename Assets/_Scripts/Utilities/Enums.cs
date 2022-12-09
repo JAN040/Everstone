@@ -352,3 +352,10 @@ public enum Gender
     Female,
     Unknown
 }
+
+public enum MultiplayerWinCriteria
+{
+    Gold = 0,
+    StageProgress = 1,
+    SumLevelCount = 2
+}

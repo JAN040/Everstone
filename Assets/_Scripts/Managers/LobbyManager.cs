@@ -61,6 +61,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("Joining the lobby...");
         PhotonNetwork.JoinLobby();
 
         if (PhotonNetwork.IsConnected && !string.IsNullOrEmpty(PhotonNetwork.NickName))
@@ -209,6 +210,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedLobby()
     {
+        Debug.Log("Joined the lobby successfully");
     }
 
     public override void OnJoinedRoom()
@@ -241,11 +243,21 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     public override void OnDisconnected(DisconnectCause cause)
     {
         Debug.LogWarning($"Player {PhotonNetwork.NickName} disconnected. Reason: {cause}");
+        StartCoroutine(OnDisconnectedRoutine(cause));
     }
 
 
     #endregion PUN Callbacks
 
+
+    private IEnumerator OnDisconnectedRoutine(DisconnectCause cause)
+    {
+        ShowInfoBox("Disconnected from the server.", $"Reason:\n{cause}");
+
+        yield return new WaitForSeconds(5);
+
+        SceneManagementSystem.Instance.LoadScene(Scenes.MainMenu);
+    }
 
 
     #endregion METHODS

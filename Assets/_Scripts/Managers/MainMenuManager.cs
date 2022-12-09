@@ -62,6 +62,7 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
         MultiplayerInfoBox.gameObject.SetActive(true);
         MultiplayerInfoBoxText.text = CONNECTING_TEXT;
 
+        PhotonNetwork.AutomaticallySyncScene = true;
         PhotonNetwork.GameVersion = Application.version;
         PhotonNetwork.ConnectUsingSettings();
     }

@@ -6,6 +6,8 @@ using UnityEngine.UI;
 using TMPro;
 using Photon.Realtime;
 using System.Linq;
+using System;
+
 
 public class RoomManager : MonoBehaviourPunCallbacks
 {
@@ -25,6 +27,25 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [Space]
     [SerializeField] Button StartGameButton;
 
+    [Space]
+    [Header("Settings panel")]
+    [SerializeField] GameObject GameSettingsPanel;
+    [SerializeField] Button SaveButton;
+    [Space]
+    [SerializeField] TMP_InputField TimeLimitInput;
+    [SerializeField] Toggle HardcoreCheckbox;
+    [SerializeField] Toggle KeepInventoryCheckbox;
+    [Space]
+    [SerializeField] TMP_Dropdown WinCriteriaCombo;
+    [SerializeField] TMP_InputField PointGoalInput;
+    [SerializeField] TMP_Dropdown GameDifficultyCombo;
+
+    [Space]
+    [Header("Info Box")]
+    [SerializeField] GameObject InfoBox;
+    [SerializeField] TextMeshProUGUI InfoBoxTitleText;
+    [SerializeField] TextMeshProUGUI InfoBoxMessageText;
+
 
     #endregion UI References
 
@@ -32,6 +53,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     //[Space]
     //[Header("Variables")]
     private List<GameObject> PlayerPanelObjectList = new List<GameObject>();
+    private ExitGames.Client.Photon.Hashtable GameSettings = new ExitGames.Client.Photon.Hashtable();
 
 
     #endregion VARIABLES
@@ -49,6 +71,23 @@ public class RoomManager : MonoBehaviourPunCallbacks
             StartGameButton.interactable = PhotonNetwork.IsMasterClient;
 
             StartCoroutine("PeriodicPlayerListRefresh");
+
+            if (PhotonNetwork.IsMasterClient)
+            {
+                //initialize setting values
+                GameSettings["TimeLimit"] = 60;
+                GameSettings["WinCriteria"] = MultiplayerWinCriteria.Gold;
+                GameSettings["PointGoal"] = 10000;
+                GameSettings["GameDifficulty"] = Difficulty.Normal;
+                GameSettings["KeepInventory"] = true;
+                GameSettings["IsHardcore"] = false;
+
+                PhotonNetwork.CurrentRoom.SetCustomProperties(GameSettings);
+            }
+        }
+        else
+        {   //something went very wrong, cut our losses and jump back to main menu before more things break
+            SceneManagementSystem.Instance.LoadScene(Scenes.MainMenu);
         }
     }
 
@@ -113,6 +152,63 @@ public class RoomManager : MonoBehaviourPunCallbacks
     }
 
 
+    public void GameSettingsClicked()
+    {
+        //show and update the setting panel
+        ShowSettings();
+
+        //if this client is the room master, enable setting editing
+        EnableDisableSettingPanelOptions(PhotonNetwork.IsMasterClient);
+    }
+
+    public void SaveSettingsClicked()
+    {
+        //initialize setting values
+        GameSettings["TimeLimit"] = TimeLimitInput.text;
+        GameSettings["WinCriteria"] = (MultiplayerWinCriteria)WinCriteriaCombo.value;
+        GameSettings["PointGoal"] = int.Parse(PointGoalInput.text);
+        GameSettings["GameDifficulty"] = (Difficulty)GameDifficultyCombo.value;
+        GameSettings["KeepInventory"] = KeepInventoryCheckbox.isOn;
+        GameSettings["IsHardcore"] = HardcoreCheckbox.isOn;
+
+        PhotonNetwork.CurrentRoom.SetCustomProperties(GameSettings);
+
+        //close the panel
+        GameSettingsPanel.gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// Shows the room settings panel and updates it from this rooms CustomProperties
+    /// </summary>
+    private void ShowSettings()
+    {
+        GameSettingsPanel.gameObject.SetActive(true);
+
+        var settings = PhotonNetwork.CurrentRoom.CustomProperties;
+        
+        if (settings == null)
+            return;
+
+        //update settings
+        TimeLimitInput.text = settings["TimeLimit"].ToString();
+        HardcoreCheckbox.isOn = (bool)settings["IsHardcore"];
+        KeepInventoryCheckbox.isOn = (bool)settings["KeepInventory"];
+        WinCriteriaCombo.value = (int)settings["WinCriteria"];
+        PointGoalInput.text = $"{settings["PointGoal"]}";
+        GameDifficultyCombo.value = (int)settings["GameDifficulty"];
+    }
+
+    private void EnableDisableSettingPanelOptions(bool isEnabled)
+    {
+        TimeLimitInput.interactable = isEnabled;
+        HardcoreCheckbox.interactable = isEnabled;
+        KeepInventoryCheckbox.interactable = isEnabled;
+        WinCriteriaCombo.interactable = isEnabled;
+        PointGoalInput.interactable = isEnabled;
+        GameDifficultyCombo.interactable = isEnabled;
+        SaveButton.interactable = isEnabled;
+    }
+
     public void StartGameClicked()
     {
         if (!PhotonNetwork.IsMasterClient)
@@ -121,7 +217,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
         PhotonNetwork.CurrentRoom.IsOpen = false;
         PhotonNetwork.CurrentRoom.IsVisible = false;
 
-        PhotonNetwork.AutomaticallySyncScene = true;
         PhotonNetwork.LoadLevel((int)Scenes.HeroSelect);
     }
 
@@ -171,11 +266,31 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public override void OnDisconnected(DisconnectCause cause)
     {
         Debug.LogWarning($"Player {PhotonNetwork.NickName} disconnected. Reason: {cause}");
+        StartCoroutine(OnDisconnectedRoutine(cause));
     }
 
 
     #endregion PUN Callbacks
 
+    private IEnumerator OnDisconnectedRoutine(DisconnectCause cause)
+    {
+        ShowInfoBox("Disconnected from the server.", $"Reason:\n{cause}");
+
+        yield return new WaitForSeconds(5);
+
+        SceneManagementSystem.Instance.LoadScene(Scenes.MainMenu);
+    }
+
+    private void ShowInfoBox(string title, string message)
+    {
+        if (InfoBox == null)
+            return;
+
+        InfoBox.gameObject.SetActive(true);
+
+        InfoBoxTitleText.text = title;
+        InfoBoxMessageText.text = message;
+    }
 
 
     #endregion METHODS
