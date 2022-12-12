@@ -92,7 +92,7 @@ public class UnitData
     public Dictionary<Difficulty, float> GameDiffScalingDict = new Dictionary<Difficulty, float>()
     {
         { Difficulty.Custom,   0f   },
-        { Difficulty.Casual,  -0.2f },
+        { Difficulty.Easy,  -0.2f },
         { Difficulty.Normal,   0    },
         { Difficulty.Hard,     0.2f },
     };

@@ -93,6 +93,9 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     private void ShowInfoBox(string title, string message)
     {
+        if (InfoBox == null)
+            return;
+
         InfoBox.gameObject.SetActive(true);
 
         InfoBoxTitleText.text = title;
@@ -114,6 +117,8 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         RoomOptions options = new RoomOptions();
         options.MaxPlayers = 10;
         options.EmptyRoomTtl = 0;
+        options.IsVisible = true;
+        options.IsOpen = true;
 
         PhotonNetwork.CreateRoom(CreateRoomNameInput.text, options);
     }
@@ -252,11 +257,15 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     private IEnumerator OnDisconnectedRoutine(DisconnectCause cause)
     {
-        ShowInfoBox("Disconnected from the server.", $"Reason:\n{cause}");
+        //when leaving the lobby by choice, dont show anything
+        if (cause != DisconnectCause.DisconnectByClientLogic)
+        {
+            ShowInfoBox("Disconnected from the server.", $"Reason:\n{cause}");
 
-        yield return new WaitForSeconds(5);
+            yield return new WaitForSeconds(5);
 
-        SceneManagementSystem.Instance.LoadScene(Scenes.MainMenu);
+            SceneManagementSystem.Instance.LoadScene(Scenes.MainMenu);
+        }
     }
 
 

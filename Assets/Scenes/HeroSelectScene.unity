@@ -181,6 +181,7 @@ MonoBehaviour:
   allocatedPointsAmount_Strength: 0
   allocatedPointsAmount_Agility: 0
   allocatedPointsAmount_Arts: 0
+  BackButton: {fileID: 2987985213256429762}
   SkillPointsText: {fileID: 969133846}
   startButton: {fileID: 1285602867}
   heroName: {fileID: 343450960}
@@ -6060,6 +6061,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 92d3bd98c333b1443b2a8814b1875e10, type: 3}
+--- !u!114 &2987985213256429762 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3460191778315157931, guid: 92d3bd98c333b1443b2a8814b1875e10, type: 3}
+  m_PrefabInstance: {fileID: 2987985213256429761}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4395320822154680442
 PrefabInstance:
   m_ObjectHideFlags: 0

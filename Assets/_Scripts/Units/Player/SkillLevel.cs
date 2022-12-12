@@ -82,8 +82,10 @@ public class SkillLevel
             ExpToNextLevel = GetRequiredExpToNextLevel(_level);
 
             OnLevelChanged?.Invoke(prevValue, _level, this);
+            GameManager.Instance.PlayerLevelChanged();
         }
     }
+
     public int Experience { get; set; }
     public int ExpToNextLevel { get; set; }
 

@@ -77,7 +77,7 @@ public class SuccessMenu : MonoBehaviour
         LootInventory = lootInventory;
         CanvasScaleFactor = canvasScaleFactor;
 
-        int currProgress = GameManager.Instance.CurrentAdventureLocation.PlayerProgress;
+        int currProgress = manager.TemporaryProgress;
         bool gotAnyLoot = lootInventory.GetItems().Any(x => x != null);
         string lootText = gotAnyLoot ? "Obtained loot:" : "No loot obtained.";
         StageDescText.text = $"Cleared stage {currProgress}. {lootText}";
@@ -176,6 +176,9 @@ public class SuccessMenu : MonoBehaviour
     {
         //close the menu
         Destroy(SuccessMenu_Object.gameObject);
+
+        //save player progress
+        ManagerRef.CurrentLocation.PlayerProgress = ManagerRef.TemporaryProgress;
 
         GameManager.Instance.EndAdventure();
     }

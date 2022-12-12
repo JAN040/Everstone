@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -64,6 +65,8 @@ public class CharacterCreationManager : MonoBehaviour
     [Space]
     [Header("UI component references")]
     [Space]
+
+    [SerializeField] Button BackButton;
 
     [Header("Skill points text field")]
     [SerializeField] TextMeshProUGUI SkillPointsText;
@@ -181,6 +184,11 @@ public class CharacterCreationManager : MonoBehaviour
         difficultyDropdown.value = diffOpt.IndexOf(Difficulty.Normal.ToString());
         difficultyDropdown.RefreshShownValue();
 
+        if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom)
+        {
+            MultiplayerModeSetup();
+        }
+
         UpdateUI();
     }
 
@@ -225,7 +233,7 @@ public class CharacterCreationManager : MonoBehaviour
                 _availableSkillPoints = -1;
                 maxSkillPoints = 10;
                 break;
-            case Difficulty.Casual:
+            case Difficulty.Easy:
                 _availableSkillPoints = 3;
                 maxSkillPoints = 5;
                 break;
@@ -343,18 +351,55 @@ public class CharacterCreationManager : MonoBehaviour
         AvailableSkillPoints        -= amount;
     }
 
+
+    private void MultiplayerModeSetup()
+    {
+        //every player should act on his own now
+        PhotonNetwork.AutomaticallySyncScene = false;
+
+        var settings = PhotonNetwork.CurrentRoom.CustomProperties;
+
+        HardcoreCheckbox.isOn = (bool)settings["IsHardcore"];
+        HardcoreCheckbox.interactable = false;
+
+        KeepInventoryCheckbox.isOn = (bool)settings["KeepInventory"];
+        KeepInventoryCheckbox.interactable = false;
+
+        difficultyDropdown.value = (int)settings["GameDifficulty"];
+        difficultyDropdown.interactable = false;
+
+        heroName.text = PhotonNetwork.NickName;
+        heroName.interactable = false;
+
+        BackButton.gameObject.SetActive(false);
+
+        //initialize the pointAmount var in player custom props
+        ExitGames.Client.Photon.Hashtable playerData = new ExitGames.Client.Photon.Hashtable();
+        playerData["PointAmount"] = 0;
+
+        PhotonNetwork.LocalPlayer.CustomProperties = playerData;
+    }
+
+
     /// <summary>
     /// Create a random character
     /// </summary>
     public void Randomize()
     {
-        heroName.text = "Player";
+        bool isMultiplayer = PhotonNetwork.IsConnected;
+
         iconDropdown.value           = UnityEngine.Random.Range(0, iconDropdown.options.Count);
         heroClassDropdown.value      = UnityEngine.Random.Range(0, heroClassDropdown.options.Count);
         heroBackgroundDropdown.value = UnityEngine.Random.Range(1, heroBackgroundDropdown.options.Count);
-        difficultyDropdown.value     = UnityEngine.Random.Range(1, difficultyDropdown.options.Count);
-        KeepInventoryCheckbox.isOn = Helper.DiceRoll(0.5f);
-        HardcoreCheckbox     .isOn = Helper.DiceRoll(0.25f);
+        
+        //dont change this values in multiplayer since they are set in matchmaking
+        if (!isMultiplayer)
+        {
+            heroName.text = "Player";
+            difficultyDropdown.value     = UnityEngine.Random.Range(1, difficultyDropdown.options.Count);
+            KeepInventoryCheckbox.isOn = Helper.DiceRoll(0.5f);
+            HardcoreCheckbox     .isOn = Helper.DiceRoll(0.25f);
+        }
 
         iconDropdown.RefreshShownValue();
         heroClassDropdown.RefreshShownValue();
@@ -363,7 +408,9 @@ public class CharacterCreationManager : MonoBehaviour
 
         OnCharacterClassChanged();
         OnCharacterBackgroundChanged();
-        OnDifficultyChanged();
+        
+        if (!isMultiplayer)
+            OnDifficultyChanged();
 
         //randomly allocate points
         while (AvailableSkillPoints > 0)

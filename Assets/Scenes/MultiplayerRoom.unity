@@ -5086,19 +5086,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7125045563423154785, guid: 800d5186478415847b18a20303c974ea, type: 3}
       propertyPath: m_Options.m_Options.Array.data[0].m_Text
-      value: Easy
+      value: Custom
       objectReference: {fileID: 0}
     - target: {fileID: 7125045563423154785, guid: 800d5186478415847b18a20303c974ea, type: 3}
       propertyPath: m_Options.m_Options.Array.data[1].m_Text
-      value: Normal
+      value: Easy
       objectReference: {fileID: 0}
     - target: {fileID: 7125045563423154785, guid: 800d5186478415847b18a20303c974ea, type: 3}
       propertyPath: m_Options.m_Options.Array.data[2].m_Text
-      value: Hard
+      value: Normal
       objectReference: {fileID: 0}
     - target: {fileID: 7125045563423154785, guid: 800d5186478415847b18a20303c974ea, type: 3}
       propertyPath: m_Options.m_Options.Array.data[3].m_Text
-      value: Custom
+      value: Hard
       objectReference: {fileID: 0}
     - target: {fileID: 7125045563423154798, guid: 800d5186478415847b18a20303c974ea, type: 3}
       propertyPath: m_Pivot.x

@@ -55,7 +55,8 @@ public class AdventureManager : MonoBehaviour
 
     
 
-    [SerializeField] ScriptableAdventureLocation CurrentLocation;
+    public ScriptableAdventureLocation CurrentLocation;
+    public int TemporaryProgress;
 
     private ScriptableHero PlayerHero;
     [SerializeField] List<ScriptableUnitBase> AlliedUnitsList;
@@ -161,6 +162,7 @@ public class AdventureManager : MonoBehaviour
 
         if (currLocationSprite != null)
             background.sprite = GameManager.Instance?.CurrentAdventureLocation?.background;
+        TemporaryProgress = CurrentLocation.PlayerProgress;
 
         InitStage(true, true);
 
@@ -255,7 +257,7 @@ public class AdventureManager : MonoBehaviour
     private void OnStageSuccess()
     {
         Pause(true);
-        CurrentLocation.PlayerProgress++;
+        TemporaryProgress++;
 
         //show success menu
         var menu = InstantiatePrefab(SuccessMenu, UICanvas.transform);

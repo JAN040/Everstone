@@ -154,11 +154,11 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     public void GameSettingsClicked()
     {
-        //show and update the setting panel
-        ShowSettings();
-
         //if this client is the room master, enable setting editing
         EnableDisableSettingPanelOptions(PhotonNetwork.IsMasterClient);
+
+        //show and update the setting panel
+        ShowSettings();
     }
 
     public void SaveSettingsClicked()
@@ -182,8 +182,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
     /// </summary>
     private void ShowSettings()
     {
-        GameSettingsPanel.gameObject.SetActive(true);
-
         var settings = PhotonNetwork.CurrentRoom.CustomProperties;
         
         if (settings == null)
@@ -196,6 +194,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
         WinCriteriaCombo.value = (int)settings["WinCriteria"];
         PointGoalInput.text = $"{settings["PointGoal"]}";
         GameDifficultyCombo.value = (int)settings["GameDifficulty"];
+        
+        GameSettingsPanel.gameObject.SetActive(true);
     }
 
     private void EnableDisableSettingPanelOptions(bool isEnabled)
@@ -213,6 +213,10 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if (!PhotonNetwork.IsMasterClient)
             return;
+
+        var roomSettings = PhotonNetwork.CurrentRoom.CustomProperties;
+        roomSettings["StartTime"] = DateTime.Now;
+        PhotonNetwork.CurrentRoom.SetCustomProperties(roomSettings);
 
         PhotonNetwork.CurrentRoom.IsOpen = false;
         PhotonNetwork.CurrentRoom.IsVisible = false;

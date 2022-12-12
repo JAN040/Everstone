@@ -1,6 +1,8 @@
+using Photon.Pun;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
@@ -79,6 +81,8 @@ public class GameManager : Singleton<GameManager>
 
             if (oldAmount != currency)
                 OnCurrencyChanged?.Invoke(oldAmount, currency);
+
+            UpdateMultiplayerScore(currency, MultiplayerWinCriteria.Gold);
         }
     }
 
@@ -106,6 +110,8 @@ public class GameManager : Singleton<GameManager>
     public bool ShowGameOverScreenOnSaveLoad { get; private set; } = false;
 
     public Scenes CurrentScene;
+
+    public bool IsMultiplayer { get { return PhotonNetwork.IsConnected && PhotonNetwork.InRoom; } }
 
 
     #region Player prefs
@@ -148,7 +154,6 @@ public class GameManager : Singleton<GameManager>
 
 
 
-
     #region UNITY METHODS
 
     void Start()
@@ -171,6 +176,42 @@ public class GameManager : Singleton<GameManager>
 
     #region METHODS
 
+
+    /// <summary>
+    /// Updates the score for the local player, if the game mode is actually tracking this criteria.
+    /// </summary>
+    /// <param name="amount"></param>
+    /// <param name="criteria"></param>
+    public void UpdateMultiplayerScore(int amount, MultiplayerWinCriteria criteria)
+    {
+        if (!IsMultiplayer)
+            return;
+
+        var roomSettings = PhotonNetwork.CurrentRoom.CustomProperties;
+        if ((MultiplayerWinCriteria)roomSettings["WinCriteria"] != criteria)
+            return;
+
+        var playerData = PhotonNetwork.LocalPlayer.CustomProperties;
+        playerData["PointAmount"] = amount;
+        PhotonNetwork.CurrentRoom.SetCustomProperties(playerData);
+    }
+
+    public void PlayerLevelChanged()
+    {
+        int playerLevelSum = 0;
+        var skillList = PlayerManager.PlayerHero.LevelSystem.Skills.Values.ToList();
+
+        skillList.ForEach(x => playerLevelSum += x.Level);
+        UpdateMultiplayerScore(playerLevelSum, MultiplayerWinCriteria.SumLevelCount);
+    }
+
+    public void StageProgressChanged()
+    {
+        int progressSum = 0;
+
+        AdventureLocationData.ForEach(x => progressSum += x.PlayerProgress);
+        UpdateMultiplayerScore(progressSum, MultiplayerWinCriteria.StageProgress);
+    }
 
     public void SetGameDifficulty(Difficulty newDifficulty, bool keepInventory, bool isHardcore)
     {
@@ -314,8 +355,11 @@ public class GameManager : Singleton<GameManager>
         //handle shop reset
         PlayerManager.RefreshShopInventory();
 
-        //handle stage progress detoriation
-        DetoriateOtherStageProgress();
+        //handle stage progress detoriation (only in singleplayer)
+        if (IsMultiplayer)
+            StageProgressChanged();
+        else
+            DetoriateOtherStageProgress();
 
         CurrentAdventureLocation = null;
     }

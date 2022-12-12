@@ -18,7 +18,7 @@ public enum Faction
 public enum Difficulty
 {
     Custom,
-    Casual,
+    Easy,
     Normal,
     Hard
 }
@@ -357,5 +357,6 @@ public enum MultiplayerWinCriteria
 {
     Gold = 0,
     StageProgress = 1,
-    SumLevelCount = 2
+    SumLevelCount = 2,
+    None
 }
