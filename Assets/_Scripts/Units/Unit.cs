@@ -802,20 +802,21 @@ public class Unit : MonoBehaviour
         if (IsValidTarget(CurrentTargetOpponent))
         {
 
+            this.IsAttacking = true;
+            
+            if (!IsPlayerHero()) //only consume all energy for non-hero units
+                this.Stats.Energy = 0;
+            
             //melee attack conditions
             if (UnitGridRef.IsInFirstRow(this.UnitDataRef) &&
                 UnitGridRef.IsInFirstRow(this.CurrentTargetOpponent))
             {
-                this.IsAttacking = true;
                 this.AttackType = AttackType.Melee;
-                this.Stats.Energy = 0;
             }
             //ranged attack conditions
             else if (this.IsRanged)
             {
-                this.IsAttacking = true;
                 this.AttackType = AttackType.Ranged;
-                this.Stats.Energy = 0;
                 StartCoroutine(RangedAttackRoutine());
             }
         }

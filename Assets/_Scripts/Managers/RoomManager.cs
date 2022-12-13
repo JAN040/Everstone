@@ -75,7 +75,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
             if (PhotonNetwork.IsMasterClient)
             {
                 //initialize setting values
-                GameSettings["TimeLimit"] = 60;
+                GameSettings["TimeLimit"] = "60";
                 GameSettings["WinCriteria"] = MultiplayerWinCriteria.Gold;
                 GameSettings["PointGoal"] = 10000;
                 GameSettings["GameDifficulty"] = Difficulty.Normal;
@@ -215,7 +215,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
             return;
 
         var roomSettings = PhotonNetwork.CurrentRoom.CustomProperties;
-        roomSettings["StartTime"] = DateTime.Now;
+        roomSettings["StartTime"] = DateTime.Now.ToString();
         PhotonNetwork.CurrentRoom.SetCustomProperties(roomSettings);
 
         PhotonNetwork.CurrentRoom.IsOpen = false;

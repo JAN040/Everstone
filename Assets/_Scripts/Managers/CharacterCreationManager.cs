@@ -453,6 +453,15 @@ public class CharacterCreationManager : MonoBehaviour
         var portraitData = SpritePortraitDict[selectedImage];
 
         hero.PortraitName = portraitData.name;
+
+        //save the portrait name to player settings, so the other players can view this players
+        //  portrait on the leaderboard
+        if (GameManager.Instance.IsMultiplayer)
+        {
+            var playerData = PhotonNetwork.LocalPlayer.CustomProperties;
+            playerData["PortraitName"] = portraitData.name;
+            PhotonNetwork.LocalPlayer.SetCustomProperties(playerData);
+        }
     }
 
     public void OnFinishCreation()
@@ -492,6 +501,7 @@ public class CharacterCreationManager : MonoBehaviour
 
         FillCharacterPortraitData(playerMngRef.PlayerHero);
         playerMngRef.PlayerHero.SetLevelSystem(new LevelSystem(GenerateSkillSystem(stats), stats));
+        GameManager.Instance.PlayerLevelChanged();
 
         //player abilities setup
         playerMngRef.SetAbilities(

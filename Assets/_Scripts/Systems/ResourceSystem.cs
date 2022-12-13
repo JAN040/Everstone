@@ -82,7 +82,9 @@ public class ResourceSystem : Singleton<ResourceSystem> {
     };
 
 
+
     #region STATIC METHODS
+
 
     public static Sprite GetStatIconImage(StatType statType)
     {
@@ -217,8 +219,30 @@ public class ResourceSystem : Singleton<ResourceSystem> {
         }
     }
 
+    public static string GetWinCriteriaDisplayString(MultiplayerWinCriteria criteria)
+    {
+        switch (criteria)
+        {
+            case MultiplayerWinCriteria.Gold:
+                return "Gold Amount";
+
+            case MultiplayerWinCriteria.StageProgress:
+                return "Stage Progress";
+
+            case MultiplayerWinCriteria.SumLevelCount:
+                return "Level Sum";
+
+            case MultiplayerWinCriteria.None:
+            default:
+                break;
+        }
+
+        return "";
+    }
+
 
     #endregion STATIC METHODS
+
 
 
     private void Start()
@@ -487,4 +511,7 @@ public class ResourceSystem : Singleton<ResourceSystem> {
 
         return null;
     }
+
+
+    
 }   

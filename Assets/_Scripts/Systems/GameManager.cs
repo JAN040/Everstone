@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class GameManager : Singleton<GameManager>
@@ -177,6 +178,8 @@ public class GameManager : Singleton<GameManager>
     #region METHODS
 
 
+    #region Multiplayer
+
     /// <summary>
     /// Updates the score for the local player, if the game mode is actually tracking this criteria.
     /// </summary>
@@ -198,7 +201,15 @@ public class GameManager : Singleton<GameManager>
 
     public void PlayerLevelChanged()
     {
+        if (!IsMultiplayer)
+            return;
+
         int playerLevelSum = 0;
+
+        //in character select when setting up the levelSystem this can be null
+        if (PlayerManager?.PlayerHero?.LevelSystem?.Skills == null)
+            return;
+
         var skillList = PlayerManager.PlayerHero.LevelSystem.Skills.Values.ToList();
 
         skillList.ForEach(x => playerLevelSum += x.Level);
@@ -212,6 +223,12 @@ public class GameManager : Singleton<GameManager>
         AdventureLocationData.ForEach(x => progressSum += x.PlayerProgress);
         UpdateMultiplayerScore(progressSum, MultiplayerWinCriteria.StageProgress);
     }
+
+
+    
+
+
+    #endregion Multiplayer
 
     public void SetGameDifficulty(Difficulty newDifficulty, bool keepInventory, bool isHardcore)
     {
