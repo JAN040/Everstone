@@ -1,13 +1,16 @@
+using ExitGames.Client.Photon;
 using Photon.Pun;
+using Photon.Realtime;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+
 
 [System.Serializable]
-public class GameManager : Singleton<GameManager>
+public class GameManager : Singleton<GameManager>, IInRoomCallbacks, IConnectionCallbacks
 {
     #region VARIABLES
 
@@ -124,12 +127,29 @@ public class GameManager : Singleton<GameManager>
     private int playerInventorySpace = 10;
 
 
-
-
     #endregion Player prefs
 
 
+    #region PUN
+
+
+    public const byte PLAYERREACHEDPOINTGOAL_EVENTCODE = 1;
+    public const byte TIMEROVER_EVENTCODE = 1;
+    public const byte ALLPLAYERSLEFT_EVENTCODE = 1;
+
+    public const string GAMEOVERTYPE = "GameOverType";
+    public const string WINNINGPLAYER = "WinningPlayer";
+
+    private DateTime GameStartTime;
+    private int GameLength;
+    public DisconnectCause DisconnectCause = DisconnectCause.None;
+
+
+    #endregion PUN
+
+
     #endregion VARIABLES
+
 
 
     #region STATIC METHODS
@@ -147,6 +167,7 @@ public class GameManager : Singleton<GameManager>
     #endregion STATIC METHODS
 
 
+
     /// <summary>
     /// Fires when Currency amount changes. Data: old amount, new amount
     /// </summary>
@@ -156,6 +177,7 @@ public class GameManager : Singleton<GameManager>
 
 
     #region UNITY METHODS
+
 
     void Start()
     {
@@ -170,15 +192,70 @@ public class GameManager : Singleton<GameManager>
             //time to punish for leaving in middle of combat >:)
             ShowGameOverScreenOnSaveLoad = true;
         }
+
+        StopAllCoroutines();
     }
 
+    private void OnEnable()
+    {
+        PhotonNetwork.AddCallbackTarget(this);
+    }
+
+    private void OnDisable()
+    {
+        PhotonNetwork.RemoveCallbackTarget(this);
+    }
+
+
     #endregion UNITY METHODS
+
 
 
     #region METHODS
 
 
+
     #region Multiplayer
+
+
+    /// <summary>
+    /// Called on master client when he starts the room
+    /// </summary>
+    public void StartMultiplayerGame()
+    {
+        PhotonNetwork.LoadLevel((int)Scenes.HeroSelect);
+
+        SetupGameMasterManager();
+    }
+
+    private void SetupGameMasterManager()
+    {
+        GameStartTime = DateTime.Parse((string)PhotonNetwork.CurrentRoom.CustomProperties["StartTime"]);
+        GameLength = int.Parse((string)PhotonNetwork.CurrentRoom.CustomProperties["TimeLimit"]);
+
+        StartCoroutine(GameTimerRoutine());
+    }
+
+
+    /// <summary>
+    /// A routine that checks for game timeout every minute
+    /// </summary>
+    private IEnumerator GameTimerRoutine()
+    {
+        while (true)
+        {
+            //check for game timeout
+            TimeSpan timeSpan = DateTime.Now - GameStartTime;
+            if (timeSpan.Minutes >= GameLength)
+            {
+                SendGameOverEvent(TIMEROVER_EVENTCODE);
+
+                break;
+            }
+
+            yield return new WaitForSecondsRealtime(60);
+        }
+    }
 
     /// <summary>
     /// Updates the score for the local player, if the game mode is actually tracking this criteria.
@@ -197,6 +274,25 @@ public class GameManager : Singleton<GameManager>
         var playerData = PhotonNetwork.LocalPlayer.CustomProperties;
         playerData["PointAmount"] = amount;
         PhotonNetwork.CurrentRoom.SetCustomProperties(playerData);
+
+        //check if the player just reached the point goal
+        int pointGoal = (int)roomSettings["PointGoal"];
+        if (amount >= pointGoal)
+        {
+            var roomData = PhotonNetwork.CurrentRoom.CustomProperties;
+
+            if (!roomData.ContainsKey(WINNINGPLAYER))
+            {
+                //write data about the game being over
+                roomData[WINNINGPLAYER] = PhotonNetwork.LocalPlayer;
+                roomData[GAMEOVERTYPE] = MultiplayerGameOverType.PlayerReachedPointGoal;
+
+                PhotonNetwork.CurrentRoom.SetCustomProperties(roomData);
+                
+                //send event about the game being over to all players
+                SendGameOverEvent(PLAYERREACHEDPOINTGOAL_EVENTCODE);
+            }
+        }
     }
 
     public void PlayerLevelChanged()
@@ -224,11 +320,105 @@ public class GameManager : Singleton<GameManager>
         UpdateMultiplayerScore(progressSum, MultiplayerWinCriteria.StageProgress);
     }
 
+   
 
-    
+    /// <summary>
+    /// Called when any of the players reach the point goal, effectively winning the match
+    /// Sends an event to all players
+    /// </summary>
+    private void SendGameOverEvent(byte eventCode)
+    { 
+        PhotonNetwork.RaiseEvent(eventCode, null, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
+    }
+
+    public void OnEvent(EventData photonEvent)
+    {
+        byte eventCode = photonEvent.Code;
+
+        if (eventCode.In(PLAYERREACHEDPOINTGOAL_EVENTCODE, 
+                         ALLPLAYERSLEFT_EVENTCODE, 
+                         TIMEROVER_EVENTCODE)
+        )
+        {
+            LoadMultiplayerGameOverScene();
+        }
+    }
+
+    private void LoadMultiplayerGameOverScene()
+    {
+        //change to the multiplayer ending scene
+        PhotonNetwork.AutomaticallySyncScene = true;
+        PhotonNetwork.LoadLevel((int)Scenes.MultiplayerGameOver);
+    }
+
+    #region PUN Callbacks
+
+
+    public void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+        
+        //check the player count
+        if (PhotonNetwork.PlayerList.Length < 2)
+        {
+            SendGameOverEvent(ALLPLAYERSLEFT_EVENTCODE);
+        }
+    }
+
+    public void OnMasterClientSwitched(Player newMasterClient)
+    {
+        if (PhotonNetwork.LocalPlayer == newMasterClient)
+            SetupGameMasterManager();
+    }
+
+    public void OnPlayerEnteredRoom(Player newPlayer)
+    {
+    }
+
+    public void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
+    {
+    }
+
+    public void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    {
+    }
+
+
+    //connection callbacks
+    public void OnDisconnected(DisconnectCause cause)
+    {
+        DisconnectCause = cause;
+        SceneManagementSystem.Instance.LoadScene(Scenes.MainMenu);
+    }
+
+    public void OnConnected()
+    {
+    }
+
+    public void OnConnectedToMaster()
+    {
+    }
+
+    public void OnRegionListReceived(RegionHandler regionHandler)
+    {
+    }
+
+    public void OnCustomAuthenticationResponse(Dictionary<string, object> data)
+    {
+    }
+
+    public void OnCustomAuthenticationFailed(string debugMessage)
+    {
+    }
+
+
+    #endregion PUN Callbacks
 
 
     #endregion Multiplayer
+
+
 
     public void SetGameDifficulty(Difficulty newDifficulty, bool keepInventory, bool isHardcore)
     {
@@ -243,7 +433,9 @@ public class GameManager : Singleton<GameManager>
     }
 
 
+
     #region SAVE/LOAD
+
 
     public static void SaveGame()
     {
@@ -335,7 +527,9 @@ public class GameManager : Singleton<GameManager>
         NumOfSilverForOneGold = data.numOfSilverForOneGold;
     }
 
+
     #endregion SAVE/LOAD
+
 
 
     /// <summary>
@@ -415,6 +609,8 @@ public class GameManager : Singleton<GameManager>
 
         return highestCleared;
     }
+
+
 
     #endregion METHODS
 }

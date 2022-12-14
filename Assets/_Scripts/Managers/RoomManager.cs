@@ -68,7 +68,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom)
         {
             RoomTitleText.text = $"Room '{PhotonNetwork.CurrentRoom?.Name}'";
-            StartGameButton.interactable = PhotonNetwork.IsMasterClient;
+            UpdateStartGameButtonInteractibility();
 
             StartCoroutine("PeriodicPlayerListRefresh");
 
@@ -147,8 +147,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
             PlayerPanelObjectList.Add(prefab);
         }
 
-        //refresh the button since ownership of room can change if master leaves
-        StartGameButton.interactable = PhotonNetwork.IsMasterClient;
+        //refresh the button since ownership of room can change if master leaves & player count just changed
+        UpdateStartGameButtonInteractibility();
     }
 
 
@@ -221,7 +221,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         PhotonNetwork.CurrentRoom.IsOpen = false;
         PhotonNetwork.CurrentRoom.IsVisible = false;
 
-        PhotonNetwork.LoadLevel((int)Scenes.HeroSelect);
+        GameManager.Instance.StartMultiplayerGame();
     }
 
 
@@ -252,6 +252,16 @@ public class RoomManager : MonoBehaviourPunCallbacks
         return obj;
     }
 
+
+    /// <summary>
+    /// Enables/Disables the Start game button depending on the number of players in the room
+    /// </summary>
+    private void UpdateStartGameButtonInteractibility()
+    {
+        StartGameButton.interactable = 
+            PhotonNetwork.IsMasterClient &&     //only master can start the game
+            PhotonNetwork.PlayerList.Length > 1;//need more than one player in the room
+    }
 
 
     #region PUN Callbacks

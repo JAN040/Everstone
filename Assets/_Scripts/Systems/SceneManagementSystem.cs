@@ -122,4 +122,5 @@ public enum Scenes
     Shop = 7,
     MultiplayerLobby = 8,
     MultiplayerRoom = 9,
+    MultiplayerGameOver = 10,
 }

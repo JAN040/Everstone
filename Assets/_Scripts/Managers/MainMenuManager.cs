@@ -40,6 +40,13 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     void Start()
     {
         ContinueButton.interactable = SaveSystem.SaveFileExists();
+
+        //in the case the player got redirected here after a random disconnect
+        if (GameManager.Instance != null && GameManager.Instance.DisconnectCause != DisconnectCause.None)
+        {
+            MultiplayerInfoBox.gameObject.SetActive(true);
+            MultiplayerInfoBoxText.text = "Disconnected from the server." + $"\nReason:\n {GameManager.Instance.DisconnectCause}";
+        }
     }
 
     #endregion UNITY METHODS
@@ -83,8 +90,6 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
         MultiplayerInfoBox.gameObject.SetActive(true);
         MultiplayerInfoBoxText.text = CONNECTION_FAILED_TEXT + $"\nReason:\n {cause}";
     }
-
-    
 
 
     #endregion Multiplayer

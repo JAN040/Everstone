@@ -360,3 +360,11 @@ public enum MultiplayerWinCriteria
     SumLevelCount = 2,
     None
 }
+
+public enum MultiplayerGameOverType
+{
+    PlayerReachedPointGoal,
+    TimerOver,
+    AllPlayersLeft,
+    None
+}
