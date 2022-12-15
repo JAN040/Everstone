@@ -388,7 +388,9 @@ public class GameManager : Singleton<GameManager>, IInRoomCallbacks, IConnection
     //connection callbacks
     public void OnDisconnected(DisconnectCause cause)
     {
-        DisconnectCause = cause;
+        if (cause != DisconnectCause.DisconnectByClientLogic)
+            DisconnectCause = cause;
+        
         SceneManagementSystem.Instance.LoadScene(Scenes.MainMenu);
     }
 

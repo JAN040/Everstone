@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
-using System;
+using UnityEngine.UI;
 using TMPro;
+using System;
+using Photon.Pun;
 using System.Linq;
+using Photon.Realtime;
 
-public class ShowLeaderboardButton : MonoBehaviour
+public class MultiplayerGameOverManager : MonoBehaviour
 {
     #region VARIABLES
 
@@ -15,13 +17,15 @@ public class ShowLeaderboardButton : MonoBehaviour
 
 
     [Header("UI References")]
+
+    [Header("Leaderboard")]
     [SerializeField] GameObject LeaderboardEntryPrefab;
-    [SerializeField] GameObject LeaderBoardPanel;
     [SerializeField] GameObject LeaderboardEntryContainer;
 
+    [SerializeField] TextMeshProUGUI TitleText;
+    [SerializeField] TextMeshProUGUI WinningPlayerText;
     [SerializeField] TextMeshProUGUI TimerText;
     [SerializeField] TextMeshProUGUI WinCriteriaLabelText;
-
 
 
     #endregion UI References
@@ -34,44 +38,35 @@ public class ShowLeaderboardButton : MonoBehaviour
     #endregion VARIABLES
 
 
+
     #region UNITY METHODS
 
 
     // Start is called before the first frame update
     void Start()
     {
-        //check if we are in multiplayer mode, if not, hide the button
-        this.gameObject.SetActive(GameManager.Instance.IsMultiplayer);
+        InitLeaderboard();
     }
 
 
     #endregion UNITY METHODS
 
 
+
     #region METHODS
 
 
-    public void OnClicked()
+    private void InitLeaderboard()
     {
-        if (!GameManager.Instance.IsMultiplayer)
-            return;
-
-        ShowLeaderboard();
-    }
-
-    private void ShowLeaderboard()
-    {
-        //remove all previous entries from the leaderboard
-        foreach (Transform child in LeaderboardEntryContainer.transform)
-            Destroy(child.gameObject);
-
         //grab multiplayer data
 
         //NOTE: if i ever wanna display players who left mid game, i'd need to track the list locally (for every player?) then display the missing players as such
-        var playerList = PhotonNetwork.PlayerList.ToList();
         var startTime = DateTime.Parse((string)PhotonNetwork.CurrentRoom.CustomProperties["StartTime"]);
         var timeLimit = (string)PhotonNetwork.CurrentRoom.CustomProperties["TimeLimit"];
         var pointGoal = (int)PhotonNetwork.CurrentRoom.CustomProperties["PointGoal"];
+        
+        //get a list of players and create an ordered list of playerData
+        var playerList = PhotonNetwork.PlayerList.ToList();
 
         if (playerList == null || playerList.Count < 1)
             return;
@@ -83,6 +78,9 @@ public class ShowLeaderboardButton : MonoBehaviour
             playerDataList.Add(new PlayerData(x.NickName, (int)data["PointAmount"], data));
         });
         playerDataList.OrderByDescending(x => x.Score);
+
+        //set winner text
+        WinningPlayerText.text = playerDataList.First().Name;
 
         //set timer & goal
         TimeSpan timeSpan = DateTime.Now - startTime;
@@ -114,10 +112,14 @@ public class ShowLeaderboardButton : MonoBehaviour
 
             prevScore = score;
         }
-
-        //actually show the leaderboard
-        LeaderBoardPanel.gameObject.SetActive(true);
     }
+
+
+    public void OnExitClicked()
+    {
+        PhotonNetwork.Disconnect();
+    }
+
 
     private GameObject InstantiatePrefab(GameObject prefab, Transform parentTransform)
     {
