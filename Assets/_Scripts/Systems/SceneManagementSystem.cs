@@ -15,6 +15,7 @@ public class SceneManagementSystem : Singleton<SceneManagementSystem>
     //  and starting multiple transition coroutines
     public bool IsSwitchingLocation = false;
 
+    public Scenes ContinueTransitioningTo = Scenes.None;
     //public Scenes CurrentScene;
 
     #endregion
@@ -107,11 +108,20 @@ public class SceneManagementSystem : Singleton<SceneManagementSystem>
         transition.SetTrigger("End");
         
         IsSwitchingLocation = false;
+
+        //if another scene is queued to be loaded after this one, continue by loading it immediately
+        if (ContinueTransitioningTo != Scenes.None)
+        {
+            StartCoroutine(LoadSceneWithTransition(ContinueTransitioningTo));
+            ContinueTransitioningTo = Scenes.None;
+        }
     }
 }
 
 public enum Scenes
 {
+    None = -1, //for ContinueTransitioningTo
+
     MainMenu = 0,
     Outskirts = 1,
     Town = 2,

@@ -97,7 +97,7 @@ public class UnitStatusBar : MonoBehaviour
     }
 
     //all currently spawned status effect panels are here, so we can clear them on unit switch
-    private List<GameObject> StatusEffectPanels;
+    private List<GameObject> StatusEffectPanels = new List<GameObject>();
     private float ColorAnimationTimer;
     private Color InitialColor;
 
@@ -108,7 +108,6 @@ public class UnitStatusBar : MonoBehaviour
 
     private void Start()
     {
-        StatusEffectPanels = new List<GameObject>();
         ColorAnimationTimer = 0f;
         InitialColor = Attack_Text.color;
     }

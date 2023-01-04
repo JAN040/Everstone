@@ -77,10 +77,10 @@ public class MultiplayerGameOverManager : MonoBehaviour
             var data = x.CustomProperties;
             playerDataList.Add(new PlayerData(x.NickName, (int)data["PointAmount"], data));
         });
-        playerDataList.OrderByDescending(x => x.Score);
+        playerDataList = playerDataList.OrderByDescending(x => x.Score).ToList();
 
         //set winner text
-        WinningPlayerText.text = playerDataList.First().Name;
+        WinningPlayerText.text = $"Winner: {playerDataList.First().Name}";
 
         //set timer & goal
         TimeSpan timeSpan = DateTime.Now - startTime;

@@ -6,11 +6,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using UnityEngine;
 
 
 [System.Serializable]
-public class GameManager : Singleton<GameManager>, IInRoomCallbacks, IConnectionCallbacks
+public class GameManager : Singleton<GameManager>, IInRoomCallbacks, IConnectionCallbacks, IOnEventCallback
 {
     #region VARIABLES
 
@@ -134,8 +135,8 @@ public class GameManager : Singleton<GameManager>, IInRoomCallbacks, IConnection
 
 
     public const byte PLAYERREACHEDPOINTGOAL_EVENTCODE = 1;
-    public const byte TIMEROVER_EVENTCODE = 1;
-    public const byte ALLPLAYERSLEFT_EVENTCODE = 1;
+    public const byte TIMEROVER_EVENTCODE = 2;
+    public const byte ALLPLAYERSLEFT_EVENTCODE = 3;
 
     public const string GAMEOVERTYPE = "GameOverType";
     public const string WINNINGPLAYER = "WinningPlayer";
@@ -267,20 +268,18 @@ public class GameManager : Singleton<GameManager>, IInRoomCallbacks, IConnection
         if (!IsMultiplayer)
             return;
 
-        var roomSettings = PhotonNetwork.CurrentRoom.CustomProperties;
-        if ((MultiplayerWinCriteria)roomSettings["WinCriteria"] != criteria)
+        var roomData = PhotonNetwork.CurrentRoom.CustomProperties;
+        if ((MultiplayerWinCriteria)roomData["WinCriteria"] != criteria)
             return;
 
         var playerData = PhotonNetwork.LocalPlayer.CustomProperties;
         playerData["PointAmount"] = amount;
-        PhotonNetwork.CurrentRoom.SetCustomProperties(playerData);
+        PhotonNetwork.LocalPlayer.SetCustomProperties(playerData);
 
         //check if the player just reached the point goal
-        int pointGoal = (int)roomSettings["PointGoal"];
+        int pointGoal = (int)roomData["PointGoal"];
         if (amount >= pointGoal)
         {
-            var roomData = PhotonNetwork.CurrentRoom.CustomProperties;
-
             if (!roomData.ContainsKey(WINNINGPLAYER))
             {
                 //write data about the game being over
@@ -335,8 +334,8 @@ public class GameManager : Singleton<GameManager>, IInRoomCallbacks, IConnection
     {
         byte eventCode = photonEvent.Code;
 
-        if (eventCode.In(PLAYERREACHEDPOINTGOAL_EVENTCODE, 
-                         ALLPLAYERSLEFT_EVENTCODE, 
+        if (eventCode.In(PLAYERREACHEDPOINTGOAL_EVENTCODE,
+                         ALLPLAYERSLEFT_EVENTCODE,
                          TIMEROVER_EVENTCODE)
         )
         {
@@ -344,11 +343,16 @@ public class GameManager : Singleton<GameManager>, IInRoomCallbacks, IConnection
         }
     }
 
+
     private void LoadMultiplayerGameOverScene()
     {
+        //PhotonNetwork.AutomaticallySyncScene = true;
+
         //change to the multiplayer ending scene
-        PhotonNetwork.AutomaticallySyncScene = true;
-        PhotonNetwork.LoadLevel((int)Scenes.MultiplayerGameOver);
+        if (SceneManagementSystem.Instance.IsSwitchingLocation) //if another scene is loading, queue the scene to be loaded after
+            SceneManagementSystem.Instance.ContinueTransitioningTo = Scenes.MultiplayerGameOver;
+        else
+            SceneManagementSystem.Instance.LoadScene(Scenes.MultiplayerGameOver);
     }
 
     #region PUN Callbacks
@@ -441,6 +445,10 @@ public class GameManager : Singleton<GameManager>, IInRoomCallbacks, IConnection
 
     public static void SaveGame()
     {
+        //no saving in multiplayer
+        if (PhotonNetwork.IsConnected)
+            return;
+
         GameData data = new GameData(Instance.GetSaveData());
 
         SaveSystem.SaveGame(data);
@@ -611,6 +619,8 @@ public class GameManager : Singleton<GameManager>, IInRoomCallbacks, IConnection
 
         return highestCleared;
     }
+
+ 
 
 
 

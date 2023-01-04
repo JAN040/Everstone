@@ -500,8 +500,8 @@ public class ResourceSystem : Singleton<ResourceSystem> {
 
     public HeroPortrait GetHeroPortraitByName(string name)
     {
-        if (string.IsNullOrEmpty(name))
-            return null;
+        if (string.IsNullOrEmpty(name)) //return default portrait
+            return HeroPortraits.FirstOrDefault();
 
         foreach (var portrait in HeroPortraits)
         {

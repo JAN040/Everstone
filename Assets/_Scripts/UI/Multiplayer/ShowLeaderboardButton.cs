@@ -80,9 +80,10 @@ public class ShowLeaderboardButton : MonoBehaviour
         playerList.ForEach(x =>
         {
             var data = x.CustomProperties;
-            playerDataList.Add(new PlayerData(x.NickName, (int)data["PointAmount"], data));
+            int pointAmount = data.ContainsKey("PointAmount") ? (int)data["PointAmount"] : 0;
+            playerDataList.Add(new PlayerData(x.NickName, pointAmount, data));
         });
-        playerDataList.OrderByDescending(x => x.Score);
+        playerDataList = playerDataList.OrderByDescending(x => x.Score).ToList();
 
         //set timer & goal
         TimeSpan timeSpan = DateTime.Now - startTime;
@@ -104,11 +105,13 @@ public class ShowLeaderboardButton : MonoBehaviour
             if (score != prevScore) //players with the same score have the same ranking
                 ranking++;
 
+            string portraitName = playerData.CustomProperties.ContainsKey("PortraitName") ? (string)playerData.CustomProperties["PortraitName"] : "";
+
             var entryPrefab = InstantiatePrefab(LeaderboardEntryPrefab, LeaderboardEntryContainer.transform);
             entryPrefab.GetComponent<LeaderboardEntryPanel>().Init(
                 ranking,
                 playerData.Name,
-                ResourceSystem.Instance.GetHeroPortraitByName((string)playerData.CustomProperties["PortraitName"]).PortraitImage,
+                ResourceSystem.Instance.GetHeroPortraitByName(portraitName).PortraitImage,
                 score
             );
 
