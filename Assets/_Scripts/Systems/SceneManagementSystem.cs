@@ -2,12 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
+using Photon.Pun;
 
 public class SceneManagementSystem : Singleton<SceneManagementSystem>
 {
     #region VARIABLES
 
     public Animator transition;
+    [SerializeField] TextMeshProUGUI SavingGameText;
     
     public float transitionDuration = 0.25f;
 
@@ -55,7 +58,8 @@ public class SceneManagementSystem : Singleton<SceneManagementSystem>
     }
 
     /// <summary>
-    /// Load scene by build index (not recommended)
+    /// Load scene by build index (not recommended, 
+    ///     only for ChangeSceneButton, because Unity editor doesnt support enums as function parameters)
     /// </summary>
     /// <param name="sceneNum"></param>
     public void LoadScene(int sceneNum)
@@ -78,14 +82,34 @@ public class SceneManagementSystem : Singleton<SceneManagementSystem>
         StartCoroutine(LoadSceneWithTransition(sc));
     }
 
-    private IEnumerator LoadSceneWithTransition(Scenes sc)
+    public void LoadSceneWithText(Scenes sc, string text)
+    {
+        if (IsSwitchingLocation)
+            return;
+
+        StartCoroutine(LoadSceneWithTransition(sc, text));
+    }
+
+    private IEnumerator LoadSceneWithTransition(Scenes sc, string sceneChangeText = "Saving...")
     {
         IsSwitchingLocation = true;
 
-        if (Time.timeScale == 0f)   //reset timescale cause 0 can literally hardlock the game
+        if (Time.timeScale != 1f)   //reset timescale cause 0 can literally hardlock the game
             Time.timeScale = 1f;
 
         //Debug.Log($"Loading scene: {sc}, ID: {(int)sc}");
+
+        //we only save the game when not in multiplayer and not in the listed scenes.
+        bool saveGame = !PhotonNetwork.IsConnected &&
+                        !sc.In(Scenes.HeroSelect,   //dont save game when switching to hero select; this would overwrite game data immediately...
+                               Scenes.MainMenu,
+                               Scenes.MultiplayerLobby,
+                               Scenes.MultiplayerRoom);
+
+        //we dont save in multiplayer mode, so dont show the text
+        SavingGameText.gameObject.SetActive(saveGame);
+        if (SavingGameText.gameObject.activeInHierarchy)
+            SavingGameText.text = sceneChangeText;
 
         //play transition "Start" animation
         transition.SetTrigger("Start");
@@ -98,11 +122,7 @@ public class SceneManagementSystem : Singleton<SceneManagementSystem>
 
         GameManager.Instance.CurrentScene = sc;
 
-        //dont save game when switching to hero select; this would overwrite game data immediately...
-        if (!sc.In( Scenes.HeroSelect,
-                    Scenes.MainMenu,
-                    Scenes.MultiplayerLobby,
-                    Scenes.MultiplayerRoom))
+        if (saveGame)
             GameManager.SaveGame();
 
         transition.SetTrigger("End");

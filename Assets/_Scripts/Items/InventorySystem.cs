@@ -307,6 +307,20 @@ public class InventorySystem
         }
     }
 
+
+    /// <summary>
+    /// Entirely empties the inventory. Meant for when the player dies without keepInventory
+    /// </summary>
+    public void RemoveAllItems()
+    {
+        for (int i = 0; i < InventoryItems.Count; i++)
+        {
+            InventoryItems[i] = null;
+        }
+
+        OnInventoryChanged?.Invoke(this);
+    }
+
     public void RemoveItemAt(int itemIndex)
     {
         if (itemIndex >= InventorySize)

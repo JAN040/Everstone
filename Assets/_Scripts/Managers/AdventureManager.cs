@@ -662,8 +662,7 @@ public class AdventureManager : MonoBehaviour
 
         if (!keepInventory)
         {
-            //TODO: lose all items :skadiDaijobu:
-
+            GameManager.Instance.PlayerManager.Inventory.RemoveAllItems();
         }
 
         if (isHardcore)
@@ -674,7 +673,7 @@ public class AdventureManager : MonoBehaviour
         }
 
         var menu = InstantiatePrefab(GameOverMenu, UICanvas.transform);
-        menu.GetComponent<GameOverMenu>().Init(message, isHardcore);
+        menu.GetComponent<GameOverMenu>().Init(message);
     }
 
     private void SetStatusBarUnit(ScriptableUnitBase unit, Faction faction)

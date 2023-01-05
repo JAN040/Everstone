@@ -1195,8 +1195,8 @@ MonoBehaviour:
   background: {fileID: 1849473802}
   IsPaused: 0
   gameSpeed: 0
-  GameState: 0
   CurrentLocation: {fileID: 0}
+  TemporaryProgress: 0
   AlliedUnitsList: []
   EnemyUnitsList: []
   targetedEnemy: {fileID: 0}

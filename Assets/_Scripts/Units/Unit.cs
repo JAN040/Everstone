@@ -337,13 +337,13 @@ public class Unit : MonoBehaviour
             var damageList = GetBasicAttackDamageList();
 
             var physDmg = damageList?.FirstOrDefault(x => x.Type == DamageType.Physical);
-            //when non-boss physical dmg ranged units are in the first row, they melee atk for less dmg
-            if (physDmg != null && this.IsRanged && UnitDataRef.Type != EnemyType.Boss)
+            
+            //when non-boss physical dmg ranged units are in the first row, they melee atk for less dmg (assassins dont have the penalty)
+            if (physDmg != null && this.IsRanged && !IsUnitClass(UnitClass.Assassin) && UnitDataRef.Type != EnemyType.Boss)
                 physDmg.Amount /= 2;
 
             enemyUnitScript.TakeDamage(damageList);
 
-            
             //Handle xp gain
             if (IsPlayerHero())
             {
@@ -356,6 +356,8 @@ public class Unit : MonoBehaviour
 
         StabiliseAfterHit();
     }
+
+   
 
 
     #endregion UNITY METHODS
@@ -828,6 +830,14 @@ public class Unit : MonoBehaviour
         var dir = CurrentTargetOpponent.Prefab.transform.position - UnitDataRef.Prefab.transform.position;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         List<Damage> damageList = GetBasicAttackDamageList();
+
+        if (this.IsUnitClass(UnitClass.Assassin))
+        {
+            //assassins do half less ranged damage
+            foreach (var damage in damageList)
+                damage.Amount /= 2;
+        }
+
         float intensityFactor = Mathf.Pow(2, RangedAtkMuzzle.GetFloat("ColorIntensity"));
         
         RangedAtkMuzzle.SetFloat("Angle", angle);
@@ -1151,5 +1161,11 @@ public class Unit : MonoBehaviour
     private bool IsPlayerHero()
     {
         return this.UnitDataRef == HeroRef;
+    }
+
+    public bool IsUnitClass(UnitClass @class)
+    {
+        return (this.UnitDataRef is ScriptableNpcUnit) &&
+               (this.UnitDataRef as ScriptableNpcUnit).Class == @class;
     }
 }

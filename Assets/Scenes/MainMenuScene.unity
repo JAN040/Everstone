@@ -271,11 +271,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abe7ffeb6c802404993a9b0f3de81ab8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TextComponent: {fileID: 0}
+  m_TextComponent: {fileID: 73988362}
   Hue: 0
   Saturation: 0.9
   Brightness: 0.7
-  AnimationSpeed: 0.8
+  AnimationSpeed: 0.7
 --- !u!1 &141530842
 GameObject:
   m_ObjectHideFlags: 0
@@ -2473,6 +2473,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 258772574, guid: 1a32bb5aaf21df040a86121d1db770fb, type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
+      objectReference: {fileID: 0}
     - target: {fileID: 1163341471010937456, guid: 1a32bb5aaf21df040a86121d1db770fb, type: 3}
       propertyPath: m_Name
       value: Systems

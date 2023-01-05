@@ -25,8 +25,9 @@ public class GameOverMenu : MonoBehaviour
     #endregion UI References
 
 
-    //[Space]
-    //[Header("Variables")]
+    [Space]
+    [Header("Variables")]
+    [SerializeField] bool IsHardcore;
 
 
     #endregion VARIABLES
@@ -54,11 +55,12 @@ public class GameOverMenu : MonoBehaviour
     #region METHODS
 
 
-    public void Init(string infoMessage, bool isHardcore)
+    public void Init(string infoMessage)
     {
         InfoText.text = infoMessage;
+        IsHardcore = GameManager.Instance.IsHardcore;
 
-        if (isHardcore)
+        if (IsHardcore)
         {
             Skull1.sprite = SkullHardcore;
             Skull2.sprite = SkullHardcore;
@@ -67,10 +69,9 @@ public class GameOverMenu : MonoBehaviour
     
     public void Continue_Clicked()
     {
-        //dont destroy lol
-        //Destroy(GameOverMenu_GameObject.gameObject);
+        Scenes continueToScene = IsHardcore ? Scenes.MainMenu : Scenes.Outskirts;
 
-        SceneManagementSystem.Instance.LoadScene(Scenes.Outskirts);
+        SceneManagementSystem.Instance.LoadScene(continueToScene);
     }
 
 

@@ -145,6 +145,8 @@ public class GameManager : Singleton<GameManager>, IInRoomCallbacks, IConnection
     private int GameLength;
     public DisconnectCause DisconnectCause = DisconnectCause.None;
 
+    public bool IsMultiplayerGameOver = false;
+
 
     #endregion PUN
 
@@ -339,6 +341,12 @@ public class GameManager : Singleton<GameManager>, IInRoomCallbacks, IConnection
                          TIMEROVER_EVENTCODE)
         )
         {
+            //prevents reloading the game finished scene from ALLPLAYERSLEFT triggerring
+            //  after the game was already concluded
+            if (IsMultiplayerGameOver)
+                return;
+
+            IsMultiplayerGameOver = true;
             LoadMultiplayerGameOverScene();
         }
     }
@@ -460,7 +468,7 @@ public class GameManager : Singleton<GameManager>, IInRoomCallbacks, IConnection
         LoadSaveData(SaveSystem.LoadGame()?.GameManagerData);
 
         //load the scene where the player left the game
-        SceneManagementSystem.Instance.LoadScene(Instance.CurrentScene);
+        SceneManagementSystem.Instance.LoadSceneWithText(Instance.CurrentScene, "Loading...");
 
         if (Instance.ShowGameOverScreenOnSaveLoad)
         {

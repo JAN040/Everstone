@@ -127,12 +127,11 @@ public class ItemInfoBox : MonoBehaviour
             {
                 foreach (var modifier in group) 
                 {
-                    bool prfx = modifier.IsPositive();
                     string icon = ResourceSystem.GetStatIconTag(modifier.ModifyingStatType);
-                    bool perc = modifier.Type == ModifierType.Percent;
-                    string val = perc ? (modifier.Value * 100).ToString("0.0") : modifier.Value.ToString("0");
-
-                    Text_Effects.text += $"{(prfx ? "+" : "-")}{val}{(perc ? "%" : "")} {icon}  ";
+                    bool perc = modifier.Type == ModifierType.Percent || modifier.ModifyingStatType.In(StatType.ArtsResist, StatType.CooldownReduction, StatType.DodgeChance, StatType.BlockChance);
+                    string val = perc ? modifier.Value.ToString("0.0%") : modifier.Value.ToString("0.0");
+                    string prfx = $"{(modifier.IsPositive() ? " + " : (val.Contains("-") ? "" : " - "))}";
+                    Text_Effects.text += $"{prfx}{val} {icon}  ";
                 }
 
                 Text_Effects.text += Environment.NewLine;

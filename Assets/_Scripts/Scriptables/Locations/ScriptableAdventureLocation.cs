@@ -142,7 +142,7 @@ public class ScriptableAdventureLocation : ScriptableObject
                 result.Add(GetRandomEnemy());
                 result.Add(GetRandomEnemy());
 
-                var multiEnemyChance = this.GetMultiEnemyChance();
+                var multiEnemyChance = this.GetMultiEnemyChance() / 2;
 
                 //roll to see if we add even more (max 6 enemies)
                 while (Helper.DiceRoll(multiEnemyChance) && result.Count < 6)
@@ -158,6 +158,8 @@ public class ScriptableAdventureLocation : ScriptableObject
                 break;
 
             case EncounterType.MonsterNest:
+                result.Add(GetRandomBoss());
+                result.Add(GetRandomBoss());
                 Debug.Log("TODO: MonsterNest");
                 break;
             case EncounterType.Event:
@@ -197,15 +199,14 @@ public class ScriptableAdventureLocation : ScriptableObject
     {
         float maxChance = ((int)GameManager.Instance.GameDifficulty) / 10f +
                             LocationData.BASE_ELITE_ENEMY_CHANCE;
-        float stageMulitplier = (playerProgress + 1) / stageAmount;
+        float stageMulitplier = ((playerProgress + 1) / stageAmount) / 2;
 
-
-        return maxChance * stageMulitplier;
+        return maxChance + stageMulitplier;
     }
 
     private float GetMultiEnemyChance()
     {
-        float difficultyBonus = ((int)GameManager.Instance.GameDifficulty) / 10f;
+        float difficultyBonus = (((int)GameManager.Instance.GameDifficulty) - 1) / 10f;
 
         return LocationData.BASE_MULTI_ENEMY_CHANCE + difficultyBonus;
     }

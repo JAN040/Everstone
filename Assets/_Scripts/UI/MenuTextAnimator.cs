@@ -20,6 +20,7 @@ public class MenuTextAnimator : MonoBehaviour
 	#endregion
 
 	#region UNITY METHODS
+
     // Start is called before the first frame update
 
     void Start()
@@ -38,9 +39,13 @@ public class MenuTextAnimator : MonoBehaviour
         hue += AnimationSpeed * Time.deltaTime * 0.25f;
         if (hue > 1)
             hue = 0;
-        
+
+        Hue = hue;
         m_TextComponent.outlineColor = Color.HSVToRGB(hue, Saturation, Brightness);
+        m_TextComponent.ForceMeshUpdate();
+        //Debug.Log($"Title color: {m_TextComponent.outlineColor}");
     }
+
     #endregion
 
 }
