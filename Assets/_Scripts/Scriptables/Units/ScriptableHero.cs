@@ -21,6 +21,9 @@ public class ScriptableHero : ScriptableUnitBase
     //pre-assigned values - GAME DATA
     //inherited: private CharacterStats _baseStats 
     public string ClassName;
+
+    public List<ItemDataBase> StartingItemList;
+
     [HideInInspector]
     public string Background;
 

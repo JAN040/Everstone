@@ -47,16 +47,23 @@ public class AdventureSelectManager : MonoBehaviour
         foreach (var location in locations)
         {
             var currentPrefab = Instantiate(LocationPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-            
-            currentPrefab.GetComponent<AdventureButton>()?.SetScriptableLocation(location, this);
+
+            var advButtonScript = currentPrefab.GetComponent<AdventureButton>();
+            advButtonScript?.SetScriptableLocation(location, this);
+
             currentPrefab.transform.SetParent(LocationScrollviewContent.transform, true);
             currentPrefab.transform.localScale = new Vector3(1,1,1);
             
             locationPrefabList.Add(currentPrefab);
         }
 
+        var forestLocation = locations.FirstOrDefault(x => x.locationName.Equals("Forest"));
+        if (forestLocation == null)
+            return;
+
         //TODO: remove, this is for faster testing only
-        OnAdventureLocationSelected(locations.FirstOrDefault(x => x.locationName.Equals("Forest")));
+        if (forestLocation.PlayerProgress < forestLocation.stageAmount)
+            OnAdventureLocationSelected(forestLocation);
     }
 	
     #endregion 	UNITY METHODS

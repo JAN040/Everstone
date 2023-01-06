@@ -17,8 +17,6 @@ MonoBehaviour:
   Type: 0
   MenuSprite: {fileID: 0}
   FaceDirection: 1
-  Description: 
-  Prefab: {fileID: 0}
   _stats:
     _healthPoints: 50
     _energy: 0
@@ -136,6 +134,8 @@ MonoBehaviour:
       canBeNegative: 1
       baseValue: 0
   ClassName: Mage
+  StartingItemList:
+  - {fileID: 11400000, guid: c0ec14bbae421a44ba02175c3fd227ab, type: 2}
   Background: 
   pointAllocationData:
     BaseSkillPointAllocations:

@@ -82,6 +82,12 @@ public class SuccessMenu : MonoBehaviour
         string lootText = gotAnyLoot ? "Obtained loot:" : "No loot obtained.";
         StageDescText.text = $"Cleared stage {currProgress}. {lootText}";
 
+        //if the currently cleared stage is the last one
+        if (currProgress >= manager.CurrentLocation.stageAmount)
+        {
+            Button_Continue.gameObject.SetActive(false);
+        }
+
         RefreshLootGrid();
 
         //if there are no items to take it would make sense to disable the take button
@@ -179,6 +185,15 @@ public class SuccessMenu : MonoBehaviour
 
         //save player progress
         ManagerRef.CurrentLocation.PlayerProgress = ManagerRef.TemporaryProgress;
+
+        //returning after beating the final stage: reset progress
+        if (ManagerRef.CurrentLocation.PlayerProgress >= ManagerRef.CurrentLocation.stageAmount)
+        {
+            ManagerRef.CurrentLocation.HasPlayerClearedFirstBoss = true;
+
+            if (!GameManager.Instance.IsMultiplayer)
+                ManagerRef.CurrentLocation.PlayerProgress = 0;
+        }
 
         GameManager.Instance.EndAdventure();
     }

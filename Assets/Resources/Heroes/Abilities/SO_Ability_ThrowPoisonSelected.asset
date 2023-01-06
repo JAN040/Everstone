@@ -38,7 +38,7 @@ MonoBehaviour:
       _type: 0
       _value: 0
       _modifyingStatType: 0
-  EnergyCost: 0
+  EnergyCost: 1
   ManaCost: 1
   IsCDRValid: 1
   IsSelected: 0

@@ -136,6 +136,8 @@ public class ScriptableAbility : ScriptableObject
         ability.UpgradeCost = data.upgradeCost;
         ability.IsSelected = data.isSelected;
 
+        ability.UpdateEffectValuesToAbilityLevel();
+
         return ability;
     } 
 
@@ -278,6 +280,11 @@ public class ScriptableAbility : ScriptableObject
         UpgradeCost *= CostPerLevelMultiplier;
 
         //increase effect values
+        LevelUpEffects();
+    }
+
+    private void LevelUpEffects()
+    {
         if (OnActivedEffects != null)
             foreach (var effect in OnActivedEffects)
                 LevelUpEffect(effect);
@@ -286,6 +293,7 @@ public class ScriptableAbility : ScriptableObject
             foreach (var effect in OnDeactivatedEffects)
                 LevelUpEffect(effect);
     }
+    
 
     private void LevelUpEffect(StatusEffect effect)
     {
@@ -296,6 +304,17 @@ public class ScriptableAbility : ScriptableObject
 
         effect.EffectValue += effect.PerLevelValueChange;
         effect.Duration += effect.PerLevelDurationChange;
+    }
+
+    private void UpdateEffectValuesToAbilityLevel()
+    {
+        if (Level <= 1)
+            return;
+
+        for (int i = 1; i < Level; i++)
+        {
+            this.LevelUpEffects();
+        }
     }
 
     public string GetDescription()

@@ -265,15 +265,15 @@ public class CharacterStats
     /// </summary>
     private void InvokeEmpty_EnergyChanged(Stat stat, bool isPositive)
     {
-        OnEnergyChanged?.Invoke(0, 0);
+        OnEnergyChanged?.Invoke(Energy, Energy);
     }
 
     /// <summary>
-    /// A helper method to invoke OnEnergyChanged when MaxHp Stat gets changed
+    /// A helper method to invoke OnHealthpointsChanged when MaxHp Stat gets changed
     /// </summary>
     private void InvokeEmpty_HealthPointsChanged(Stat stat, bool isPositive)
     {
-        OnHealthPointsChanged?.Invoke(0, 0);
+        OnHealthPointsChanged?.Invoke(HealthPoints, HealthPoints);
     }
 
     public float GetHpNormalized()

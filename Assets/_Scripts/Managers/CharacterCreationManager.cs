@@ -486,16 +486,26 @@ public class CharacterCreationManager : MonoBehaviour
             new EquipmentSystem(6, true)
         );
 
+        foreach (var item in hero.StartingItemList)
+        {
+            //auto equip equipment
+            if (item is ItemDataEquipment)
+            {
+                var equipItem = item as ItemDataEquipment;
+
+                if (equipItem.EquipmentType == EquipmentType.Rune)
+                    playerMngRef.Runes.EquipItem(new InventoryItem(item));
+                else
+                    playerMngRef.Equipment.EquipItem(new InventoryItem(item));
+            }
+            else
+                playerMngRef.Inventory.AddItem(new InventoryItem(item));
+        }
+
         //test items
-        playerMngRef.Equipment.EquipItem(new InventoryItem(resSysRef.Items_Equipment[0]));
-        playerMngRef.Equipment.EquipItem(new InventoryItem(resSysRef.Items_Equipment[2]));
-        playerMngRef.Runes.EquipItem(new InventoryItem(resSysRef.Items_Equipment[4]));
-        playerMngRef.Inventory.AddItem(new InventoryItem(resSysRef.Items_Equipment[4]));
-        playerMngRef.Inventory.AddItem(new InventoryItem(resSysRef.Items_Equipment[1]));
-        playerMngRef.Inventory.AddItem(new InventoryItem(resSysRef.Items_Equipment[3]));
-        playerMngRef.Inventory.AddItem(new InventoryItem(resSysRef.Items_Equipment[5]));
-        playerMngRef.Inventory.AddItem(new InventoryItem(resSysRef.Items_Equipment[6]));
-        playerMngRef.Inventory.AddItem(new InventoryItem(resSysRef.Items_Equipment[7]));
+        //playerMngRef.Equipment.EquipItem(new InventoryItem(resSysRef.Items_Equipment[0]));
+        //playerMngRef.Runes.EquipItem(new InventoryItem(resSysRef.Items_Equipment[4]));
+        //playerMngRef.Inventory.AddItem(new InventoryItem(resSysRef.Items_Equipment[4]));
         //for (int i = 0; i < playerMngRef.Storage.InventorySize; i++)
         //    playerMngRef.Storage.PlaceItemAtSlot(new InventoryItem(resSysRef.Items_Loot[UnityEngine.Random.Range(0, resSysRef.Items_Loot.Count)]), i);
 
@@ -516,6 +526,9 @@ public class CharacterCreationManager : MonoBehaviour
             if (basicAtkAbility != null)
                 basicAtkAbility.MenuImage = MageBasicAtkImage;
         }
+
+        //starting a new game without closing the game causes the GameManager to remember the progress from the previous game otherwise
+        GameManager.Instance.AdventureLocationData = null;
 
         GameManager.Instance.Currency = GetSelectedBackground().startingCurrencyAmount;
         GameManager.Instance.SetGameDifficulty(

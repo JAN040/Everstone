@@ -15,6 +15,7 @@ public class AdventureButton : MonoBehaviour
     [SerializeField] float NameBorderSlideUpY = 30f;
     [SerializeField] float OriginalBorderPosY;
     [SerializeField] bool  IsSelected = false;
+    public Button ButtonRef;
 
 
     [SerializeField] AdventureSelectManager AdventureSelectManagerRef;
@@ -31,13 +32,21 @@ public class AdventureButton : MonoBehaviour
         IsSelected = false;
 
         OriginalBorderPosY = transform.Find("Picture").Find("NameBorder").GetComponent<RectTransform>().anchoredPosition.y;
-        var locationIcon = this.transform.Find("Picture");
-        var progressText = this.transform.Find("ProgressText");
-        var locationName = locationIcon.transform.Find("NameBorder").transform.Find("Text");
+        var locationIcon = this.transform.Find("Picture").GetComponent<Image>();
+        var progressText = this.transform.Find("ProgressText").GetComponent<TextMeshProUGUI>();
+        var locationName = locationIcon.transform.Find("NameBorder")?.transform?.Find("Text")?.GetComponent<TextMeshProUGUI>();
 
-        locationIcon.GetComponent<Image>().sprite = location.icon;
-        progressText.GetComponent<TextMeshProUGUI>().text = $"Progress: {location.PlayerProgress}/{location.stageAmount}";
-        locationName.GetComponent<TextMeshProUGUI>().text = location.locationName;
+        locationIcon.sprite = location.icon;
+        progressText.text = $"Progress: {location.PlayerProgress}/{location.stageAmount}";
+        if (locationName != null)
+            locationName.text = location.locationName;
+
+        //multiplayer scenario where the stage progress isnt reset: disable the location button
+        if (ScriptableLocation.PlayerProgress >= ScriptableLocation.stageAmount)
+        {
+            ButtonRef.interactable = false;
+            progressText.text += " (Complete)";
+        }
     }
 
     public void OnSelected()

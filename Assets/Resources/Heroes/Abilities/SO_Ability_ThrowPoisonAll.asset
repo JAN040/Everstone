@@ -24,9 +24,9 @@ MonoBehaviour:
   Cooldown: 3
   UnlockConditions:
   - Skill: 2
-    Level: 3
+    Level: 10
   - Skill: 1
-    Level: 6
+    Level: 10
   OnActivedEffects:
   - EffectType: 2
     Target: 8
@@ -40,8 +40,8 @@ MonoBehaviour:
       _type: 0
       _value: 0
       _modifyingStatType: 0
-  EnergyCost: 0
-  ManaCost: 1
+  EnergyCost: 2
+  ManaCost: 10
   IsCDRValid: 1
   IsSelected: 0
   ToggleMode: 0

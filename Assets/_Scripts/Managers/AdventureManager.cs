@@ -302,6 +302,11 @@ public class AdventureManager : MonoBehaviour
             if (isFirstTime)
                 InitPlayerAbilities();
         }
+        else
+        {
+            //increase player mana
+            PlayerHero.Stats.Mana += PlayerHero.Stats.ManaRecovery.GetValue();
+        }
 
         //reset ally status bar to the hero
         SelectedAlly = PlayerHero;

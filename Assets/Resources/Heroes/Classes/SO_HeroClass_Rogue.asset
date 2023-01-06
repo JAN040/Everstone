@@ -17,8 +17,6 @@ MonoBehaviour:
   Type: 0
   MenuSprite: {fileID: 0}
   FaceDirection: 1
-  Description: 
-  Prefab: {fileID: 0}
   _stats:
     _healthPoints: 50
     _energy: 0
@@ -136,6 +134,8 @@ MonoBehaviour:
       canBeNegative: 1
       baseValue: 0
   ClassName: Rogue
+  StartingItemList:
+  - {fileID: 11400000, guid: a6b3f37647bc152458fc50501d2ab610, type: 2}
   Background: 
   pointAllocationData:
     BaseSkillPointAllocations:
