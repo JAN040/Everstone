@@ -36,26 +36,36 @@ public class ScriptableAdventureLocation : ScriptableObject
     /// If the boss was already reached, then getting to the last stage
     ///     will be a super hard monster nest encounter
     /// </summary>
-    [SerializeField] private bool _hasPlayerClearedFirstBoss = false;
+    [SerializeField] private bool _hasPlayerClearedFirstBoss;   //afraid of removing this since it might break my scriptable objects
     public bool HasPlayerClearedFirstBoss
     {
-        get => _hasPlayerClearedFirstBoss; 
-        set
+        get => LoopCount > 0;
+    }
+
+    private int _loopCount = 0;
+    public int LoopCount { 
+        get 
         {
-            if (_hasPlayerClearedFirstBoss)
+            return _loopCount;
+        }
+        set 
+        {
+            if (value != _loopCount + 1)
                 return;
 
-            if (value)
-            {
-                this.IncreaseDifficulty();
-                _hasPlayerClearedFirstBoss = value;
-            }
+            if (value > LOOP_COUNT_LIMIT)
+                return;
+
+            _loopCount = value;
+            this.IncreaseDifficulty();
         }
     }
 
+    private const int LOOP_COUNT_LIMIT = 5;
 
     public List<ScriptableNpcUnit> EnemyPool { get; private set; }
 
+    private const float COMMON_ENEMY_CHANCE = 0.05f;
 
     //TODO eventPool ?
     //TODO boss ?
@@ -74,7 +84,8 @@ public class ScriptableAdventureLocation : ScriptableObject
 
         var location = ResourceSystem.Instance.GetAdventureLocationByName(data.locationName);
         location.PlayerProgress = data.playerProgress;
-        location.HasPlayerClearedFirstBoss = data.HasPlayerClearedFirstBoss;
+        location._loopCount = data.LoopCount;
+        location.difficulty = data.Difficulty;
 
         return location;
     } 
@@ -90,7 +101,8 @@ public class ScriptableAdventureLocation : ScriptableObject
         AdventureLocationSaveData data = new AdventureLocationSaveData(
             locationName,
             playerProgress,
-            HasPlayerClearedFirstBoss
+            LoopCount,
+            difficulty
         );
 
         return data;
@@ -102,13 +114,13 @@ public class ScriptableAdventureLocation : ScriptableObject
             EnemyPool = pool;
     }
 
-    public EncounterType GetNextEncounter()
+    public EncounterType GetNextEncounter(int currentProgress)
     {
-        int nextProgress = PlayerProgress + 1;
+        int nextProgress = currentProgress + 1;
 
         //If the next encounter is the last, it is either a boss or a nest
         if (nextProgress == this.stageAmount)
-            return HasPlayerClearedFirstBoss ? EncounterType.MonsterNest : EncounterType.BossEnemy;
+            return EncounterType.BossEnemy;
 
         //check if its an event
         if (Helper.DiceRoll(LocationData.EVENT_CHANCE))
@@ -154,13 +166,11 @@ public class ScriptableAdventureLocation : ScriptableObject
                 break;
 
             case EncounterType.BossEnemy:
-                result.Add(GetRandomBoss());
-                break;
-
-            case EncounterType.MonsterNest:
-                result.Add(GetRandomBoss());
-                result.Add(GetRandomBoss());
-                Debug.Log("TODO: MonsterNest");
+                for (int i = 0; i <= LoopCount; i++)
+                {
+                    result.Add(GetRandomBoss());
+                }
+                Debug.Log($"Boss room (loopCount: {LoopCount})");
                 break;
             case EncounterType.Event:
             default:
@@ -182,13 +192,31 @@ public class ScriptableAdventureLocation : ScriptableObject
 
     public ScriptableNpcUnit GetRandomEnemy()
     {
-        bool isElite = Helper.DiceRoll(GetEliteEnemyChance());
-        List<ScriptableNpcUnit> effectivePool = isElite ?
-            effectivePool = EnemyPool.Where(x => x.Type == EnemyType.Elite).ToList()
-            :
-            effectivePool = EnemyPool.Where(x => x.Type == EnemyType.Normal).ToList();
+        ScriptableNpcUnit res = null;
 
-        return Instantiate(effectivePool[Random.Range(0, effectivePool.Count)]);
+        bool isElite = Helper.DiceRoll(GetEliteEnemyChance());
+
+        List<ScriptableNpcUnit> effectivePool;
+        if (isElite)
+        {
+            effectivePool = EnemyPool.Where(x => x.Type == EnemyType.Elite).ToList();
+            res = Instantiate(effectivePool[Random.Range(0, effectivePool.Count)]);
+        }
+        else
+        {
+            //first check if the enemy will be one of the common (shared between locations) ones
+            if (Helper.DiceRoll(COMMON_ENEMY_CHANCE))
+            {
+                res = ResourceSystem.Instance.GetRandomCommonEnemy();
+            }
+            else
+            {
+                effectivePool = EnemyPool.Where(x => x.Type == EnemyType.Normal).ToList();
+                res = Instantiate(effectivePool[Random.Range(0, effectivePool.Count)]);
+            }
+        }
+
+        return res;
     }
 
 

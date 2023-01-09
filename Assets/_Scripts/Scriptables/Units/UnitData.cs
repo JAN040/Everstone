@@ -86,7 +86,7 @@ public class UnitData
 
     //bonus stats (in percentages)
     private readonly float EliteBonus = 0.25f;
-    private readonly float BossBonus = 1f;
+    private readonly float BossBonus = 3f;
 
     //game difficulty modifiers
     public Dictionary<Difficulty, float> GameDiffScalingDict = new Dictionary<Difficulty, float>()
@@ -144,7 +144,7 @@ public class UnitData
 
     public CharacterStats GetBaseStats(UnitClass @class, EnemyType enemyType, Difficulty gameDiff, ScriptableAdventureLocation locationData)
     {
-        return GetEnemyStatsForClass(@class, CalculateStatModifier(enemyType, gameDiff, locationData));
+        return GetEnemyStatsForClass(@class, CalculateStatModifier(enemyType, gameDiff, locationData), enemyType);
     }
 
     public bool IsClassRanged(UnitClass @class)
@@ -183,7 +183,7 @@ public class UnitData
     }
 
     /// <param name="statModifier">Based on location & game difficulties</param>
-    private CharacterStats GetEnemyStatsForClass(UnitClass @class, float statModifier)
+    private CharacterStats GetEnemyStatsForClass(UnitClass @class, float statModifier, EnemyType enemyType)
     {
         UnitClassData classData = ClassDataDict[@class];
 
@@ -191,6 +191,11 @@ public class UnitData
         float health = GetScaledStatWithVariabilityAndMods(Health, classData.Constitution, statModifier);
         float speed = GetScaledStatWithVariabilityAndMods(Speed, classData.Speed, statModifier);
         float armor = GetScaledStatWithVariabilityAndMods(Armor, classData.Armor, statModifier);
+
+        if (enemyType == EnemyType.Elite)
+            health *= 2;
+        else if (enemyType == EnemyType.Boss)
+            health *= 5;
 
         if (classData.DamageType == DamageType.Physical)
         {
@@ -289,25 +294,24 @@ public class UnitData
     private InventoryItem GetDropByUnitRace(UnitRace race)
     {
         InventoryItem res = null;
-        ItemType lootType;
 
         switch (race)
         {
             case UnitRace.Animal:
                 //can only drop hides
-                res = RollDropByItemType(ItemType.Loot);
+                //res = RollDropByItemType(ItemType.Loot);
                 break;
 
             case UnitRace.Humanoid:
-                //drops hides & can rarely drop equip
-                lootType = Helper.DiceRoll(HumanoidEquipDropChance) ? ItemType.Equipment : ItemType.Loot;
-                res = RollDropByItemType(lootType);
+                //can rarely drop equip
+                if(Helper.DiceRoll(HumanoidEquipDropChance))
+                    res = RollDropByItemType(ItemType.Equipment);
                 break;
 
             case UnitRace.Human:
                 //can only drop equipment and currency
-                lootType = Helper.DiceRoll(HumanoidEquipDropChance) ? ItemType.Equipment : ItemType.Currency;
-                res = RollDropByItemType(lootType);
+                if(Helper.DiceRoll(HumanoidEquipDropChance))
+                    res = RollDropByItemType(ItemType.Equipment);
                 break;
 
             case UnitRace.Monster:

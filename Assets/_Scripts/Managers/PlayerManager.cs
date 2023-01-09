@@ -133,6 +133,18 @@ public class PlayerManager
                 EquippedAbilities.Add(ScriptableAbility.GetAbilityFromSaveData(abilityData));
         }
 
+        //overwrite the references so they are the same in both lists (could optimize by just saving IDs into equipped abilities but im lazy)
+        for (int i = 0; i < EquippedAbilities.Count; i++)
+        {
+            if (EquippedAbilities[i] == null)
+                continue;
+
+            EquippedAbilities[i] = Abilities.FirstOrDefault(x =>
+            {
+                return x != null && x.Name == EquippedAbilities[i].Name;
+            });
+        }
+
         PlayerHero = ScriptableHero.GetHeroFromSaveData(data.playerHero);
         //Abilities = data.abilities;
         //EquippedAbilities = data.equippedAbilities;

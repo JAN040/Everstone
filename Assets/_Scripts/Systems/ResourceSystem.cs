@@ -498,6 +498,19 @@ public class ResourceSystem : Singleton<ResourceSystem> {
         return HeroPortraits;
     }
 
+    public ItemDataBase GetLootItemByValue(int value)
+    {
+        var sortedLootItems = Items_Loot.OrderByDescending(x => x.BuyPrice);
+
+        foreach (var item in sortedLootItems)
+        {
+            if (item.BuyPrice <= value)
+                return item;
+        }
+
+        return null;
+    }
+
     public HeroPortrait GetHeroPortraitByName(string name)
     {
         if (string.IsNullOrEmpty(name)) //return default portrait
@@ -512,6 +525,10 @@ public class ResourceSystem : Singleton<ResourceSystem> {
         return null;
     }
 
+    public ScriptableNpcUnit GetRandomCommonEnemy()
+    {
+        return Instantiate(CommonEnemies[Random.Range(0, CommonEnemies.Count)]);
+    }
 
     
 }   

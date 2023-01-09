@@ -34,7 +34,12 @@ public enum LocationDifficulty
     Normal = 5,
     Advanced = 10,
     Hard = 25,
-    Expert = 50
+    Expert = 50,
+
+    Extreme = 75,
+    Hell = 100,
+    Impossible = 200,
+    Unimaginable = 300,
 }
 
 

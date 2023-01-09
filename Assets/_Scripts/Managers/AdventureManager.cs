@@ -57,6 +57,7 @@ public class AdventureManager : MonoBehaviour
 
     public ScriptableAdventureLocation CurrentLocation;
     public int TemporaryProgress;
+    public int CurrentStageLootValue;
 
     private ScriptableHero PlayerHero;
     [SerializeField] List<ScriptableUnitBase> AlliedUnitsList;
@@ -141,7 +142,7 @@ public class AdventureManager : MonoBehaviour
     //selected + special cases like basic attack & dodge
     private List<ScriptableAbility> AllPlayerAbilities = new List<ScriptableAbility>();
 
-    [SerializeField] float AbilityAntiSpamCD = 2f;
+    [SerializeField] float AbilityAntiSpamCD = 1f;
 
     #endregion 	VARIABLES
 
@@ -259,10 +260,13 @@ public class AdventureManager : MonoBehaviour
         Pause(true);
         TemporaryProgress++;
 
-        //show success menu
-        var menu = InstantiatePrefab(SuccessMenu, UICanvas.transform);
+        AddLootByStageValue();
+
+         //show success menu
+         var menu = InstantiatePrefab(SuccessMenu, UICanvas.transform);
         menu.GetComponent<SuccessMenu>().Init(this, LootInventory, UICanvas.scaleFactor);
     }
+    
 
     private void InitStage(bool isFirstTime, bool initAllies)
     {
@@ -272,8 +276,10 @@ public class AdventureManager : MonoBehaviour
         LootInventory = new InventorySystem(7); //up to 7 loot items can be displayed
 
         //get encounter type
-        EncounterType encounter = CurrentLocation.GetNextEncounter();
+        EncounterType encounter = CurrentLocation.GetNextEncounter(TemporaryProgress);
 
+        if (encounter == EncounterType.BossEnemy)
+            GameSpeed = 1;
 
         if (isFirstTime || initAllies)
         {   //Handle allies (and hero)
@@ -324,6 +330,9 @@ public class AdventureManager : MonoBehaviour
             EnemyUnitsList = CurrentLocation.RollEnemies(encounter);
         }
 
+        //calculate stage loot value (used in determinining the loot after stage clear)
+        CurrentStageLootValue = CalculateStageLootValue();
+
         //spawn enemies/chests
         SpawnEnemies();
 
@@ -332,6 +341,90 @@ public class AdventureManager : MonoBehaviour
         GameSpeed = GameManager.Instance.BattleGameSpeed;
         GameManager.Instance.GameState = BattleState.InBattle;
     }
+
+
+    #region Stage Value Calculation
+
+    private int CalculateStageLootValue()
+    {
+        float locationDifficultyMod = (int)CurrentLocation.difficulty;
+        float gameDifficultyMod = GetGameDiffLootModifier();
+        float currentStageStreakMod = GetStageStreakModifier();
+        float enemyValue = GetEnemyValue();
+
+        float totalValue = enemyValue + currentStageStreakMod;
+        totalValue += locationDifficultyMod * EnemyUnitsList.Count;
+        totalValue *= gameDifficultyMod;
+
+        return totalValue.Round();
+    }
+
+    private float GetStageStreakModifier()
+    {
+        int currentStreak = Math.Clamp(TemporaryProgress - CurrentLocation.PlayerProgress, 0, 100);
+
+        //the streak bonus should be exponential, but didnt want the numbers to get too crazy
+        return Mathf.Pow(currentStreak, 1.5f);
+    }
+
+    private float GetEnemyValue()
+    {
+        var value = 0;
+
+        foreach (var enemy in EnemyUnitsList)
+        {
+            value += GetEnemyLootValue(enemy);
+        }
+
+        return value;
+    }
+
+    private int GetEnemyLootValue(ScriptableNpcUnit enemy)
+    {
+        switch (enemy.Type)
+        {
+            case EnemyType.Elite:
+                return 20;
+            case EnemyType.Boss:
+                return 500;
+            case EnemyType.Normal:
+            default:
+                return 3;
+        }
+    }
+
+    private float GetGameDiffLootModifier()
+    {
+        switch (GameManager.Instance.GameDifficulty)
+        {
+            case Difficulty.Easy:
+                return 0.8f;
+            case Difficulty.Hard:
+                return 1.5f;
+            case Difficulty.Custom:
+            case Difficulty.Normal:
+            default:
+                return 1f;
+        }
+    }
+
+    private void AddLootByStageValue()
+    {
+        int tempValue = CurrentStageLootValue;
+        var lootItem = ResourceSystem.Instance.GetLootItemByValue(tempValue);
+
+        while (lootItem != null)
+        {
+            LootInventory.AddItem(new InventoryItem(lootItem));
+            tempValue -= lootItem.BuyPrice;
+
+            lootItem = ResourceSystem.Instance.GetLootItemByValue(tempValue);
+        }
+    }
+
+
+    #endregion Stage Value Calculation
+
 
     private void ResetPlayerStatusEffects()
     {

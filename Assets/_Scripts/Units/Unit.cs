@@ -1087,7 +1087,12 @@ public class Unit : MonoBehaviour
     public void ApplyTakeDamageEffect(List<Damage> damageList, ScriptableUnitBase origin)
     {
         var origStats = origin.Stats;
-        var correctedDmgList = new List<Damage>(damageList);
+        var correctedDmgList = new List<Damage>();
+
+        foreach (var damage in damageList)
+        {
+            correctedDmgList.Add(damage.Clone());
+        }
 
         foreach (var damage in correctedDmgList)
         {

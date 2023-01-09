@@ -47,6 +47,11 @@ public class AdventureButton : MonoBehaviour
             ButtonRef.interactable = false;
             progressText.text += " (Complete)";
         }
+        //signify higher danger, because of the nest
+        else if (ScriptableLocation.HasPlayerClearedFirstBoss)
+        {
+            progressText.text += $" (+{ScriptableLocation.LoopCount})";
+        }
     }
 
     public void OnSelected()

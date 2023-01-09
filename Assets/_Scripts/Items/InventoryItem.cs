@@ -51,6 +51,9 @@ public class InventoryItem
     /// </summary>
     public InventoryItem(InventoryItemSaveData data)
     {
+        if (data == null)
+            return;
+
         this.ItemData = ResourceSystem.Instance.GetItemById(data.itemId);
         this.IsShopOwned = data.isShopOwned;
         this.StackSize = data.stackSize;

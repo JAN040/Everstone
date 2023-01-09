@@ -110,7 +110,7 @@ public class ItemInfoBox : MonoBehaviour
         string buyPrice = GameManager.Instance.CurrencyToDisplayString(itemData.BuyPrice);
         int totalSell = ItemRef.GetSellPrice();
         string totalSellText = GameManager.Instance.CurrencyToDisplayString(totalSell);
-        Text_Value.text  = $"{buyPrice}\n{totalSellText} ({itemRef.StackSize})";
+        Text_Value.text  = ItemRef.IsShopOwned ? $"{buyPrice}" : $"{totalSellText} ({itemRef.StackSize})";
 
         Text_Description.text = itemData.Description;
         Object_Description.SetActive(!string.IsNullOrEmpty(Text_Description.text));

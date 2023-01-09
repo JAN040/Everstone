@@ -23,10 +23,10 @@ MonoBehaviour:
   EquipmentType: 8
   StatModifiers:
   - _type: 0
-    _value: 50
+    _value: 8
     _modifyingStatType: 1
   - _type: 1
-    _value: 0.05
+    _value: 0.5
     _modifyingStatType: 1
   - _type: 0
     _value: 0.2

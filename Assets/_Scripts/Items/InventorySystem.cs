@@ -36,10 +36,12 @@ public class InventorySystem
 
         foreach (var itemData in data.itemDataList)
         {
-            if (itemData == null)
+            var invItem = new InventoryItem(itemData);
+
+            if (invItem.ItemData == null)
                 InventoryItems.Add(null);
             else
-                InventoryItems.Add(new InventoryItem(itemData));
+                InventoryItems.Add(invItem);
         }
 
         IsShop = data.isShop;

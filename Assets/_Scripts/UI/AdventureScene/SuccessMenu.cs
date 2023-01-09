@@ -186,10 +186,10 @@ public class SuccessMenu : MonoBehaviour
         //save player progress
         ManagerRef.CurrentLocation.PlayerProgress = ManagerRef.TemporaryProgress;
 
-        //returning after beating the final stage: reset progress
+        //returning after beating the final stage: reset progress & increase loop count
         if (ManagerRef.CurrentLocation.PlayerProgress >= ManagerRef.CurrentLocation.stageAmount)
         {
-            ManagerRef.CurrentLocation.HasPlayerClearedFirstBoss = true;
+            ManagerRef.CurrentLocation.LoopCount++;
 
             if (!GameManager.Instance.IsMultiplayer)
                 ManagerRef.CurrentLocation.PlayerProgress = 0;

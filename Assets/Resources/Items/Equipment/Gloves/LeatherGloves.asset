@@ -23,5 +23,5 @@ MonoBehaviour:
   EquipmentType: 13
   StatModifiers:
   - _type: 0
-    _value: 2
+    _value: 1
     _modifyingStatType: 1

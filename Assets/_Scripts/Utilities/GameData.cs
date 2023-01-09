@@ -130,13 +130,15 @@ public class AdventureLocationSaveData
 {
     public string locationName;
     public int playerProgress;
-    public bool HasPlayerClearedFirstBoss;
+    public int LoopCount;
+    public LocationDifficulty Difficulty;
 
-    public AdventureLocationSaveData(string name, int playerProgress, bool hasPlayerClearedFirstBoss)
+    public AdventureLocationSaveData(string name, int playerProgress, int LoopCount, LocationDifficulty difficulty)
     {
         this.locationName = name;
         this.playerProgress = playerProgress;
-        HasPlayerClearedFirstBoss = hasPlayerClearedFirstBoss;
+        this.LoopCount = LoopCount;
+        this.Difficulty = difficulty;
     }
 }
 

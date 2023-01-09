@@ -104,7 +104,8 @@ public class SceneManagementSystem : Singleton<SceneManagementSystem>
                         !sc.In(Scenes.HeroSelect,   //dont save game when switching to hero select; this would overwrite game data immediately...
                                Scenes.MainMenu,
                                Scenes.MultiplayerLobby,
-                               Scenes.MultiplayerRoom);
+                               Scenes.MultiplayerRoom,
+                               Scenes.Adventure);
 
         //we dont save in multiplayer mode, so dont show the text
         SavingGameText.gameObject.SetActive(saveGame);

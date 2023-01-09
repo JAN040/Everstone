@@ -401,9 +401,9 @@ public class SkillLevel
                     nextLvlSellMod = 0.99f;
 
                 res += Environment.NewLine;
-                res += $"Sell modifier: {plrMng.SellPriceModifier} / {nextLvlSellMod}";
+                res += $"Sell modifier: {plrMng.SellPriceModifier:0.00} / {nextLvlSellMod:0.00}";
                 res += Environment.NewLine;
-                res += $"Sell modifier (loot): {plrMng.SellPriceModifier_Loot} / {plrMng.SellPriceModifier_Loot + PlayerManager.SELLPRICEMOD_PER_LEVEL_INCREASE}";
+                res += $"Sell modifier (loot): {plrMng.SellPriceModifier_Loot:0.00} / {plrMng.SellPriceModifier_Loot + PlayerManager.SELLPRICEMOD_PER_LEVEL_INCREASE:0.00}";
                 break;
 
             case Skill.Equipment_Skill:

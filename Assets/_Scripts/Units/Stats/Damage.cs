@@ -79,6 +79,18 @@ public class Damage
         CanBeBlocked = canBeBlocked;
     }
 
+    public Damage Clone()
+    {
+        Damage res = new Damage(this.Amount, this.Type);
+
+        res.ElementType = this.ElementType;
+        res.CanBeEvaded = this.CanBeEvaded;
+        res.CanBeBlocked = this.CanBeBlocked;
+        res.PerLevelDamageChange = this.PerLevelDamageChange;
+
+        return res;
+    }
+
     /// <summary>
     /// Returns a color matching the damageType
     /// </summary>
