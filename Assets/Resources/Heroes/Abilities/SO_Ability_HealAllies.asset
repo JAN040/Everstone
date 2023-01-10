@@ -39,7 +39,7 @@ MonoBehaviour:
       _value: 0
       _modifyingStatType: 0
   EnergyCost: 0
-  ManaCost: 1
+  ManaCost: 10
   IsCDRValid: 1
   IsSelected: 0
   ToggleMode: 0

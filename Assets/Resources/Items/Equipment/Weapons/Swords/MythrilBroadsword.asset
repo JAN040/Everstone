@@ -31,6 +31,6 @@ MonoBehaviour:
   - _type: 0
     _value: 10
     _modifyingStatType: 2
-  - _type: 1
+  - _type: 0
     _value: 0.12
     _modifyingStatType: 15

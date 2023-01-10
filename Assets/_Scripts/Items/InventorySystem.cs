@@ -284,6 +284,23 @@ public class InventorySystem
             );
     }
 
+    public bool IsEmpty()
+    {
+        return GetItemAmount() == 0;
+    }
+
+    public int GetItemAmount()
+    {
+        int count = 0;
+        foreach (var item in InventoryItems)
+        {
+            if (item != null)
+                count++;
+        }
+
+        return count;
+    }
+
     public ItemMoveResult StackItemToTarget(int itemIndex, InventorySystem targetInventory, int targetIndex)
     {
         var invItem = InventoryItems[itemIndex];

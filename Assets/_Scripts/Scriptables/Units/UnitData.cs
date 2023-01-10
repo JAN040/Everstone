@@ -86,7 +86,7 @@ public class UnitData
 
     //bonus stats (in percentages)
     private readonly float EliteBonus = 0.25f;
-    private readonly float BossBonus = 3f;
+    private readonly float BossBonus = 2f;
 
     //game difficulty modifiers
     public Dictionary<Difficulty, float> GameDiffScalingDict = new Dictionary<Difficulty, float>()
@@ -113,7 +113,7 @@ public class UnitData
 
     //base stat amounts
     private readonly float Damage = 15;
-    private readonly float Health = 50;
+    private readonly float Health = 70;
     private readonly float Armor = 4;
     private readonly float Speed = 10;
 
@@ -193,7 +193,7 @@ public class UnitData
         float armor = GetScaledStatWithVariabilityAndMods(Armor, classData.Armor, statModifier);
 
         if (enemyType == EnemyType.Elite)
-            health *= 2;
+            health *= 3;
         else if (enemyType == EnemyType.Boss)
             health *= 5;
 

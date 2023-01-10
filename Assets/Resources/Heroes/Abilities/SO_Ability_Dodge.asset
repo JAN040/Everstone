@@ -22,8 +22,8 @@ MonoBehaviour:
     100.'
   Level: 1
   MaxLevel: 5
-  UpgradeCost: 50
-  CostPerLevelMultiplier: 3
+  UpgradeCost: 150
+  CostPerLevelMultiplier: 5
   Cooldown: 10
   UnlockConditions: []
   OnActivedEffects:
@@ -31,7 +31,7 @@ MonoBehaviour:
     Target: 0
     MultipleTargetCount: 0
     EffectValue: 0.5
-    PerLevelValueChange: 0.01
+    PerLevelValueChange: 0.02
     Duration: 1
     PerLevelDurationChange: 0.1
     DamageList: []
@@ -45,7 +45,7 @@ MonoBehaviour:
     EffectValue: 1
     PerLevelValueChange: 0
     Duration: 0.1
-    PerLevelDurationChange: 0.01
+    PerLevelDurationChange: 0.02
     DamageList: []
     StatModifier:
       _type: 0

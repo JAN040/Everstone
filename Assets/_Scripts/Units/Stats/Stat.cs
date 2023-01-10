@@ -134,6 +134,65 @@ public class Stat
         return string.Empty;
     }
 
+    public static string GetDescription(StatType statType)
+    {
+        switch (statType)
+        {
+            case StatType.PhysicalDamage:
+                return "Defines how much damage you deal with each basic attack, when wielding a physical weapon.";
+
+            case StatType.Armor:
+                return "Negates physical damage by a flat amount.";
+
+            case StatType.ArtsDamage:
+                return "Defines how much damage you deal with each basic attack, when wielding an arts weapon.";
+
+            case StatType.ArtsResist:
+                return "Negates arts damage by a percentual amount.";
+
+            case StatType.MaxHP:
+                return "Defines how much damage you can take before dying. Every gamer knows this...";
+
+            case StatType.MaxEnergy:
+                return "The max amount of energy you can currently have.";
+
+            case StatType.EnergyRecovery:
+                return "Defines how much energy you will recover every second in battle. Note: You start every encounter with 0 energy.";
+
+            case StatType.MaxMana:
+                return "The max amount of mana you can currently have. You start the adventure with a full bar.";
+
+            case StatType.ManaRecovery:
+                return "Defines how much mana you recover after each encounter.";
+
+            case StatType.CooldownReduction:
+                return "Reduces the cooldown of certain abilities by a percentage.";
+
+            case StatType.Speed:
+                return "Defines how fast you are. When enemies are faster than you, they will act more often, and less often, when they are slower than you.";
+
+            case StatType.WeaponAccuracy:
+                return "Not implemented";
+
+            case StatType.DodgeChance:
+                return "Every time you get hit, you have a chance of negating the damage entirely. Note: certain damage types (like poison) cannot be dodged.";
+
+            case StatType.Proficiency:
+                return "Not implemented";
+
+            case StatType.HealEfficiency:
+                return "Increases heal amount when you recieve healing by a percentage.";
+
+            case StatType.BlockChance:
+                return "Every time you get hit, you have a chance of lowering the damage received by 50% (before applying armor and resistance)";
+
+            default:
+                break;
+        }
+
+        return string.Empty;
+    }
+
 
     #endregion STATIC METHODS
 

@@ -15,7 +15,7 @@ MonoBehaviour:
   DisplayName: Ragged Cloth
   Description: A rag around your neck. Keeps you warm at least?
   MenuIcon: {fileID: 21300000, guid: 85a10d25e70513243a4d99d4d8336971, type: 3}
-  BuyPrice: 5
+  BuyPrice: 7
   CanBeSold: 1
   MaxStackSize: 1
   ItemType: 1
@@ -23,5 +23,11 @@ MonoBehaviour:
   EquipmentType: 12
   StatModifiers:
   - _type: 1
-    _value: 0.01
+    _value: 0.02
     _modifyingStatType: 1
+  - _type: 0
+    _value: 0.5
+    _modifyingStatType: 1
+  - _type: 0
+    _value: 20
+    _modifyingStatType: 4

@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UIElements;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// Used in CharacterUI/Equipment&Stats tab for the stats to update automatically
 /// </summary>
 [RequireComponent(typeof(TextMeshProUGUI))]
-public class HeroStatText : MonoBehaviour
+public class HeroStatText : MonoBehaviour, IPointerClickHandler
 {
     #region VARIABLES
 
@@ -31,6 +32,8 @@ public class HeroStatText : MonoBehaviour
     [Header("Variables")]
     //which stat is the text representing
     [SerializeField] StatType StatType;
+    [SerializeField] GameObject StatInfoBoxPrefab;
+
     private Stat StatRef;
     private bool IsAnimating;
     private float Timer = 0f;
@@ -73,6 +76,17 @@ public class HeroStatText : MonoBehaviour
     private void OnDestroy()
     {
         StatRef.OnStatChanged -= StatChanged;
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        Debug.Log($"Clicked stat: {Stat.GetDisplayName(StatType)}");
+        
+        var obj = Instantiate(StatInfoBoxPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        obj.transform.localScale = Vector3.one;
+        obj.transform.localPosition = Vector3.zero;
+
+        obj.GetComponent<StatInfoBox>().Init(StatType);
     }
 
 
@@ -126,6 +140,8 @@ public class HeroStatText : MonoBehaviour
         IsAnimating = false;
         Debug.Log($"Stopped animating for stat {StatRef.Type}");
     }
+
+    
 
     #endregion METHODS
 }

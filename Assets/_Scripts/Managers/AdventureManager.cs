@@ -384,9 +384,9 @@ public class AdventureManager : MonoBehaviour
         switch (enemy.Type)
         {
             case EnemyType.Elite:
-                return 20;
+                return 300;
             case EnemyType.Boss:
-                return 500;
+                return 5000;
             case EnemyType.Normal:
             default:
                 return 3;

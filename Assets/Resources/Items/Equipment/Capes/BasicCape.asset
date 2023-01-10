@@ -15,7 +15,7 @@ MonoBehaviour:
   DisplayName: Basic Cape
   Description: Has a low chance of teleporting you to Cape town.
   MenuIcon: {fileID: 21300000, guid: 838e914b15a1ad8419487ed6662b8f5e, type: 3}
-  BuyPrice: 60
+  BuyPrice: 980
   CanBeSold: 1
   MaxStackSize: 1
   ItemType: 1
@@ -23,5 +23,8 @@ MonoBehaviour:
   EquipmentType: 12
   StatModifiers:
   - _type: 1
-    _value: 0.05
+    _value: 0.1
     _modifyingStatType: 1
+  - _type: 1
+    _value: 0.25
+    _modifyingStatType: 4

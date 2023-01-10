@@ -134,6 +134,6 @@ MonoBehaviour:
       canBeNegative: 1
       baseValue: 0
   Class: 9
-  Race: 1
+  Race: 0
   GuaranteedDrop: {fileID: 0}
   PossibleDropsList: []

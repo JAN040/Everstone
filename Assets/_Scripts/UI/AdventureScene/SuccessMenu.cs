@@ -26,6 +26,8 @@ public class SuccessMenu : MonoBehaviour
     [SerializeField] Button Button_Return;
     [SerializeField] Button Button_Continue;
     [SerializeField] TextMeshProUGUI Text_InventoryFull;
+    [SerializeField] TextMeshProUGUI Text_FinalStageNotification;
+
 
     [Space]
     [Header("Manage Inventory")]
@@ -77,13 +79,13 @@ public class SuccessMenu : MonoBehaviour
         LootInventory = lootInventory;
         CanvasScaleFactor = canvasScaleFactor;
 
-        int currProgress = manager.TemporaryProgress;
+        int currProgress = ManagerRef.TemporaryProgress;
         bool gotAnyLoot = lootInventory.GetItems().Any(x => x != null);
         string lootText = gotAnyLoot ? "Obtained loot:" : "No loot obtained.";
         StageDescText.text = $"Cleared stage {currProgress}. {lootText}";
 
         //if the currently cleared stage is the last one
-        if (currProgress >= manager.CurrentLocation.stageAmount)
+        if (currProgress >= ManagerRef.CurrentLocation.stageAmount)
         {
             Button_Continue.gameObject.SetActive(false);
         }
@@ -93,6 +95,16 @@ public class SuccessMenu : MonoBehaviour
         //if there are no items to take it would make sense to disable the take button
         if (!gotAnyLoot)
             Button_TakeAll.interactable = false;
+
+        //show a warning since the boss is ahead
+        if (currProgress + 1 >= ManagerRef.CurrentLocation.stageAmount)
+        {
+            //add extra exclamation points for every extra boss
+            for (int i = 0; i < ManagerRef.CurrentLocation.LoopCount; i++)
+                Text_FinalStageNotification.text += "!";
+            
+            Text_FinalStageNotification.gameObject.SetActive(true);
+        }
 
         //manage inventory form starts hidden
         ManageInventory_Object.gameObject.SetActive(false);
@@ -112,7 +124,8 @@ public class SuccessMenu : MonoBehaviour
             LootScroll.vertical = true;
         }
 
-        ShowInventoryFullNotification(!GameManager.Instance.PlayerManager.Inventory.HasFreeSpace());
+        if (GameManager.Instance.PlayerManager.Inventory.HasFreeSpace())
+            ShowInventoryFullNotification(false);
     }
 
     private void ShowInventoryFullNotification(bool isFull)
@@ -133,7 +146,7 @@ public class SuccessMenu : MonoBehaviour
 
             //once nulls start it indicates the start of empty slots in the LootInventory
             if (currItem == null)
-                break;
+                continue;
 
             //taking money
             if (currItem.ItemData.ItemType == ItemType.Currency)
@@ -142,13 +155,16 @@ public class SuccessMenu : MonoBehaviour
                 continue;
             }
 
-            if (!playerInventory.HasFreeSpace())
+            //if (!playerInventory.HasFreeSpace())
+            //{
+            //    break;
+            //}
+
+            if (!playerInventory.AddItem(currItem))
             {
                 ShowInventoryFullNotification(true);
-                break;
+                continue;
             }
-
-            playerInventory.AddItem(currItem);
 
             //remove the item from loot inventory
             Destroy(currItem.Prefab.gameObject);

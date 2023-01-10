@@ -52,7 +52,7 @@ public class PlayerManager
     /// <summary>
     /// This is multiplied by Item price to determine Trading skill xp
     /// </summary>
-    public const float SELLPRICE_TO_XP_RATE = 0.5f; 
+    public const float SELLPRICE_TO_XP_RATE = 0.15f;
 
     /// <summary>
     /// The amount of items available in the shop. Increases with Trading skill level.

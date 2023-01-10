@@ -15,7 +15,7 @@ MonoBehaviour:
   DisplayName: Unknown Dagger
   Description: Brimming with power. Using it could be dangerous (for your opponents)
   MenuIcon: {fileID: 21300000, guid: 0b2655cfa7da48a489a241b3fd610dc0, type: 3}
-  BuyPrice: 9999999
+  BuyPrice: 999999
   CanBeSold: 0
   MaxStackSize: 1
   ItemType: 1

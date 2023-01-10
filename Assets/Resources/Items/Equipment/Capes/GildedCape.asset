@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68a4d297ca894d74f8261e9687a50119, type: 3}
   m_Name: GildedCape
   m_EditorClassIdentifier: 
-  DisplayName: Basic Cape
+  DisplayName: Gilded Cape
   Description: Coolness incarnate.
   MenuIcon: {fileID: 21300000, guid: 942aa2439bbdb9540a7e5602a970f99c, type: 3}
-  BuyPrice: 1350
+  BuyPrice: 63500
   CanBeSold: 1
   MaxStackSize: 1
   ItemType: 1
@@ -23,8 +23,14 @@ MonoBehaviour:
   EquipmentType: 12
   StatModifiers:
   - _type: 1
-    _value: 0.1
+    _value: 0.2
     _modifyingStatType: 1
   - _type: 1
     _value: 0.05
     _modifyingStatType: 2
+  - _type: 0
+    _value: 0.05
+    _modifyingStatType: 9
+  - _type: 0
+    _value: 0.75
+    _modifyingStatType: 4

@@ -20,7 +20,7 @@ MonoBehaviour:
   MaxLevel: 10
   UpgradeCost: 50
   CostPerLevelMultiplier: 3
-  Cooldown: 3
+  Cooldown: 6
   UnlockConditions:
   - Skill: 1
     Level: 3

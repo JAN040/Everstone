@@ -536,8 +536,14 @@ public class Unit : MonoBehaviour
         }
 
         if (canBlock && Helper.DiceRoll(this.Stats.BlockChance.GetValue()))
-            return false;
-
+        {
+            OnBlock();
+            damageList.ForEach(x =>
+            {
+                if (x.CanBeBlocked)
+                    x.Amount *= 0.5f;
+            });
+        }
 
         damageList.ForEach(x =>
         {
@@ -648,6 +654,13 @@ public class Unit : MonoBehaviour
             xpAmount *= this.Stats.DodgeChance.GetValue() >= 1f ? 3 : 1;
             ManagerRef.AddPlayerXp(xpAmount.RoundHP(), Skill.Agility);
         }
+    }
+
+
+    private void OnBlock()
+    {
+        ManagerRef.LogInfo($"{UnitDataRef.Faction} Unit {UnitDataRef.Name} Blocked. (Chance: {this.Stats.BlockChance.GetValue():P2})");
+        CreateStatusIndicator("Blocked!", Color.white);
     }
 
     private void CreateStatusIndicator(string text, Color color)

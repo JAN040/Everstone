@@ -15,7 +15,7 @@ MonoBehaviour:
   DisplayName: Basic Cape
   Description: Warmness incarnate.
   MenuIcon: {fileID: 21300000, guid: c1e1597b19c3d3641a2532b54e7703bc, type: 3}
-  BuyPrice: 220
+  BuyPrice: 12000
   CanBeSold: 1
   MaxStackSize: 1
   ItemType: 1
@@ -23,5 +23,8 @@ MonoBehaviour:
   EquipmentType: 12
   StatModifiers:
   - _type: 1
-    _value: 0.07
+    _value: 0.15
     _modifyingStatType: 1
+  - _type: 1
+    _value: 0.5
+    _modifyingStatType: 4
