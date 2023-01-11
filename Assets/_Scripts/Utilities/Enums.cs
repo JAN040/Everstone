@@ -40,6 +40,10 @@ public enum LocationDifficulty
     Hell = 100,
     Impossible = 200,
     Unimaginable = 300,
+    Unimaginable2 = 750,
+    Unimaginable3 = 750,
+    Unimaginable4 = 750,
+    Unimaginable5 = 750,
 }
 
 

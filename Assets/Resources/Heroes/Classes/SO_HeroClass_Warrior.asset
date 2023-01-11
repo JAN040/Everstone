@@ -76,7 +76,7 @@ MonoBehaviour:
         DivisionMultiplier: 7
       type: 6
       canBeNegative: 1
-      baseValue: 1
+      baseValue: 0.9
     speed:
       growthParameters:
         AdditionMultiplier: 300
@@ -84,7 +84,7 @@ MonoBehaviour:
         DivisionMultiplier: 7
       type: 10
       canBeNegative: 0
-      baseValue: 10
+      baseValue: 9
     dodgeChance:
       growthParameters:
         AdditionMultiplier: 300

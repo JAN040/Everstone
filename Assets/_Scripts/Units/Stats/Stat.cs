@@ -273,6 +273,16 @@ public class Stat
         while (growByLevels > 0)
         {
             float bonus = GetGrowthAmount(false);
+
+            //amount corrections for rogues where dodge chance grows too fast
+            if (Type == StatType.DodgeChance)
+            {
+                if (BaseValue >= 0.5f)
+                    bonus = 0;
+                else if (bonus > 0.01f)
+                    bonus = 0.01f;
+            }
+
             BaseValue += bonus;
             growthLevel += 1f;
             Debug.Log($"Grew stat {Type} by '{bonus}' to '{BaseValue}' (growthLevel {growthLevel})");

@@ -15,8 +15,7 @@ MonoBehaviour:
   locationName: Volcano
   icon: {fileID: 21300000, guid: c44840a97a95f984fbc25b2079fc2fda, type: 3}
   background: {fileID: 21300000, guid: b9a311445dd5cb640bedec9bd7393a42, type: 3}
-  difficulty: 50
+  difficulty: 100
   stageAmount: 30
   playerProgress: 0
   _hasPlayerClearedFirstBoss: 0
-  enemyPool: []

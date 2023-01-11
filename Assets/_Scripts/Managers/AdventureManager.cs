@@ -16,6 +16,8 @@ public class AdventureManager : MonoBehaviour
 
     [Header("UI References")]
     [SerializeField] GameObject PauseMenu;
+    [SerializeField] GameObject PauseMenu_EscapeButton;
+    [SerializeField] GameObject PauseMenu_ResetButton;
     [SerializeField] GameObject SuccessMenu;
     [SerializeField] GameObject GameOverMenu;
     [SerializeField] Canvas UICanvas;
@@ -238,6 +240,9 @@ public class AdventureManager : MonoBehaviour
         if (icon != null && icon.GetComponent<Image>() != null)
             icon.GetComponent<Image>().sprite = IsPaused ? PauseButton_ContinueImage : PauseButton_PauseImage;
 
+        PauseMenu_EscapeButton.SetActive(GameManager.Instance.GameDifficulty == Difficulty.Custom);
+        PauseMenu_ResetButton .SetActive(GameManager.Instance.GameDifficulty == Difficulty.Custom);
+        
         PauseMenu.SetActive(IsPaused);
     }
 
@@ -319,7 +324,7 @@ public class AdventureManager : MonoBehaviour
 
         //TODO: set energy to 'starting energy' stat
         PlayerHero.Prefab.GetComponent<Unit>().Stats.Energy = 0;
-        ResetAbilityToggles();
+        ResetAbilities();
 
         if (encounter == EncounterType.Event)
         {
@@ -431,12 +436,21 @@ public class AdventureManager : MonoBehaviour
         PlayerHero.GetUnit().RemoveAllStatusEffects();
     }
 
-    private void ResetAbilityToggles()
+    /// <summary>
+    /// Resets ability toggles and cooldowns
+    /// </summary>
+    private void ResetAbilities()
     {
         PlayerAbilities.ForEach(x =>
         {
-            if (x != null && x.ToggleMode == ToggleMode.Toggled)
+            if (x == null)
+                return;
+
+            if (x.ToggleMode == ToggleMode.Toggled)
                 x.ToggleMode = ToggleMode.UnToggled;
+
+            x.CurrentCooldown = 0;
+            x.CooldownAtStart = 0;
         });
     }
 

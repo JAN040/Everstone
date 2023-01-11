@@ -193,7 +193,7 @@ public class UnitData
         float armor = GetScaledStatWithVariabilityAndMods(Armor, classData.Armor, statModifier);
 
         if (enemyType == EnemyType.Elite)
-            health *= 3;
+            health *= 2;
         else if (enemyType == EnemyType.Boss)
             health *= 5;
 

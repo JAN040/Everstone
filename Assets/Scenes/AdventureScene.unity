@@ -1177,6 +1177,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PauseMenu: {fileID: 2106625113}
+  PauseMenu_EscapeButton: {fileID: 412523088}
+  PauseMenu_ResetButton: {fileID: 764214805}
   SuccessMenu: {fileID: 8263505089572102244, guid: e359372653d7e6f4e949f7dff42fd717, type: 3}
   GameOverMenu: {fileID: 7701919887047931270, guid: b8e03c8b729bd9a41889485b3e96be10, type: 3}
   UICanvas: {fileID: 1643773590}
@@ -1386,12 +1388,17 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1833640899925671764, guid: 31d0c6efdc5d92d4cb15c651e415a088, type: 3}
   m_PrefabInstance: {fileID: 412523085}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 412523088}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aa297143b79d754408e9748679e8e414, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &412523088 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1833640899925671769, guid: 31d0c6efdc5d92d4cb15c651e415a088, type: 3}
+  m_PrefabInstance: {fileID: 412523085}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &443274609
 GameObject:
   m_ObjectHideFlags: 0
@@ -2000,7 +2007,7 @@ MonoBehaviour:
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 1
-  m_ChildControlHeight: 1
+  m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
@@ -2804,6 +2811,11 @@ PrefabInstance:
 --- !u!224 &764214804 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1833640899925671768, guid: 31d0c6efdc5d92d4cb15c651e415a088, type: 3}
+  m_PrefabInstance: {fileID: 764214803}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &764214805 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1833640899925671769, guid: 31d0c6efdc5d92d4cb15c651e415a088, type: 3}
   m_PrefabInstance: {fileID: 764214803}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &963194225
@@ -5178,6 +5190,10 @@ PrefabInstance:
     - target: {fileID: 1833640899925671769, guid: 31d0c6efdc5d92d4cb15c651e415a088, type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1833640899925671769, guid: 31d0c6efdc5d92d4cb15c651e415a088, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 31d0c6efdc5d92d4cb15c651e415a088, type: 3}

@@ -84,7 +84,7 @@ MonoBehaviour:
         DivisionMultiplier: 7
       type: 10
       canBeNegative: 0
-      baseValue: 11
+      baseValue: 10
     dodgeChance:
       growthParameters:
         AdditionMultiplier: 300

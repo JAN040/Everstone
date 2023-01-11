@@ -16,6 +16,7 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
 
     [Header("UI References")]
     [SerializeField] Button ContinueButton;
+    [SerializeField] TextMeshProUGUI VersionNumberText;
 
     [SerializeField] GameObject MultiplayerInfoBox;
     [SerializeField] TextMeshProUGUI MultiplayerInfoBoxText;
@@ -40,6 +41,7 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     void Start()
     {
         ContinueButton.interactable = SaveSystem.SaveFileExists();
+        VersionNumberText.text = $"v{Application.version}";
 
         //in the case the player got redirected here after a random disconnect
         if (GameManager.Instance != null && GameManager.Instance.DisconnectCause != DisconnectCause.None)

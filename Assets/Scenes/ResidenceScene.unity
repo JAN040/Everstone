@@ -1875,11 +1875,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4926513370248614037, guid: 103ce86897d7f0345ae55c84911d4a19, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 185
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 4926513370248614037, guid: 103ce86897d7f0345ae55c84911d4a19, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 185
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 4926513370248614037, guid: 103ce86897d7f0345ae55c84911d4a19, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3704,6 +3704,7 @@ GameObject:
   - component: {fileID: 399020511}
   - component: {fileID: 399020510}
   - component: {fileID: 399020509}
+  - component: {fileID: 399020512}
   m_Layer: 5
   m_Name: CloseButton
   m_TagString: Untagged
@@ -3787,6 +3788,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 399020512}
+        m_TargetAssemblyTypeName: ChangeSceneButton, Assembly-CSharp
+        m_MethodName: ChangeScene
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &399020510
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3825,6 +3838,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 399020507}
   m_CullTransparentMesh: 1
+--- !u!114 &399020512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 399020507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa297143b79d754408e9748679e8e414, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &401070797
 GameObject:
   m_ObjectHideFlags: 0
@@ -19196,11 +19221,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4926513370248614037, guid: 103ce86897d7f0345ae55c84911d4a19, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 150
+      value: 185
       objectReference: {fileID: 0}
     - target: {fileID: 4926513370248614037, guid: 103ce86897d7f0345ae55c84911d4a19, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 150
+      value: 185
       objectReference: {fileID: 0}
     - target: {fileID: 4926513370248614037, guid: 103ce86897d7f0345ae55c84911d4a19, type: 3}
       propertyPath: m_LocalPosition.x

@@ -15,8 +15,7 @@ MonoBehaviour:
   locationName: Frost Mountain
   icon: {fileID: 21300000, guid: 936e4b761e8afb94e994107a147eea68, type: 3}
   background: {fileID: 21300000, guid: adaead5d2a9c230469a6388e8cbdc0c7, type: 3}
-  difficulty: 10
+  difficulty: 50
   stageAmount: 35
   playerProgress: 0
   _hasPlayerClearedFirstBoss: 0
-  enemyPool: []

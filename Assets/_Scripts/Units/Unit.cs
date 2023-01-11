@@ -974,7 +974,7 @@ public class Unit : MonoBehaviour
         if (unit == null || damage == null)
             return;
 
-        float xpAmount = unit.GetUnit().GetDamageAmountAfterResistances(damage);
+        float xpAmount = unit.GetUnit().GetDamageAmountAfterResistances(damage) / 2;
         Skill skill = damage.Type == DamageType.Physical ? Skill.Strength : Skill.Arts;
 
         ManagerRef.AddPlayerXp(xpAmount.RoundHP(), skill);
