@@ -77,7 +77,7 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 2160, y: 1080}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
@@ -452,6 +452,7 @@ MonoBehaviour:
   NumOfCopperForOneSilver: 10
   NumOfSilverForOneGold: 100
   DisconnectCause: 0
+  IsMultiplayerGameOver: 0
 --- !u!1 &1461370444
 GameObject:
   m_ObjectHideFlags: 0
@@ -647,7 +648,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4991167089072936128
 RectTransform:
   m_ObjectHideFlags: 0
