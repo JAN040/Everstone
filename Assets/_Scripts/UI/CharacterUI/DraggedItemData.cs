@@ -8,7 +8,7 @@ public class DraggedItemData
 
 
     public bool AreItemsDraggable = true;
-    public float CanvasScaleFactor { get; private set; }
+    public Canvas CanvasRef { get; private set; }
     public GameObject DraggedItemContainer { get; private set; }
     public ItemGrid InventoryGrid { get; set; }
     public ItemGrid ShopGrid { get; set; }
@@ -21,9 +21,9 @@ public class DraggedItemData
     #endregion VARIABLES
 
 
-    public DraggedItemData(float scaleFactor, GameObject draggedItemContainer, ItemGrid playerInventoryGridRef)
+    public DraggedItemData(Canvas canvas, GameObject draggedItemContainer, ItemGrid playerInventoryGridRef)
     {
-        CanvasScaleFactor = scaleFactor;
+        CanvasRef = canvas;
         DraggedItemContainer = draggedItemContainer;
         InventoryGrid = playerInventoryGridRef;
 

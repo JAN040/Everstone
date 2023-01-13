@@ -115,7 +115,7 @@ public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEn
         if (!ItemDragData.AreItemsDraggable)
             return;
 
-        var movement = eventData.delta / ItemDragData.CanvasScaleFactor;
+        var movement = eventData.delta / ItemDragData.CanvasRef.scaleFactor;
 
         rectTransform.anchoredPosition += movement;
     }

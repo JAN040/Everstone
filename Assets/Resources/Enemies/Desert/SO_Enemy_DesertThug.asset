@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfee79429a23a6845a15e0205ee8c742, type: 3}
   m_Name: SO_Enemy_DesertThug
   m_EditorClassIdentifier: 
-  Name: DesertThug
+  Name: Desert Thug
   Faction: 1
   Type: 0
   MenuSprite: {fileID: 21300000, guid: 53925ee438372cd44afd86b35d21c331, type: 3}

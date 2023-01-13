@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfee79429a23a6845a15e0205ee8c742, type: 3}
-  m_Name: SO_Enemy_Troll 1
+  m_Name: SO_Enemy_BrownBear
   m_EditorClassIdentifier: 
   Name: Brown Bear
   Faction: 1
@@ -134,6 +134,6 @@ MonoBehaviour:
       canBeNegative: 1
       baseValue: 0
   Class: 6
-  Race: 1
+  Race: 0
   GuaranteedDrop: {fileID: 0}
   PossibleDropsList: []

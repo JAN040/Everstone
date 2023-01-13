@@ -30,8 +30,8 @@ MonoBehaviour:
     _value: 0.05
     _modifyingStatType: 3
   - _type: 0
-    _value: 0.4
+    _value: 0.5
     _modifyingStatType: 15
   - _type: 1
-    _value: -0.45
+    _value: -0.35
     _modifyingStatType: 10

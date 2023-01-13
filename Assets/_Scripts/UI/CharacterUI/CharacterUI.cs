@@ -134,7 +134,7 @@ public class CharacterUI : MonoBehaviour
             RightArm,
             LeftArm
         };
-        ItemDragData = new DraggedItemData(ParentCanvas.scaleFactor, DraggedItemContainer, ItemGrid_Inventory);
+        ItemDragData = new DraggedItemData(ParentCanvas, DraggedItemContainer, ItemGrid_Inventory);
         ItemDragData.SetCharacterUI(this);
 
         InitTab_Equipment();

@@ -30,20 +30,21 @@ public enum Difficulty
 [Serializable]
 public enum LocationDifficulty
 {
-    Easy = 0,
-    Normal = 5,
-    Advanced = 10,
-    Hard = 25,
-    Expert = 50,
-
+    Easy = 0,       //forest
+    Easy2 = 5,
+    Normal = 10,    //dark forest
+    Normal2 = 15,
+    Advanced = 20,  //desert
+    Hard = 30,
+    Expert = 50,    //frost mountain
     Extreme = 75,
-    Hell = 100,
+    Hell = 100,     //volcano
     Impossible = 200,
     Unimaginable = 300,
-    Unimaginable2 = 750,
+    Unimaginable2 = 500,
     Unimaginable3 = 750,
-    Unimaginable4 = 750,
-    Unimaginable5 = 750,
+    Unimaginable4 = 1000,
+    Unimaginable5 = 1200,
 }
 
 

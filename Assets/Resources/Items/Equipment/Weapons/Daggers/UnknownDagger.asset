@@ -29,5 +29,5 @@ MonoBehaviour:
     _value: 0.5
     _modifyingStatType: 0
   - _type: 1
-    _value: 0.25
+    _value: 0.2
     _modifyingStatType: 10

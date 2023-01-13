@@ -135,6 +135,25 @@ public class AdventureManager : MonoBehaviour
         }
     }
 
+    public bool IsEscaping
+    {
+        get 
+        { 
+            return isEscaping; 
+        }
+        set
+        {
+            //if changing the value, flip portrait directions
+            if (value != isEscaping)
+            {
+                AlliedUnitsList.ForEach(x => x.GetUnit()?.FlipFaceDirection());
+            }
+
+            isEscaping = value;
+        }
+    }
+    private bool isEscaping = false;
+
     float Timer = 0f;
 
 
@@ -211,6 +230,18 @@ public class AdventureManager : MonoBehaviour
         TogglePausedMenu();
     }
 
+    public void EscapeClicked()
+    {
+        IsEscaping = true;
+
+        TogglePause();
+    }
+
+    public void OnEscaped()
+    {
+        SceneManagementSystem.Instance.LoadScene(Scenes.Outskirts);
+    }
+
     //DONT FORGET TO UNPAUSE AFTER ANY BUTTON CLICKS
     // (quitting the scene doesnt reset the timescale)
     //Update() still gets called even when timescale = 0
@@ -240,7 +271,7 @@ public class AdventureManager : MonoBehaviour
         if (icon != null && icon.GetComponent<Image>() != null)
             icon.GetComponent<Image>().sprite = IsPaused ? PauseButton_ContinueImage : PauseButton_PauseImage;
 
-        PauseMenu_EscapeButton.SetActive(GameManager.Instance.GameDifficulty == Difficulty.Custom);
+        //PauseMenu_EscapeButton.SetActive(GameManager.Instance.GameDifficulty == Difficulty.Custom);
         PauseMenu_ResetButton .SetActive(GameManager.Instance.GameDifficulty == Difficulty.Custom);
         
         PauseMenu.SetActive(IsPaused);
@@ -269,7 +300,7 @@ public class AdventureManager : MonoBehaviour
 
          //show success menu
          var menu = InstantiatePrefab(SuccessMenu, UICanvas.transform);
-        menu.GetComponent<SuccessMenu>().Init(this, LootInventory, UICanvas.scaleFactor);
+        menu.GetComponent<SuccessMenu>().Init(this, LootInventory, UICanvas);
     }
     
 
@@ -363,6 +394,8 @@ public class AdventureManager : MonoBehaviour
 
         return totalValue.Round();
     }
+
+    
 
     private float GetStageStreakModifier()
     {
@@ -927,6 +960,7 @@ public class AdventureManager : MonoBehaviour
 
     private void CastAbility_BasicAttack(ScriptableAbility ability)
     {
+        IsEscaping = false;
         PlayerHero.GetUnit()?.BasicAttack();
     }
 

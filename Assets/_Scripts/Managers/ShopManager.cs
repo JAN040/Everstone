@@ -38,7 +38,7 @@ public class ShopManager : MonoBehaviour
 
     void Awake()
     {
-        ItemDragData = new DraggedItemData(ParentCanvas.scaleFactor, DraggedItemContainer, ItemGrid_Inventory);
+        ItemDragData = new DraggedItemData(ParentCanvas, DraggedItemContainer, ItemGrid_Inventory);
         ItemDragData.ShopGrid = ItemGrid_Shop;
     }
 

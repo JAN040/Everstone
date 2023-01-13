@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: SO_ItemBase_MonsterScraps_U
   m_EditorClassIdentifier: 
   DisplayName: Monster Scraps
-  Description: A bunch of monster leftovers. Can be sold at the merchant or in the
-    guild.
+  Description: A bunch of monster materials. Exchange these for money.
   MenuIcon: {fileID: 21300000, guid: f512fdf30b54afb418395d0251e83fda, type: 3}
   BuyPrice: 25
   CanBeSold: 1

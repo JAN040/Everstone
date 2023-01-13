@@ -129,11 +129,11 @@ public class UnitData
 
     //chance for common loot is 1 - (sum of chances for other rarities)
     private readonly float RarityChance_Uncommon = 0.3f;    //cca. 30%
-    private readonly float RarityChance_Rare = 0.1f;    //cca. 10%
-    private readonly float RarityChance_Epic = 0.01f;   //cca. 1%
-    private readonly float RarityChance_Legendary = 0.002f;  //cca. 0.2%
+    private readonly float RarityChance_Rare = 0.1f;        //cca. 10%
+    private readonly float RarityChance_Epic = 0.01f;       //cca. 1%
+    private readonly float RarityChance_Legendary = 0.002f; //cca. 0.2%
 
-    private readonly float LocationDiffChanceQuotient = 1000;
+    private readonly float LocationDiffChanceQuotient = 3000;
 
     private readonly int CurrencyMinDrop = 1;
     private readonly int CurrencyMaxDrop = 1000;

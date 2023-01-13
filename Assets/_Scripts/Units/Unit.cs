@@ -19,6 +19,7 @@ public class Unit : MonoBehaviour
 
     [SerializeField] float LerpDelta;
     [SerializeField] float MovementSpeed_Base;
+    [SerializeField] float EscapeSpeed_Base;
     [SerializeField] float BasicAttackForce_Base;
     [SerializeField] Material Material_Dissolve;
     [SerializeField] GameObject StatusIndicatorPrefab;
@@ -59,7 +60,7 @@ public class Unit : MonoBehaviour
     [SerializeField] Sprite BackHealth_Heal;
 
     [Space]
-    [SerializeField] GameObject   UnitEffects;
+    [SerializeField] GameObject UnitEffects;
     [SerializeField] VisualEffect RangedAtkMuzzle;
     [SerializeField] VisualEffect RangedAtkImpact;
 
@@ -76,7 +77,7 @@ public class Unit : MonoBehaviour
     [Header("Script properties")]
 
     [SerializeField] Material Material_Dissolve_Instance;
-    
+
     [SerializeField] CharacterStats stats;
     public CharacterStats Stats { get => stats; private set => stats = value; }
 
@@ -174,6 +175,15 @@ public class Unit : MonoBehaviour
     /// </summary>
     public bool IsRanged { get; private set; }
 
+    private bool IsEscapingAlly { 
+        get 
+        {
+            if (UnitDataRef == null || ManagerRef == null)
+                return false;
+            return UnitDataRef.Faction == Faction.Allies && ManagerRef.IsEscaping; 
+        } 
+    }
+
     /// <summary>
     /// Determines whether this NpcUnit can only use abilities (cannot basic attack)
     /// </summary>
@@ -252,7 +262,7 @@ public class Unit : MonoBehaviour
         //update effects
         UpdateStatusEffects();
 
-        if (IsAttacking)
+        if (IsAttacking || IsEscapingAlly)
             return;
 
         //energy gain only when not already attacking
@@ -314,7 +324,11 @@ public class Unit : MonoBehaviour
             return;
         }
 
-        if ((Vector2)transform.position != IdlePosition)
+        if (IsEscapingAlly)
+        {
+            MoveTowardsEscapePosition();
+        }
+        else if((Vector2)transform.position != IdlePosition)
         {
             MoveTowardsIdlePosition();
         }
@@ -323,6 +337,9 @@ public class Unit : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         var enemyUnitScript = collision.gameObject?.GetComponent<Unit>();
+
+        if (enemyUnitScript == null)
+            return;
 
         //same faction just-in-case check
         if (enemyUnitScript.UnitDataRef.Faction == this.UnitDataRef.Faction) //shouldnt theoretically happen if layers are set correctly
@@ -357,7 +374,13 @@ public class Unit : MonoBehaviour
         StabiliseAfterHit();
     }
 
-   
+    /// <summary>
+    /// Should only happen when hitting the escape target
+    /// </summary>
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        ManagerRef.OnEscaped();
+    }
 
 
     #endregion UNITY METHODS
@@ -470,7 +493,7 @@ public class Unit : MonoBehaviour
 
         if (UnitDataRef.FaceDirection != shouldBeFacing)
         {
-            Transform_Portrait.localScale = Transform_Portrait.localScale.FlipX();
+            FlipFaceDirection();
         }
 
         if (shouldBeFacing == FacingDirection.Left)
@@ -478,6 +501,11 @@ public class Unit : MonoBehaviour
             //the frame faces right by default
             Transform_Frame.localScale = Transform_Frame.localScale.FlipX();
         }
+    }
+
+    public void FlipFaceDirection()
+    {
+        Transform_Portrait.localScale = Transform_Portrait.localScale.FlipX();
     }
 
     public void UnitClicked()
@@ -542,6 +570,7 @@ public class Unit : MonoBehaviour
             {
                 if (x.CanBeBlocked)
                     x.Amount *= 0.5f;
+                x.CanBeBlocked = false;
             });
         }
 
@@ -569,7 +598,12 @@ public class Unit : MonoBehaviour
             return false;
         }
         if (damage.CanBeBlocked && Helper.DiceRoll(this.Stats.BlockChance.GetValue()))
+        {
+            OnBlock();
+            damage.Amount *= 0.5f;
+
             return false;
+        }
 
 
         float dmgAmount = GetDamageAmountAfterResistances(damage);
@@ -778,6 +812,13 @@ public class Unit : MonoBehaviour
         var b = IdlePosition;
 
         transform.position = Vector2.MoveTowards(a, Vector2.Lerp(a, b, LerpDelta), MovementSpeed);
+    }
+
+    private void MoveTowardsEscapePosition()
+    {
+        Vector2 escapePos = new Vector2(IdlePosition.x - 8, IdlePosition.y);
+
+        transform.position = Vector2.MoveTowards(transform.position, escapePos, EscapeSpeed_Base);
     }
 
     //non-hero units use this formula to get the multiplier for Time.deltaTime
@@ -1114,17 +1155,21 @@ public class Unit : MonoBehaviour
             {
                 case DamageType.Physical:
                     damage.Amount = damage.Amount * origStats.PhysicalDamage.GetValue();
+
+                    if (origin == HeroRef)
+                        ManagerRef.AddPlayerXp(GetDamageAmountAfterResistances(damage).Round(), Skill.Strength);
                     break;
 
                 case DamageType.Arts:
                     damage.Amount = damage.Amount * origStats.ArtsDamage.GetValue();
+                    if (origin == HeroRef)
+                        ManagerRef.AddPlayerXp(GetDamageAmountAfterResistances(damage).Round(), Skill.Arts);
                     break;
 
                 case DamageType.True:
                 case DamageType.Elemental:
                 default:
                     break;
-
             }
         }
 

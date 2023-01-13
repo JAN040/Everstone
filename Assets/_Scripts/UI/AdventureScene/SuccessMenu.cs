@@ -45,7 +45,9 @@ public class SuccessMenu : MonoBehaviour
     private AdventureManager ManagerRef;
     private InventorySystem LootInventory;
 
-    private float CanvasScaleFactor;
+    private Canvas CanvasRef;
+
+    bool cancelledContinueOnce = false;
 
 
     #endregion VARIABLES
@@ -73,11 +75,11 @@ public class SuccessMenu : MonoBehaviour
     #region METHODS
 
     
-    public void Init(AdventureManager manager, InventorySystem lootInventory, float canvasScaleFactor)
+    public void Init(AdventureManager manager, InventorySystem lootInventory, Canvas canvas)
     {
         ManagerRef = manager;
         LootInventory = lootInventory;
-        CanvasScaleFactor = canvasScaleFactor;
+        CanvasRef = canvas;
 
         int currProgress = ManagerRef.TemporaryProgress;
         bool gotAnyLoot = lootInventory.GetItems().Any(x => x != null);
@@ -97,7 +99,7 @@ public class SuccessMenu : MonoBehaviour
             Button_TakeAll.interactable = false;
 
         //show a warning since the boss is ahead
-        if (currProgress + 1 >= ManagerRef.CurrentLocation.stageAmount)
+        if (currProgress + 1 == ManagerRef.CurrentLocation.stageAmount)
         {
             //add extra exclamation points for every extra boss
             for (int i = 0; i < ManagerRef.CurrentLocation.LoopCount; i++)
@@ -112,7 +114,7 @@ public class SuccessMenu : MonoBehaviour
 
     private void RefreshLootGrid()
     {
-        DraggedItemData itemData = new DraggedItemData(0f, null, null);
+        DraggedItemData itemData = new DraggedItemData(null, null, null);
         itemData.AreItemsDraggable = false; //this grid functions as display only, we dont want any dragging here
 
         LootInventory.MoveItemsToFront();
@@ -137,8 +139,19 @@ public class SuccessMenu : MonoBehaviour
 
     public void TakeAll_Clicked()
     {
+        bool tookAll = TryTakeAllItems();
+
+        //if all items were taken it would make sense to disable the take button
+        if (tookAll)
+            Button_TakeAll.interactable = false;
+    }
+
+    /// <returns>True if all items were successfully taken</returns>
+    private bool TryTakeAllItems()
+    {
         var lootItems = LootInventory.GetItems();
         var playerInventory = GameManager.Instance.PlayerManager.Inventory;
+        bool tookAll = true;
 
         for (var i = 0; i < lootItems.Count; i++)
         {
@@ -155,14 +168,10 @@ public class SuccessMenu : MonoBehaviour
                 continue;
             }
 
-            //if (!playerInventory.HasFreeSpace())
-            //{
-            //    break;
-            //}
-
             if (!playerInventory.AddItem(currItem))
             {
                 ShowInventoryFullNotification(true);
+                tookAll = false;
                 continue;
             }
 
@@ -171,16 +180,14 @@ public class SuccessMenu : MonoBehaviour
             lootItems[i] = null;
         }
 
-        //if all items were taken it would make sense to disable the take button
-        if (lootItems.TrueForAll(x => x == null))
-            Button_TakeAll.interactable = false;
+        return tookAll;
     }
 
     public void Manage_Clicked()
     {
         ManageInventory_Object.gameObject.SetActive(true);
 
-        DraggedItemData itemData = new DraggedItemData(CanvasScaleFactor, DraggedItemContainer, ItemGrid_Inventory);
+        DraggedItemData itemData = new DraggedItemData(CanvasRef, DraggedItemContainer, ItemGrid_Inventory);
         LootInventory.MoveItemsToFront();
 
         ItemGrid_Inventory.Initialize(GameManager.Instance.PlayerManager.Inventory, itemData);
@@ -216,6 +223,12 @@ public class SuccessMenu : MonoBehaviour
 
     public void Continue_Clicked()
     {
+        if (!TryTakeAllItems() && !cancelledContinueOnce)
+        {
+            cancelledContinueOnce = true;
+            return;
+        }
+
         //close the menu
         Destroy(SuccessMenu_Object.gameObject); 
 

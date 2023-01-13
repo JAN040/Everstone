@@ -15,7 +15,7 @@ MonoBehaviour:
   locationName: Desert
   icon: {fileID: 21300000, guid: d55c0c3e914d166418fa4b1af63d6a8b, type: 3}
   background: {fileID: 21300000, guid: ce87f0f0d4cc8a846a430a3e26b4dd14, type: 3}
-  difficulty: 10
+  difficulty: 20
   stageAmount: 50
   playerProgress: 0
   _hasPlayerClearedFirstBoss: 0

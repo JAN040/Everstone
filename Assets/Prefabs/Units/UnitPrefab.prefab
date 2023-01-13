@@ -794,6 +794,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LerpDelta: 0.15
   MovementSpeed_Base: 0.15
+  EscapeSpeed_Base: 0.015
   BasicAttackForce_Base: 70
   Material_Dissolve: {fileID: 2100000, guid: 53bb19500aee5f84c938670d4c670a99, type: 2}
   StatusIndicatorPrefab: {fileID: 6908614878156508830, guid: 82d11929d6bc67c4ea4ef78885891d62, type: 3}
@@ -826,117 +827,117 @@ MonoBehaviour:
     _energy: 0
     _mana: 0
     physicalDamage:
-      baseValue: 0
-      type: 0
-      canBeNegative: 0
       growthParameters:
         AdditionMultiplier: 0
         PowerMultiplier: 0
         DivisionMultiplier: 0
+      type: 0
+      canBeNegative: 0
+      baseValue: 0
     armor:
-      baseValue: 0
-      type: 0
-      canBeNegative: 0
       growthParameters:
         AdditionMultiplier: 0
         PowerMultiplier: 0
         DivisionMultiplier: 0
+      type: 0
+      canBeNegative: 0
+      baseValue: 0
     artsDamage:
-      baseValue: 0
-      type: 0
-      canBeNegative: 0
       growthParameters:
         AdditionMultiplier: 0
         PowerMultiplier: 0
         DivisionMultiplier: 0
+      type: 0
+      canBeNegative: 0
+      baseValue: 0
     artsResist:
-      baseValue: 0
-      type: 0
-      canBeNegative: 0
       growthParameters:
         AdditionMultiplier: 0
         PowerMultiplier: 0
         DivisionMultiplier: 0
+      type: 0
+      canBeNegative: 0
+      baseValue: 0
     maxHP:
-      baseValue: 0
-      type: 0
-      canBeNegative: 0
       growthParameters:
         AdditionMultiplier: 0
         PowerMultiplier: 0
         DivisionMultiplier: 0
+      type: 0
+      canBeNegative: 0
+      baseValue: 0
     maxEnergy:
-      baseValue: 0
-      type: 0
-      canBeNegative: 0
       growthParameters:
         AdditionMultiplier: 0
         PowerMultiplier: 0
         DivisionMultiplier: 0
+      type: 0
+      canBeNegative: 0
+      baseValue: 0
     energyRecovery:
-      baseValue: 0
-      type: 0
-      canBeNegative: 0
       growthParameters:
         AdditionMultiplier: 0
         PowerMultiplier: 0
         DivisionMultiplier: 0
+      type: 0
+      canBeNegative: 0
+      baseValue: 0
     speed:
-      baseValue: 0
-      type: 0
-      canBeNegative: 0
       growthParameters:
         AdditionMultiplier: 0
         PowerMultiplier: 0
         DivisionMultiplier: 0
+      type: 0
+      canBeNegative: 0
+      baseValue: 0
     dodgeChance:
-      baseValue: 0
-      type: 0
-      canBeNegative: 0
       growthParameters:
         AdditionMultiplier: 0
         PowerMultiplier: 0
         DivisionMultiplier: 0
+      type: 0
+      canBeNegative: 0
+      baseValue: 0
     healEfficiency:
-      baseValue: 0
-      type: 0
-      canBeNegative: 0
       growthParameters:
         AdditionMultiplier: 0
         PowerMultiplier: 0
         DivisionMultiplier: 0
+      type: 0
+      canBeNegative: 0
+      baseValue: 0
     maxMana:
-      baseValue: 0
-      type: 0
-      canBeNegative: 0
       growthParameters:
         AdditionMultiplier: 0
         PowerMultiplier: 0
         DivisionMultiplier: 0
+      type: 0
+      canBeNegative: 0
+      baseValue: 0
     manaRecovery:
-      baseValue: 0
-      type: 0
-      canBeNegative: 0
       growthParameters:
         AdditionMultiplier: 0
         PowerMultiplier: 0
         DivisionMultiplier: 0
+      type: 0
+      canBeNegative: 0
+      baseValue: 0
     blockChance:
-      baseValue: 0
-      type: 0
-      canBeNegative: 0
       growthParameters:
         AdditionMultiplier: 0
         PowerMultiplier: 0
         DivisionMultiplier: 0
+      type: 0
+      canBeNegative: 0
+      baseValue: 0
     cooldownReduction:
-      baseValue: 0
-      type: 0
-      canBeNegative: 0
       growthParameters:
         AdditionMultiplier: 0
         PowerMultiplier: 0
         DivisionMultiplier: 0
+      type: 0
+      canBeNegative: 0
+      baseValue: 0
   UnitDataRef: {fileID: 0}
   IdlePosition: {x: 0, y: 0}
   isTargeted: 0
