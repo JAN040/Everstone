@@ -10,22 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 68a4d297ca894d74f8261e9687a50119, type: 3}
-  m_Name: SO_ItemEquip_Rune1
+  m_Name: Rune_Resist_2
   m_EditorClassIdentifier: 
-  Id: Equip_Rune1
-  DisplayName: Attack rune
-  Description: A runestone of unknown origin.
-  MenuIcon: {fileID: 21300000, guid: 753b2c7b9fafbe447804889cc30c12af, type: 3}
-  BuyPrice: 6000
+  DisplayName: Water Rune Crystal
+  Description: A rune crystal of unknown origin. Brimming with power.
+  MenuIcon: {fileID: 21300000, guid: ef4a0a455fb5d4b4b903008934eabde4, type: 3}
+  BuyPrice: 100000
   CanBeSold: 1
   MaxStackSize: 1
   ItemType: 1
-  Rarity: 1
+  Rarity: 4
   EquipmentType: 15
   StatModifiers:
   - _type: 0
-    _value: 10
-    _modifyingStatType: 0
-  - _type: 1
     _value: 0.1
-    _modifyingStatType: 0
+    _modifyingStatType: 3

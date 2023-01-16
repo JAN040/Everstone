@@ -35,7 +35,11 @@ public class HeroStatText : MonoBehaviour, IPointerClickHandler
     [SerializeField] GameObject StatInfoBoxPrefab;
 
     private Stat StatRef;
+    private float StatValue;
+
     private bool IsAnimating;
+    private float AnimatingForValueChange;
+
     private float Timer = 0f;
     private Color baseColor;
 
@@ -58,7 +62,9 @@ public class HeroStatText : MonoBehaviour, IPointerClickHandler
         StatRef = GameManager.Instance.PlayerManager.PlayerHero.Stats.GetStatFromStatType(StatType);
         if (StatRef == null)
             return;
-        
+
+        StatValue = StatRef.GetValue();
+
         StatRef.OnStatChanged += StatChanged;
         baseColor = TextField.color;
 
@@ -109,8 +115,21 @@ public class HeroStatText : MonoBehaviour, IPointerClickHandler
     {
         SetText();
 
+        float valueChange = StatRef.GetValue() - StatValue;
+
+        //if already animating and the new change is more impactful, restart animation
+        if (IsAnimating && Mathf.Abs(valueChange) > Mathf.Abs(AnimatingForValueChange))
+        {
+            StopAllCoroutines();
+            IsAnimating = false;
+            TextField.color = baseColor;
+        }
+
         if (!IsAnimating && this.gameObject != null && this.gameObject.activeInHierarchy)
+        {
+            AnimatingForValueChange = valueChange;
             StartCoroutine(HighlightTextForSeconds(TextField, isChangePositive));
+        }
     }
 
     private IEnumerator HighlightTextForSeconds(TextMeshProUGUI textComponent, bool isChangePositive)
@@ -138,6 +157,7 @@ public class HeroStatText : MonoBehaviour, IPointerClickHandler
         }
 
         IsAnimating = false;
+        AnimatingForValueChange = 0;
         Debug.Log($"Stopped animating for stat {StatRef.Type}");
     }
 

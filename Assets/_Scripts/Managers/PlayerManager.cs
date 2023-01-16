@@ -246,7 +246,7 @@ public class PlayerManager
         if (highestClearedAdventure != null)
             locDiff = highestClearedAdventure.difficulty;
         
-        locDiff = locDiff.NextOrSame();
+        //locDiff = locDiff.NextOrSame();
 
         return locDiff;
     }

@@ -605,6 +605,10 @@ public class Unit : MonoBehaviour
             return false;
         }
 
+        if (this.IsEscapingAlly)
+        {
+            damage.Amount *= 2;
+        }
 
         float dmgAmount = GetDamageAmountAfterResistances(damage);
 

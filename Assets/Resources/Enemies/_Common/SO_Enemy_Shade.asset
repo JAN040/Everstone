@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Shade
   Faction: 1
-  Type: 1
+  Type: 2
   MenuSprite: {fileID: 21300000, guid: 03a705365b0b4f44085a1caae1d233c7, type: 3}
   FaceDirection: 1
   _stats:
@@ -136,4 +136,34 @@ MonoBehaviour:
   Class: 1
   Race: 2
   GuaranteedDrop: {fileID: 0}
-  PossibleDropsList: []
+  PossibleDropsList:
+  - Drop: {fileID: 11400000, guid: 26e673cece942544c8e1a21351ac335e, type: 2}
+    Chance: 0.05
+  - Drop: {fileID: 11400000, guid: 3e5fe2edaa85af6448882838c289783d, type: 2}
+    Chance: 0.01
+  - Drop: {fileID: 11400000, guid: d83e850f21665ea4e81c9896d1d5a4fd, type: 2}
+    Chance: 0.002
+  - Drop: {fileID: 11400000, guid: 3cb6555421ff4124684d483726ca55ae, type: 2}
+    Chance: 0.05
+  - Drop: {fileID: 11400000, guid: 2ef6cc8392276004291d9d97ee293ee6, type: 2}
+    Chance: 0.01
+  - Drop: {fileID: 11400000, guid: 7415d214a270f6b4588545ff4088281c, type: 2}
+    Chance: 0.002
+  - Drop: {fileID: 11400000, guid: e8495a474f2f11942ac804892c4f1911, type: 2}
+    Chance: 0.05
+  - Drop: {fileID: 11400000, guid: 56106b32802783f4098ced323af69740, type: 2}
+    Chance: 0.05
+  - Drop: {fileID: 11400000, guid: 3c3e0e59fb6987048bdd4f2fbb2ef112, type: 2}
+    Chance: 0.01
+  - Drop: {fileID: 11400000, guid: 50c987d9a6b804a4192a372f53847324, type: 2}
+    Chance: 0.05
+  - Drop: {fileID: 11400000, guid: b1f71769bb51092458126ee14dfde8d7, type: 2}
+    Chance: 0.01
+  - Drop: {fileID: 11400000, guid: c7735558392892242b86ec530e3541fd, type: 2}
+    Chance: 0.05
+  - Drop: {fileID: 11400000, guid: c3c8614f384666e42b5ac3744ef3e68c, type: 2}
+    Chance: 0.01
+  - Drop: {fileID: 11400000, guid: 020c91db10956074b8998f3c6ccb5e8f, type: 2}
+    Chance: 0.05
+  - Drop: {fileID: 11400000, guid: 78eac0c3da29da64dbd7e0a2acf855a3, type: 2}
+    Chance: 0.01
