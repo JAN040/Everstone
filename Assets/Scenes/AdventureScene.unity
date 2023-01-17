@@ -1416,6 +1416,7 @@ MonoBehaviour:
   SuccessMenu: {fileID: 8263505089572102244, guid: e359372653d7e6f4e949f7dff42fd717, type: 3}
   GameOverMenu: {fileID: 7701919887047931270, guid: b8e03c8b729bd9a41889485b3e96be10, type: 3}
   UICanvas: {fileID: 1643773590}
+  BattleCanvas: {fileID: 1328333775}
   UnitPrefab: {fileID: 6637542071658122928, guid: 3bb5eab35f5c3d34eb841bbce7be4fb1, type: 3}
   AllyStatusBar: {fileID: 156682324}
   EnemyStatusBar: {fileID: 1964249963}
@@ -1438,7 +1439,6 @@ MonoBehaviour:
   EnemyUnitsList: []
   targetedEnemy: {fileID: 0}
   selectedAlly: {fileID: 0}
-  IsEscaping: 0
   AbilityAntiSpamCD: 2
 --- !u!1001 &412523085
 PrefabInstance:
@@ -4071,6 +4071,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerDodge
       objectReference: {fileID: 0}
+    - target: {fileID: 992319994084950546, guid: 7845db00aab3f744089ae0945f139bde, type: 3}
+      propertyPath: Hotkey
+      value: 97
+      objectReference: {fileID: 0}
+    - target: {fileID: 992319994084950546, guid: 7845db00aab3f744089ae0945f139bde, type: 3}
+      propertyPath: HoldEnabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3682795803691899364, guid: 7845db00aab3f744089ae0945f139bde, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -4527,6 +4535,7 @@ GameObject:
   - component: {fileID: 1557758000}
   - component: {fileID: 1557757999}
   - component: {fileID: 1557757998}
+  - component: {fileID: 1557758001}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -4649,6 +4658,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1557757996}
   m_CullTransparentMesh: 1
+--- !u!114 &1557758001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1557757996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b451fcfc0b2c224c95dc0c50282369e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Hotkey: 32
+  HoldEnabled: 0
 --- !u!1 &1595353145
 GameObject:
   m_ObjectHideFlags: 0
@@ -5013,6 +5036,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1743354625199837822, guid: 3bb5eab35f5c3d34eb841bbce7be4fb1, type: 3}
       propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2765132439750792572, guid: 3bb5eab35f5c3d34eb841bbce7be4fb1, type: 3}
+      propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4160396740337279709, guid: 3bb5eab35f5c3d34eb841bbce7be4fb1, type: 3}
@@ -6241,6 +6268,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 964361182662114876, guid: baa21d00d3da3b8429628d994ef65520, type: 3}
+      propertyPath: Hotkey
+      value: 258
+      objectReference: {fileID: 0}
     - target: {fileID: 1327767337861620926, guid: baa21d00d3da3b8429628d994ef65520, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -6280,6 +6311,10 @@ PrefabInstance:
     - target: {fileID: 1351940891926320598, guid: baa21d00d3da3b8429628d994ef65520, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1965178258597368467, guid: baa21d00d3da3b8429628d994ef65520, type: 3}
+      propertyPath: Hotkey
+      value: 260
       objectReference: {fileID: 0}
     - target: {fileID: 2640009615260639150, guid: baa21d00d3da3b8429628d994ef65520, type: 3}
       propertyPath: m_Name
@@ -6325,6 +6360,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4624944404935121927, guid: baa21d00d3da3b8429628d994ef65520, type: 3}
+      propertyPath: Hotkey
+      value: 257
+      objectReference: {fileID: 0}
     - target: {fileID: 4690576626190247625, guid: baa21d00d3da3b8429628d994ef65520, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -6425,6 +6464,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6094928788732042930, guid: baa21d00d3da3b8429628d994ef65520, type: 3}
+      propertyPath: Hotkey
+      value: 259
+      objectReference: {fileID: 0}
     - target: {fileID: 6135528500310645359, guid: baa21d00d3da3b8429628d994ef65520, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -6465,6 +6508,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6529268170024629510, guid: baa21d00d3da3b8429628d994ef65520, type: 3}
+      propertyPath: Hotkey
+      value: 263
+      objectReference: {fileID: 0}
     - target: {fileID: 6613836879452433084, guid: baa21d00d3da3b8429628d994ef65520, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -6504,6 +6551,10 @@ PrefabInstance:
     - target: {fileID: 6766967570494983446, guid: baa21d00d3da3b8429628d994ef65520, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855824928061277796, guid: baa21d00d3da3b8429628d994ef65520, type: 3}
+      propertyPath: Hotkey
+      value: 262
       objectReference: {fileID: 0}
     - target: {fileID: 6888427409776691215, guid: baa21d00d3da3b8429628d994ef65520, type: 3}
       propertyPath: m_AnchorMax.y
@@ -6604,6 +6655,10 @@ PrefabInstance:
     - target: {fileID: 7647387079211506064, guid: baa21d00d3da3b8429628d994ef65520, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7778480939322613719, guid: baa21d00d3da3b8429628d994ef65520, type: 3}
+      propertyPath: Hotkey
+      value: 261
       objectReference: {fileID: 0}
     - target: {fileID: 8130259248006609309, guid: baa21d00d3da3b8429628d994ef65520, type: 3}
       propertyPath: m_AnchorMax.y
@@ -6840,6 +6895,14 @@ PrefabInstance:
     - target: {fileID: 889794246554866327, guid: 7845db00aab3f744089ae0945f139bde, type: 3}
       propertyPath: m_Name
       value: PlayerWeaponAttack
+      objectReference: {fileID: 0}
+    - target: {fileID: 992319994084950546, guid: 7845db00aab3f744089ae0945f139bde, type: 3}
+      propertyPath: Hotkey
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 992319994084950546, guid: 7845db00aab3f744089ae0945f139bde, type: 3}
+      propertyPath: HoldEnabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3682795803691899364, guid: 7845db00aab3f744089ae0945f139bde, type: 3}
       propertyPath: m_Pivot.x

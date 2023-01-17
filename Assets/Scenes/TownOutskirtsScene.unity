@@ -1332,6 +1332,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1861852445}
     m_Modifications:
+    - target: {fileID: 482864426262360773, guid: 58e583cd41e53124684837f0dcc7021d, type: 3}
+      propertyPath: Hotkey
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 5525986568715398392, guid: 58e583cd41e53124684837f0dcc7021d, type: 3}
       propertyPath: m_text
       value: Adventure
@@ -2134,7 +2138,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 395.54004, y: 117.100006}
+  m_AnchoredPosition: {x: 395.53998, y: 117.100006}
   m_SizeDelta: {x: 1807.41, y: 400}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &1502736111
@@ -2287,6 +2291,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1861852445}
     m_Modifications:
+    - target: {fileID: 482864426262360773, guid: 58e583cd41e53124684837f0dcc7021d, type: 3}
+      propertyPath: Hotkey
+      value: 115
+      objectReference: {fileID: 0}
     - target: {fileID: 5525986568715398392, guid: 58e583cd41e53124684837f0dcc7021d, type: 3}
       propertyPath: m_text
       value: Town
@@ -3572,6 +3580,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1861852445}
     m_Modifications:
+    - target: {fileID: 482864426262360773, guid: 58e583cd41e53124684837f0dcc7021d, type: 3}
+      propertyPath: Hotkey
+      value: 97
+      objectReference: {fileID: 0}
     - target: {fileID: 5525986568715398393, guid: 58e583cd41e53124684837f0dcc7021d, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

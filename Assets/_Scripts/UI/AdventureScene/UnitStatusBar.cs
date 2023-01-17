@@ -118,16 +118,16 @@ public class UnitStatusBar : MonoBehaviour
         if (UnitRef == null || UnitRef.Prefab == null)
             return;
 
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            Debug.Log($"Manually Healed unit {unitRef.Name} from {UnitRef.Prefab.GetComponent<Unit>().Stats.HealthPoints} to {UnitRef.Prefab.GetComponent<Unit>().Stats.HealthPoints + 20}");
-            UnitRef.GetUnit().Heal(20);
-        }
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            Debug.Log($"Manually Damaged unit {unitRef.Name} from {UnitRef.Prefab.GetComponent<Unit>().Stats.HealthPoints} to {UnitRef.Prefab.GetComponent<Unit>().Stats.HealthPoints - 20}");
-            UnitRef.GetUnit().TakeDamage(new Damage(20, DamageType.True));
-        }
+        //if (Input.GetKeyDown(KeyCode.H))
+        //{
+        //    Debug.Log($"Manually Healed unit {unitRef.Name} from {UnitRef.Prefab.GetComponent<Unit>().Stats.HealthPoints} to {UnitRef.Prefab.GetComponent<Unit>().Stats.HealthPoints + 20}");
+        //    UnitRef.GetUnit().Heal(20);
+        //}
+        //if (Input.GetKeyDown(KeyCode.D))
+        //{
+        //    Debug.Log($"Manually Damaged unit {unitRef.Name} from {UnitRef.Prefab.GetComponent<Unit>().Stats.HealthPoints} to {UnitRef.Prefab.GetComponent<Unit>().Stats.HealthPoints - 20}");
+        //    UnitRef.GetUnit().TakeDamage(new Damage(20, DamageType.True));
+        //}
 
         UpdateHpUI();
     }

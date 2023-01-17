@@ -49,6 +49,8 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
             MultiplayerInfoBox.gameObject.SetActive(true);
             MultiplayerInfoBoxText.text = "Disconnected from the server." + $"\nReason:\n {GameManager.Instance.DisconnectCause}";
         }
+
+        GameManager.Instance.ResetMultiplayerData();
     }
 
     #endregion UNITY METHODS

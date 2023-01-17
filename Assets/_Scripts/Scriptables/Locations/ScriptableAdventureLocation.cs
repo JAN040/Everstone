@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -31,6 +32,11 @@ public class ScriptableAdventureLocation : ScriptableObject
     /// </summary>
     [SerializeField] private int playerProgress = 0;
     public int PlayerProgress { get => playerProgress; set => playerProgress = value; }
+
+    /// <summary>
+    /// Used for some calculations like elite enemy chance etc
+    /// </summary>
+    [NonSerialized] public int CurrentProgress;
 
     /// <summary>
     /// If the boss was already reached, then getting to the last stage
@@ -118,6 +124,9 @@ public class ScriptableAdventureLocation : ScriptableObject
     {
         int nextProgress = currentProgress + 1;
 
+        if (difficulty == LocationDifficulty.Easy && currentProgress <= 10)
+            return EncounterType.SingleEnemy;
+
         //If the next encounter is the last, it is either a boss or a nest
         if (nextProgress == this.stageAmount)
             return EncounterType.BossEnemy;
@@ -138,8 +147,9 @@ public class ScriptableAdventureLocation : ScriptableObject
     /// <summary>
     /// Decide the enemies for the stage, from the ScriptableAdventureLocation enemy pool
     /// </summary>
-    public List<ScriptableNpcUnit> RollEnemies(EncounterType encounterType)
+    public List<ScriptableNpcUnit> RollEnemies(EncounterType encounterType, int currentProgress)
     {
+        CurrentProgress = currentProgress;
         var result = new List<ScriptableNpcUnit>();
 
         switch (encounterType)
@@ -187,7 +197,7 @@ public class ScriptableAdventureLocation : ScriptableObject
     {
         List<ScriptableNpcUnit> effectivePool = EnemyPool.Where(x => x.Type == EnemyType.Boss).ToList();
 
-        return Instantiate(effectivePool[Random.Range(0, effectivePool.Count)]);
+        return Instantiate(effectivePool[UnityEngine.Random.Range(0, effectivePool.Count)]);
     }
 
     public ScriptableNpcUnit GetRandomEnemy()
@@ -196,11 +206,15 @@ public class ScriptableAdventureLocation : ScriptableObject
 
         bool isElite = Helper.DiceRoll(GetEliteEnemyChance());
 
+        //check to make the early game in forest more manageable
+        if (difficulty == LocationDifficulty.Easy && CurrentProgress <= 10)
+            isElite = false;
+
         List<ScriptableNpcUnit> effectivePool;
         if (isElite)
         {
             effectivePool = EnemyPool.Where(x => x.Type == EnemyType.Elite).ToList();
-            res = Instantiate(effectivePool[Random.Range(0, effectivePool.Count)]);
+            res = Instantiate(effectivePool[UnityEngine.Random.Range(0, effectivePool.Count)]);
         }
         else
         {
@@ -212,7 +226,7 @@ public class ScriptableAdventureLocation : ScriptableObject
             else
             {
                 effectivePool = EnemyPool.Where(x => x.Type == EnemyType.Normal).ToList();
-                res = Instantiate(effectivePool[Random.Range(0, effectivePool.Count)]);
+                res = Instantiate(effectivePool[UnityEngine.Random.Range(0, effectivePool.Count)]);
             }
         }
 

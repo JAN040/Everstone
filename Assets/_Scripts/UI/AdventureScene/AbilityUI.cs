@@ -37,6 +37,9 @@ public class AbilityUI : MonoBehaviour
     [Space]
     [Header("Variables")]
 
+    [SerializeField] KeyCode Hotkey;
+    [SerializeField] bool HoldEnabled = false;
+
     [SerializeField] ScriptableAbility Ability;
 
     private Unit PlayerHeroUnit;
@@ -58,12 +61,31 @@ public class AbilityUI : MonoBehaviour
             Ability.CurrentCooldown -= Time.deltaTime;
         
         UpdateUI(false);
+
+        if (Input.GetKeyDown(Hotkey))
+        {
+            if (HoldEnabled)
+            {
+                Debug.Log($"Button hold: {Hotkey}");
+                StartCoroutine(HoldAction());
+            }
+            else
+            {
+                Activate();
+            }
+        }
+        if (Input.GetKeyUp(Hotkey) && HoldEnabled)
+        {
+            Debug.Log($"Button release: {Hotkey}");
+            StopAllCoroutines();
+        }
     }
 
     private void OnDestroy()
     {
         //if (Ability != null)
         //    Ability.OnAbilityToggled -= ToggleAbility;
+        StopAllCoroutines();
     }
 
     #endregion UNITY METHODS
@@ -132,17 +154,26 @@ public class AbilityUI : MonoBehaviour
         //Update toggled animation
         if (Animator != null && Ability.ToggleMode != ToggleMode.None)
             Animator.SetBool("IsToggled", Ability.ToggleMode == ToggleMode.Toggled);
+
+        if (PlayerHeroUnit.IsDead)
+            AbilityButton.interactable = false;
     }
 
     //when ability is clicked
     public void Activate()
     {
+        if (AbilityButton.interactable == false)
+            return;
+
         //handle the cost
         if (!HandleAbilityCost(false))
         {
             Debug.LogWarning($"Tried to activate ability {Ability.Name} but it failed because it cost more than the player had.");
             return;
         }
+
+        if (PlayerHeroUnit.IsDead)
+            return;
 
         //handle the cooldown
         float cd = Ability.Cooldown;
@@ -184,5 +215,16 @@ public class AbilityUI : MonoBehaviour
         }
 
         return false;
+    }
+
+    IEnumerator HoldAction()
+    {
+        while (true)
+        {
+            Debug.Log($"Hotkey '{Hotkey}' Action!");
+            Activate();
+
+            yield return new WaitForSeconds(1f);
+        }
     }
 }

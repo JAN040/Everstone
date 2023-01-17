@@ -21,6 +21,7 @@ public class AdventureManager : MonoBehaviour
     [SerializeField] GameObject SuccessMenu;
     [SerializeField] GameObject GameOverMenu;
     [SerializeField] Canvas UICanvas;
+    [SerializeField] Canvas BattleCanvas;
 
     [Space]
     [SerializeField] GameObject UnitPrefab;
@@ -201,6 +202,16 @@ public class AdventureManager : MonoBehaviour
     {
         Timer += Time.deltaTime;
         TimerText.text = $"{(int)Timer}s";
+
+        //game speed hotkeys
+        if (Input.GetKeyDown(KeyCode.Q))
+            LowerGameSpeed(0.5f);
+        if (Input.GetKeyDown(KeyCode.E))
+            IncreaseGameSpeedBy(0.5f);
+        if (Input.GetKeyDown(KeyCode.W))
+            GameSpeed = 3f;
+        if (Input.GetKeyDown(KeyCode.S))
+            GameSpeed = 0.5f;
     }
 
     private void OnDestroy()
@@ -279,14 +290,41 @@ public class AdventureManager : MonoBehaviour
 
     public void OnGameSpeedChange()
     {
+        IncreaseGameSpeedBy(0.5f);
+    }
+
+    public void IncreaseGameSpeedBy(float change)
+    {
         var tempSpeed = GameSpeed;
-        tempSpeed += 0.5f;
+        tempSpeed += change;
+
+        if (tempSpeed == 1.5f) //1.5x speed kinna useless
+            tempSpeed = 2f;
 
         if (tempSpeed == 2.5f) //2.5x speed setting kinna useless
             tempSpeed = 3f;
 
         if (tempSpeed > 3f)
             tempSpeed = 0.5f;
+
+        
+
+        GameSpeed = tempSpeed;
+    }
+
+    public void LowerGameSpeed(float change)
+    {
+        var tempSpeed = GameSpeed;
+        tempSpeed -= change;
+
+        if (tempSpeed == 1.5f) //1.5x speed kinna useless
+            tempSpeed = 1f;
+
+        if (tempSpeed == 2.5f) //2.5x speed setting kinna useless
+            tempSpeed = 2f;
+
+        if (tempSpeed < 0.5f)
+            tempSpeed = 3f;
 
         GameSpeed = tempSpeed;
     }
@@ -298,9 +336,10 @@ public class AdventureManager : MonoBehaviour
 
         AddLootByStageValue();
 
-         //show success menu
-         var menu = InstantiatePrefab(SuccessMenu, UICanvas.transform);
+        //show success menu
+        var menu = InstantiatePrefab(SuccessMenu, UICanvas.transform);
         menu.GetComponent<SuccessMenu>().Init(this, LootInventory, UICanvas);
+        BattleCanvas.gameObject.SetActive(false);
     }
     
 
@@ -310,6 +349,8 @@ public class AdventureManager : MonoBehaviour
         Logger_Text.text = "";
         Timer = 0;
         LootInventory = new InventorySystem(7); //up to 7 loot items can be displayed
+
+        BattleCanvas.gameObject.SetActive(true);
 
         //get encounter type
         EncounterType encounter = CurrentLocation.GetNextEncounter(TemporaryProgress);
@@ -363,7 +404,7 @@ public class AdventureManager : MonoBehaviour
         }
         else
         {
-            EnemyUnitsList = CurrentLocation.RollEnemies(encounter);
+            EnemyUnitsList = CurrentLocation.RollEnemies(encounter, TemporaryProgress);
         }
 
         //calculate stage loot value (used in determinining the loot after stage clear)
@@ -797,6 +838,8 @@ public class AdventureManager : MonoBehaviour
     private void HandleGameOver()
     {
         Pause(true);    //pause the game in the background
+
+        BattleCanvas.gameObject.SetActive(false);
 
         bool isHardcore = GameManager.Instance.IsHardcore;
         bool keepInventory = GameManager.Instance.KeepInventory;

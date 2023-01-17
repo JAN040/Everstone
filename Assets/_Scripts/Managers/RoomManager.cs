@@ -283,6 +283,22 @@ public class RoomManager : MonoBehaviourPunCallbacks
         StartCoroutine(OnDisconnectedRoutine(cause));
     }
 
+    public override void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
+    {
+        var settings = PhotonNetwork.CurrentRoom.CustomProperties;
+
+        if (settings == null)
+            return;
+
+        //update settings
+        TimeLimitInput.text = settings["TimeLimit"].ToString();
+        HardcoreCheckbox.isOn = (bool)settings["IsHardcore"];
+        KeepInventoryCheckbox.isOn = (bool)settings["KeepInventory"];
+        WinCriteriaCombo.value = (int)settings["WinCriteria"];
+        PointGoalInput.text = $"{settings["PointGoal"]}";
+        GameDifficultyCombo.value = (int)settings["GameDifficulty"];
+    }
+
 
     #endregion PUN Callbacks
 

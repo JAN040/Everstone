@@ -774,6 +774,7 @@ MonoBehaviour:
   Skull1: {fileID: 5833845558265773913}
   Skull2: {fileID: 5833845558302701340}
   SkullHardcore: {fileID: 21300000, guid: 995d25df5d569054f92db06a05658378, type: 3}
+  IsHardcore: 0
 --- !u!1 &8031414349873415209
 GameObject:
   m_ObjectHideFlags: 0
@@ -1206,6 +1207,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 31d0c6efdc5d92d4cb15c651e415a088, type: 3}
+--- !u!1 &5452941037638081908 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1833640899925671769, guid: 31d0c6efdc5d92d4cb15c651e415a088, type: 3}
+  m_PrefabInstance: {fileID: 5971450216361173549}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3185007549349740904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5452941037638081908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b451fcfc0b2c224c95dc0c50282369e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Hotkey: 115
 --- !u!224 &5452941037638081909 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1833640899925671768, guid: 31d0c6efdc5d92d4cb15c651e415a088, type: 3}

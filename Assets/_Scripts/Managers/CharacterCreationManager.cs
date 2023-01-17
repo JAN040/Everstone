@@ -528,7 +528,8 @@ public class CharacterCreationManager : MonoBehaviour
         }
 
         //starting a new game without closing the game causes the GameManager to remember the progress from the previous game otherwise
-        GameManager.Instance.AdventureLocationData = null;
+        GameManager.Instance.ResetLocationData();
+        resSysRef.ReloadLocationData();
 
         GameManager.Instance.Currency = GetSelectedBackground().startingCurrencyAmount;
         GameManager.Instance.SetGameDifficulty(

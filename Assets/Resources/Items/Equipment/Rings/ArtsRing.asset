@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 68a4d297ca894d74f8261e9687a50119, type: 3}
-  m_Name: GreatIronDamageRing
+  m_Name: ArtsRing
   m_EditorClassIdentifier: 
-  DisplayName: Great Iron Ring
-  Description: A large iron ring. Poor mans aesthetic.
-  MenuIcon: {fileID: 21300000, guid: 561a219c8e16fd943b3fed2896ae4c6c, type: 3}
-  BuyPrice: 750
+  DisplayName: Arts Ring
+  Description: Commonly reffered to as the blueberry ring.
+  MenuIcon: {fileID: 21300000, guid: 5bdbb117bd306e144bae84b40919d1bc, type: 3}
+  BuyPrice: 1500
   CanBeSold: 1
   MaxStackSize: 1
   ItemType: 1
@@ -24,4 +24,7 @@ MonoBehaviour:
   StatModifiers:
   - _type: 0
     _value: 8
-    _modifyingStatType: 0
+    _modifyingStatType: 2
+  - _type: 0
+    _value: 0.1
+    _modifyingStatType: 9

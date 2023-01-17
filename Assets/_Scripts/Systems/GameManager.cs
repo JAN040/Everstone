@@ -221,6 +221,14 @@ public class GameManager : Singleton<GameManager>, IInRoomCallbacks, IConnection
     #region Multiplayer
 
 
+    public void ResetMultiplayerData()
+    {
+        IsMultiplayerGameOver = false;
+        GameLength = 0;
+        DisconnectCause = DisconnectCause.None;
+    }
+
+
     /// <summary>
     /// Called on master client when he starts the room
     /// </summary>
@@ -433,6 +441,11 @@ public class GameManager : Singleton<GameManager>, IInRoomCallbacks, IConnection
     #endregion Multiplayer
 
 
+    public void ResetLocationData()
+    {
+        CurrentAdventureLocation = null;
+        AdventureLocationData = ResourceSystem.Instance.GetAdventureLocations();
+    }
 
     public void SetGameDifficulty(Difficulty newDifficulty, bool keepInventory, bool isHardcore)
     {

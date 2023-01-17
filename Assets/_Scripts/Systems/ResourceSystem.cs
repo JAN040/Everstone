@@ -266,13 +266,7 @@ public class ResourceSystem : Singleton<ResourceSystem> {
 
         UnitClassAbilities = Resources.LoadAll<ScriptableAbility>("Enemies/Abilities").ToList();
 
-        var locationData = Resources.LoadAll<ScriptableAdventureLocation>("Locations/Adventure").ToList();
-        AdventureLocations = new List<ScriptableAdventureLocation>();
-       
-        foreach (var location in locationData.OrderBy(x => x.name).OrderBy(x => x.difficulty))
-            AdventureLocations.Add(Instantiate(location));
-            
-        _AdventureLocationsDict = AdventureLocations.ToDictionary(x => x.locationName, x => x);
+        ReloadLocationData();
 
         CommonEnemies = Resources.LoadAll<ScriptableNpcUnit>("Enemies/_Common").ToList();
 
@@ -361,6 +355,19 @@ public class ResourceSystem : Singleton<ResourceSystem> {
     private ScriptableAbility GetClassAbilityFromName(string name)
     {
         return Instantiate(UnitClassAbilities.FirstOrDefault(x => x.Name.Equals(name)));
+    }
+
+    //this data has to be reloaded for a new game to get fresh location objects if a new game
+    //  is created without reloading the entire game in between
+    public void ReloadLocationData()
+    {
+        var locationData = Resources.LoadAll<ScriptableAdventureLocation>("Locations/Adventure").ToList();
+        AdventureLocations = new List<ScriptableAdventureLocation>();
+
+        foreach (var location in locationData.OrderBy(x => x.name).OrderBy(x => x.difficulty))
+            AdventureLocations.Add(Instantiate(location));
+
+        _AdventureLocationsDict = AdventureLocations.ToDictionary(x => x.locationName, x => x);
     }
 
     /// <summary>
