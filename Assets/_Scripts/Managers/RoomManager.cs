@@ -285,18 +285,33 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     public override void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
     {
+        //updates on master client are redundant since he makes the changes
+        if (PhotonNetwork.IsMasterClient)
+            return;
+
         var settings = PhotonNetwork.CurrentRoom.CustomProperties;
 
         if (settings == null)
             return;
 
         //update settings
-        TimeLimitInput.text = settings["TimeLimit"].ToString();
-        HardcoreCheckbox.isOn = (bool)settings["IsHardcore"];
-        KeepInventoryCheckbox.isOn = (bool)settings["KeepInventory"];
-        WinCriteriaCombo.value = (int)settings["WinCriteria"];
-        PointGoalInput.text = $"{settings["PointGoal"]}";
-        GameDifficultyCombo.value = (int)settings["GameDifficulty"];
+        if (settings.ContainsKey("TimeLimit"))
+            TimeLimitInput.text = settings["TimeLimit"].ToString();
+
+        if (settings.ContainsKey("IsHardcore"))
+            HardcoreCheckbox.isOn = (bool)settings["IsHardcore"];
+
+        if (settings.ContainsKey("KeepInventory"))
+            KeepInventoryCheckbox.isOn = (bool)settings["KeepInventory"];
+
+        if (settings.ContainsKey("WinCriteria"))
+            WinCriteriaCombo.value = (int)settings["WinCriteria"];
+
+        if (settings.ContainsKey("PointGoal"))
+            PointGoalInput.text = $"{settings["PointGoal"]}";
+
+        if (settings.ContainsKey("GameDifficulty"))
+            GameDifficultyCombo.value = (int)settings["GameDifficulty"];
     }
 
 
