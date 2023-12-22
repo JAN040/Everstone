@@ -990,7 +990,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AbilityImage: {fileID: 4846828286260354062}
-  MageBasicAtkImage: {fileID: 0}
   AbilityButton: {fileID: 6858707799609016206}
   CooldownImage: {fileID: 6541376902626576505}
   CooldownText: {fileID: 5313265900418617876}
@@ -998,10 +997,12 @@ MonoBehaviour:
   CostText_Energy: {fileID: 1385114283329540854}
   CostText_Mana: {fileID: 5515722083045486481}
   Animator: {fileID: 2370361051899493382}
+  Hotkey: 0
+  HoldEnabled: 0
   Ability: {fileID: 0}
 --- !u!95 &2370361051899493382
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1018,7 +1019,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!1 &7198001267236193607
 GameObject:
   m_ObjectHideFlags: 0

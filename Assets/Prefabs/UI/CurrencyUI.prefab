@@ -185,7 +185,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 999999999999
+  m_text: <sprite name="coin_gold"> 9 <sprite name="coin_silver"> 9 <sprite name="coin_copper">
+    9
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 29eb6e783de946c44adc505379199690, type: 2}
   m_sharedMaterial: {fileID: 7928342520420039591, guid: 29eb6e783de946c44adc505379199690, type: 2}
